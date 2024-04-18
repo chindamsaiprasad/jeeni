@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jeeni/pages/auth/login_page.dart';
+import 'package:jeeni/pages/dashboard.dart';
 
 void main() {
   runApp(
@@ -15,10 +15,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'jeeni',
-      home: LoginPage(),
+      home: Dashboard(),
     );
   }
 }
