@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jeeni/pages/auth/login_page.dart';
 import 'package:jeeni/pages/home_page.dart';
 import 'package:jeeni/pages/navbar.dart';
 import 'package:jeeni/pages/settings_page.dart';
@@ -24,9 +25,7 @@ class Dashboard extends ConsumerWidget {
       body: Consumer(
         builder: (context, ref, child) {
           final selectedMenu = ref.watch(menuProvider).selectedMenu;
-          print("1111111111111 ${_key.currentState?.isDrawerOpen}");
           if (_key.currentState?.isDrawerOpen ?? false) {
-            print("22222222222222222 ${_key.currentState?.isDrawerOpen}");
             Future.delayed(
               const Duration(seconds: 0),
               () {
@@ -39,6 +38,8 @@ class Dashboard extends ConsumerWidget {
               return const HomePage();
             case MenuType.settings:
               return const SettingsPage();
+            case MenuType.logout:
+              return const LoginPage();
           }
         },
       ),

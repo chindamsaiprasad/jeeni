@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-enum MenuType { home, settings }
+enum MenuType { home, settings, logout }
 
 final menuProvider = ChangeNotifierProvider((ref) => MenuProvider(ref: ref));
 

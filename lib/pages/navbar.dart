@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jeeni/providers/auth_provider.dart';
 import 'package:jeeni/providers/menu_provider.dart';
 
 class NavBar extends StatelessWidget {
@@ -78,6 +79,25 @@ class NavBar extends StatelessWidget {
                 onTap: () {
                   ref.read(menuProvider).setSelectedMenu(MenuType.settings);
                   callback();
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.logout,
+                  color: selectedMenu == MenuType.logout
+                      ? const Color(0xff1c5e20)
+                      : Colors.black,
+                ),
+                title: Text(
+                  "LogOut",
+                  style: TextStyle(
+                    color: selectedMenu == MenuType.settings
+                        ? const Color(0xff1c5e20)
+                        : Colors.black,
+                  ),
+                ),
+                onTap: () {
+                  ref.read(authenticationProvider.notifier).logOut();
                 },
               )
             ],
