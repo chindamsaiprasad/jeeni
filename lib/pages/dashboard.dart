@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/auth/login_page.dart';
 import 'package:jeeni/pages/home_page.dart';
 import 'package:jeeni/pages/navbar.dart';
+import 'package:jeeni/pages/report_page.dart';
 import 'package:jeeni/pages/settings_page.dart';
 import 'package:jeeni/providers/menu_provider.dart';
 
@@ -20,7 +21,7 @@ class Dashboard extends ConsumerWidget {
       ),
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
-        title: Text(ref.watch(menuProvider).selectedMenu.name.toString()),
+        title: Text(ref.watch(menuProvider).getDisplayName(),style: TextStyle(color: Colors.white),),
       ),
       body: Consumer(
         builder: (context, ref, child) {
@@ -38,6 +39,8 @@ class Dashboard extends ConsumerWidget {
               return const HomePage();
             case MenuType.settings:
               return const SettingsPage();
+            case MenuType.issueReport:
+              return const ReportIssuePage();
             case MenuType.logout:
               return const LoginPage();
           }
