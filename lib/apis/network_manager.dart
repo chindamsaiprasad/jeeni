@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:jeeni/models/student.dart';
 
-const String BASE_URL = "https://exam.jeeni.in/Jeeni/rest/";
+const String BASE_URL = "https://exam.jeeni.in/Jeeni/rest";
 
 class NetworkManager {
   static final NetworkManager _singleton = NetworkManager._internal();
@@ -29,7 +29,7 @@ class NetworkManager {
 
     return await http
         .post(
-      Uri.parse("${BASE_URL}login/processLoginAuthentication"),
+      Uri.parse("$BASE_URL/login/processLoginAuthentication"),
       headers: headers,
       body: body,
     )

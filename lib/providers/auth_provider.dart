@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/Apis/network_manager.dart';
 import 'package:jeeni/models/student.dart';
@@ -39,8 +41,11 @@ class AuthenticationNotifier extends StateNotifier<Student> {
       const Duration(seconds: 0),
       () async {
         await LocalDataManager().loadStudentFromLocal().then((student) {
+          log("AUTH :: ${student.jauth}");
           state = student.copyWith(
               authenticationState: AuthenticationState.loggedIn);
+        }).catchError((error) {
+          log("AUTH ERROR :: $error");
         });
       },
     );
