@@ -26,7 +26,8 @@ class LocalDataManager {
 
   Future<Student> loadStudentFromLocal() {
     return init().then((sharedPreferences) async {
-      if (sharedPreferences.getString("STUDENT") == null) {
+      if (sharedPreferences.getString("STUDENT") == null ||
+          sharedPreferences.getString("STUDENT") == "") {
         throw Exception("Student Logout");
       }
 

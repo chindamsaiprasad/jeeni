@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/auth/login_page.dart';
+import 'package:jeeni/pages/dashboard/practice_test/practice_test.dart';
 import 'package:jeeni/pages/home_page.dart';
 import 'package:jeeni/pages/navbar.dart';
 import 'package:jeeni/pages/report_page.dart';
@@ -21,7 +22,10 @@ class Dashboard extends ConsumerWidget {
       ),
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
-        title: Text(ref.watch(menuProvider).getDisplayName(),style: TextStyle(color: Colors.white),),
+        title: Text(
+          ref.watch(menuProvider).getDisplayName(),
+          style: const TextStyle(color: Colors.white),
+        ),
       ),
       body: Consumer(
         builder: (context, ref, child) {
@@ -37,6 +41,8 @@ class Dashboard extends ConsumerWidget {
           switch (selectedMenu) {
             case MenuType.home:
               return const HomePage();
+            case MenuType.practiceTest:
+              return const PracticeTest();
             case MenuType.settings:
               return const SettingsPage();
             case MenuType.issueReport:

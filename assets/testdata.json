@@ -1,0 +1,139 @@
+[
+    {
+      "id": 769933,
+      "answerValidity": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "type": 1,
+      "solutionAvailable": true,
+      "durationInMinutes": 1,
+      "status": 2,
+      "questionTypeId": 7,
+      "section": "Physics",
+      "questionType": "Column Matching",
+      "isMultipleAnswer": true,
+      "positiveMark": 2.0,
+      "negativeMark": 1.0,
+      "groupId": 777740,
+      "answerStatus": 0,
+      "numericAnswerDifference": "0.05",
+      "partialRule": 1,
+      "columnMatchAnswer": [
+        "p",
+        "q",
+        "r",
+        "s"
+      ],
+      "questionUrl": "https://jeeni-question-images.s3.ap-south-1.amazonaws.com/question-images%2FkSLjc9CURE4%3D%2Fmdpi.png",
+      "solutionUrl": "https://jeeni-question-images.s3.ap-south-1.amazonaws.com/question-images%2FkSLjc9CURE4%3D%2Fsoln.png"
+    },
+    {
+      "id": 769934,
+      "answerValidity": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "type": 1,
+      "solutionAvailable": true,
+      "durationInMinutes": 1,
+      "status": 2,
+      "questionTypeId": 7,
+      "section": "Physics",
+      "questionType": "Column Matching",
+      "isMultipleAnswer": true,
+      "positiveMark": 2.0,
+      "negativeMark": 1.0,
+      "groupId": 777741,
+      "answerStatus": 0,
+      "numericAnswerDifference": "0.05",
+      "partialRule": 1,
+      "columnMatchAnswer": [
+        "s",
+        "r",
+        "q",
+        "p"
+      ],
+      "questionUrl": "https://jeeni-question-images.s3.ap-south-1.amazonaws.com/question-images%2FmzGNB%2BpMpdY%3D%2Fmdpi.png",
+      "solutionUrl": "https://jeeni-question-images.s3.ap-south-1.amazonaws.com/question-images%2FmzGNB%2BpMpdY%3D%2Fsoln.png"
+    },
+    {
+      "id": 127596,
+      "answerValidity": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "type": 1,
+      "solutionAvailable": true,
+      "durationInMinutes": 4,
+      "status": 2,
+      "questionTypeId": 1,
+      "section": "Chemistry",
+      "questionType": "Basic",
+      "isMultipleAnswer": false,
+      "positiveMark": 2.0,
+      "negativeMark": 1.0,
+      "groupId": 133705,
+      "answerStatus": 0,
+      "numericAnswerDifference": "0.05",
+      "partialRule": 1,
+      "questionUrl": "https://jeeni-question-images.s3.ap-south-1.amazonaws.com/question-images%2FPI31I358Fzc%3D%2Fmdpi.png",
+      "solutionUrl": "https://jeeni-question-images.s3.ap-south-1.amazonaws.com/question-images%2FPI31I358Fzc%3D%2Fsoln.png"
+    },
+    {
+      "id": 127595,
+      "answerValidity": [
+        false,
+        true,
+        false,
+        false
+      ],
+      "type": 1,
+      "solutionAvailable": true,
+      "durationInMinutes": 4,
+      "status": 2,
+      "questionTypeId": 1,
+      "section": "Chemistry",
+      "questionType": "Basic",
+      "isMultipleAnswer": false,
+      "positiveMark": 2.0,
+      "negativeMark": 1.0,
+      "groupId": 133704,
+      "answerStatus": 0,
+      "numericAnswerDifference": "0.05",
+      "partialRule": 1,
+      "questionUrl": "https://jeeni-question-images.s3.ap-south-1.amazonaws.com/question-images%2Fi2y5auQuYlo%3D%2Fmdpi.png",
+      "solutionUrl": "https://jeeni-question-images.s3.ap-south-1.amazonaws.com/question-images%2Fi2y5auQuYlo%3D%2Fsoln.png"
+    },
+    {
+      "id": 176269,
+      "answerValidity": [
+        true,
+        true,
+        false,
+        true
+      ],
+      "type": 1,
+      "solutionAvailable": true,
+      "durationInMinutes": 1,
+      "status": 2,
+      "questionTypeId": 1,
+      "section": "Chemistry",
+      "questionType": "Basic",
+      "isMultipleAnswer": true,
+      "positiveMark": 2.0,
+      "negativeMark": 1.0,
+      "groupId": 181237,
+      "answerStatus": 0,
+      "numericAnswerDifference": "0.05",
+      "partialRule": 1,
+      "questionUrl": "https://jeeni-question-images.s3.ap-south-1.amazonaws.com/question-images%2Fc1lMS20yNrI%3D%2Fmdpi.png",
+      "solutionUrl": "https://jeeni-question-images.s3.ap-south-1.amazonaws.com/question-images%2Fc1lMS20yNrI%3D%2Fsoln.png"
+    }
+  ]

@@ -12,7 +12,7 @@ enum AuthenticationState {
 }
 
 final authenticationProvider =
-    StateNotifierProvider<AuthenticationNotifier, Student>((ref) {
+    StateNotifierProvider<AuthenticationNotifier, Student?>((ref) {
   return AuthenticationNotifier();
 });
 
@@ -26,7 +26,7 @@ class SharedPreferencesKeys {
   static const String language = "LANGUAGE";
 }
 
-class AuthenticationNotifier extends StateNotifier<Student> {
+class AuthenticationNotifier extends StateNotifier<Student?> {
   AuthenticationNotifier()
       : super(
           Student.init(
@@ -41,11 +41,12 @@ class AuthenticationNotifier extends StateNotifier<Student> {
       const Duration(seconds: 0),
       () async {
         await LocalDataManager().loadStudentFromLocal().then((student) {
-          log("AUTH :: ${student.jauth}");
+          print("JAUTH  ${student.jauth}");
           state = student.copyWith(
               authenticationState: AuthenticationState.loggedIn);
         }).catchError((error) {
           log("AUTH ERROR :: $error");
+          state = null;
         });
       },
     );
@@ -54,7 +55,7 @@ class AuthenticationNotifier extends StateNotifier<Student> {
   Future<void> logOut() async {
     final isCleared = await LocalDataManager().clearLocalDatabase();
     if (isCleared) {
-      state = state.copyWith(
+      state = state?.copyWith(
           jauth: null, authenticationState: AuthenticationState.loggedOut);
     }
   }
@@ -69,6 +70,7 @@ class AuthenticationNotifier extends StateNotifier<Student> {
             userId: userId, password: password, deviceIMEI: deviceIMEI)
         .then((student) {
       LocalDataManager().storeStudent(student);
+      print("JAUTH  ${student.jauth}");
       state =
           student.copyWith(authenticationState: AuthenticationState.loggedIn);
     }).catchError((error) {

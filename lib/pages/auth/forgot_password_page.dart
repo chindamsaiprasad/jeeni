@@ -81,6 +81,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                           : const Text("Send Password"),
                     ),
                   ),
+                
                 ],
               ),
             ),

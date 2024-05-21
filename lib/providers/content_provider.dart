@@ -19,7 +19,7 @@ class ContentProvider with ChangeNotifier {
   });
 
   Future<bool> getAllSubscribedCoursesFromJeeniServer() async {
-    final jauth = ref.read(authenticationProvider).jauth;
+    final jauth = ref.read(authenticationProvider)?.jauth;
 
     Map<String, String> headers = {};
 

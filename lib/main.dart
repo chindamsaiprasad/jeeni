@@ -24,7 +24,9 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'jeeni',
-          home: user.authenticationState == AuthenticationState.loggedIn
+          // home: TestInstructions(),
+          home: user != null &&
+                  user.authenticationState == AuthenticationState.loggedIn
               ? Dashboard()
               : const LoginPage(),
         );
