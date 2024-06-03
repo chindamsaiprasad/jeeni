@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/dashboard/test/result_page.dart';
 import 'package:jeeni/pages/dashboard/test/test_instructions.dart';
 import 'package:jeeni/pages/dashboard/test/test_page.dart';
+import 'package:jeeni/pages/solution/solution_provider.dart';
 import 'package:jeeni/pages/widgets/overlay_loader.dart';
 import 'package:jeeni/pages/solution/view_questions_solution.dart';
 import 'package:jeeni/providers/test_provider.dart';
@@ -106,11 +107,11 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                     ),
                                                   ).then((value) {
                                                     print(
-                                                        "111111111111111111 VALUE");
+                                                        "111111111111111111111111111");
                                                     if (value
                                                         is SubmitTestResponse) {
                                                       print(
-                                                          "22222222222222222 VALUE");
+                                                          "22222222222222222222222222222  if");
                                                       Navigator.push<
                                                           SubmitTestResponse>(
                                                         context,
@@ -123,17 +124,26 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                       ).then(
                                                           (submitTestResponse) {
                                                         print(
-                                                            "11111111111111111111111111");
+                                                            "11111111111111111111111111 result");
                                                         if (submitTestResponse !=
                                                             null) {
-                                                          // Navigator.push(context,
-                                                          //     MaterialPageRoute(
-                                                          //   builder: (context) {
-                                                          //     return ViewQuestionSolution(
-                                                          //         submitTestResponse:
-                                                          //             submitTestResponse);
-                                                          //   },
-                                                          // ));
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                            builder: (context) {
+                                                              return ViewQuestionSolution(
+                                                                solutionProvider:
+                                                                    ChangeNotifierProvider(
+                                                                  (ref) =>
+                                                                      SolutionProvider(
+                                                                    submitTestResponse:
+                                                                        submitTestResponse,
+                                                                    ref: ref,
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                          ));
                                                         }
                                                       });
                                                     }

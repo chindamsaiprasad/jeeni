@@ -7,12 +7,17 @@ final menuProvider = ChangeNotifierProvider((ref) => MenuProvider(ref: ref));
 
 class MenuProvider with ChangeNotifier {
   final Ref ref;
-  late MenuType selectedMenu = MenuType.home;
-
+  MenuType selectedMenu = MenuType.home;
+  bool showLogout = false;
   MenuProvider({required this.ref});
 
   void setSelectedMenu(MenuType menuType) {
     selectedMenu = menuType;
+    notifyListeners();
+  }
+
+  void toggleLogoutPopUp(bool open) {
+    showLogout = open;
     notifyListeners();
   }
 
@@ -28,6 +33,13 @@ class MenuProvider with ChangeNotifier {
         return "Logout";
       case MenuType.practiceTest:
         return "Practice Test";
+      // case MenuType.logoutPopUp:
+      //   return "";
     }
+  }
+
+  void setLogOut(MenuType menuType) {
+    selectedMenu = menuType;
+    notifyListeners();
   }
 }

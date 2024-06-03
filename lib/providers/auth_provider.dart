@@ -1,14 +1,34 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/Apis/network_manager.dart';
 import 'package:jeeni/models/student.dart';
+import 'package:jeeni/pages/auth/login_page.dart';
+import 'package:jeeni/pages/dashboard.dart';
+import 'package:jeeni/pages/home_page.dart';
+import 'package:jeeni/pages/splash_page.dart';
 import 'package:jeeni/utils/local_data_manager.dart';
 
 enum AuthenticationState {
   loading,
   loggedIn,
   loggedOut,
+  logoutPopUp;
+
+  Widget getPage(AuthenticationState authenticationState) {
+    switch (authenticationState) {
+      case AuthenticationState.loading:
+        return const SplashPage();
+      case AuthenticationState.loggedIn:
+        return Dashboard();
+      case AuthenticationState.loggedOut:
+        print("00000000000000000000000000000000000000000");
+        return const LoginPage();
+      case AuthenticationState.logoutPopUp:
+        return Dashboard();
+    }
+  }
 }
 
 final authenticationProvider =
@@ -63,8 +83,15 @@ class AuthenticationNotifier extends StateNotifier<Student?> {
     final isCleared = await LocalDataManager().clearLocalDatabase();
     if (isCleared) {
       state = state?.copyWith(
-          jauth: null, authenticationState: AuthenticationState.loggedOut);
+        authenticationState: AuthenticationState.loggedOut,
+      );
     }
+  }
+
+  void logOutPopUp() {
+    state = state?.copyWith(
+      authenticationState: AuthenticationState.logoutPopUp,
+    );
   }
 
   Future<void> loginWithIdAndPassword({

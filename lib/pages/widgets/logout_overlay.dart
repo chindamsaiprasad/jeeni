@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jeeni/providers/auth_provider.dart';
 
 class LogoutOverlay {
   static OverlayEntry? _overlayEntry;
@@ -23,43 +25,57 @@ class LogoutOverlay {
     );
   }
 
-  static void show({required BuildContext context, String title = ""}) {
+  static void show({
+    required BuildContext context,
+    String title = "",
+    required VoidCallback onTapYes,
+    required VoidCallback onTapNo,
+  }) {
     _overlayEntry = OverlayEntry(
       builder: (BuildContext context) => Stack(
         children: [
           Positioned.fill(
-            child: Container(
-              color: Colors.black.withOpacity(0.5),
-              alignment: Alignment.center,
+            child: Material(
               child: Container(
-                // padding: const EdgeInsets.all(50),
-                height: 200,
-                width: MediaQuery.of(context).size.width * .70,
-                color: Colors.white,
-                child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Logout"),
-                    const Text(
-                        "Do you really want to sign out? If yes then all downloaded files will delete permanently."),
-                    SizedBox(
-                      height: 50,
-                      width: double.infinity,
-                      child: Row(
-                        children: [
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text("NO"),
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text("YES"),
-                          ),
-                        ],
+                color: Colors.black.withOpacity(0.5),
+                alignment: Alignment.center,
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  height: 200,
+                  width: MediaQuery.of(context).size.width * .80,
+                  color: Colors.white,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Logout",
+                        style: TextStyle(color: Colors.black, fontSize: 24),
                       ),
-                    )
-                  ],
+                      const Text(
+                        "Do you really want to sign out? If yes then all downloaded files will delete permanently.",
+                        style: TextStyle(color: Colors.black, fontSize: 18),
+                      ),
+                      SizedBox(
+                        height: 50,
+                        width: double.infinity,
+                        child: Row(
+                          children: [
+                            const Spacer(),
+                            TextButton(
+                              onPressed: onTapNo,
+                              child: const Text("NO"),
+                            ),
+                            TextButton(
+                              onPressed: onTapYes,
+                              child: const Text("YES"),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

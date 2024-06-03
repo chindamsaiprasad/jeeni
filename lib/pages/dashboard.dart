@@ -3,12 +3,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/auth/login_page.dart';
 import 'package:jeeni/pages/dashboard/practice_test/practice_test.dart';
 import 'package:jeeni/pages/home_page.dart';
+import 'package:jeeni/pages/logout_popup_page.dart';
 import 'package:jeeni/pages/navbar.dart';
 import 'package:jeeni/pages/report_page.dart';
 import 'package:jeeni/pages/settings_page.dart';
-import 'package:jeeni/pages/solution/solution_provider.dart';
-import 'package:jeeni/pages/solution/view_questions_solution.dart';
-import 'package:jeeni/pages/widgets/logout_overlay.dart';
 import 'package:jeeni/providers/menu_provider.dart';
 
 class Dashboard extends ConsumerWidget {
@@ -23,11 +21,16 @@ class Dashboard extends ConsumerWidget {
       drawer: NavBar(
         callback: () {
           print("callback");
-          if (ref.read(menuProvider).selectedMenu == MenuType.logout) {
-            print("callback11  ${ref.read(menuProvider).selectedMenu}");
-
-            LogoutOverlay.show(context: context);
-          }
+          // if (ref.read(menuProvider).showLogout) {
+          //   LogoutOverlay.show(
+          //     context: context,
+          //     title: "",
+          //     onTap: () {
+          //       ref.read(authenticationProvider.notifier).increment();
+          //       // ref.read(authenticationProvider.notifier).logOut();
+          //     },
+          //   );
+          // }
         },
       ),
       appBar: AppBar(
@@ -40,6 +43,7 @@ class Dashboard extends ConsumerWidget {
       body: Consumer(
         builder: (context, ref, child) {
           final selectedMenu = ref.watch(menuProvider).selectedMenu;
+          print("selectedMenu $selectedMenu");
           if (_key.currentState?.isDrawerOpen ?? false) {
             Future.delayed(
               const Duration(seconds: 0),
@@ -59,6 +63,8 @@ class Dashboard extends ConsumerWidget {
               return const ReportIssuePage();
             case MenuType.logout:
               return const LoginPage();
+            // case MenuType.logoutPopUp:
+            //   return const LogoutPopUpPage();
           }
         },
       ),

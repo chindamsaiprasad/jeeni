@@ -150,11 +150,13 @@ class NavBar extends StatelessWidget {
                 ),
                 onTap: () {
                   print("LOGOUT");
-                  // ref.read(menuProvider).setSelectedMenu(MenuType.logout);
+                  // ref.read(menuProvider).toggleLogoutPopUp(true);
 
-                  ref.read(authenticationProvider.notifier).logOut();
+                  ref.read(authenticationProvider.notifier).logOutPopUp();
 
-                  callback();
+                  // ref.read(menuProvider).setLogOut(MenuType.logoutPopUp);
+
+                  // callback();
 
                   // LogoutOverlay.show(context: context);
                 },
