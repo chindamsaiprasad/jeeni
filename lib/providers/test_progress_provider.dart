@@ -2,7 +2,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jeeni/enums/answer_status.dart';
@@ -17,6 +19,8 @@ final testProgressProvider =
 
 class TestProgressProvider with ChangeNotifier {
   late TestResponse testResponse;
+  TextEditingController textEditingController = TextEditingController();
+  FocusNode focusNode = FocusNode();
   late int testId = -1;
   List<QuestionMobileVos> questions = [];
 
@@ -24,7 +28,7 @@ class TestProgressProvider with ChangeNotifier {
   Timer? _timer;
   int _remaingDurationInSeconds = 0;
   bool isLoading = false;
-  bool _hasHide = true;
+  bool hasHide = true;
 
   final Ref ref;
   TestProgressProvider({
@@ -37,7 +41,7 @@ class TestProgressProvider with ChangeNotifier {
   int get getremaingDurationInSeconds => _remaingDurationInSeconds;
   String? get userSelectedOption => _currentQuestion?.userSelectedOption;
   bool get getIsLoading => isLoading;
-  bool get getHasHiden => _hasHide;
+  bool get getHasHiden => hasHide;
 
   QuestionMobileVos? get getCurrentQuestion => _currentQuestion;
 
@@ -49,11 +53,11 @@ class TestProgressProvider with ChangeNotifier {
   }
 
   void _reset() {
-    _hasHide = true;
+    hasHide = true;
     Future.delayed(
       const Duration(seconds: 2),
       () {
-        _hasHide = false;
+        hasHide = false;
         notifyListeners();
       },
     );
@@ -101,6 +105,12 @@ class TestProgressProvider with ChangeNotifier {
   void next() {
     final currentQuestion = getCurrentQuestion;
     if (currentQuestion == null) return;
+
+    if (currentQuestion.questionType == "Numeric") {
+      setNumericAnswer(textEditingController.text);
+      textEditingController.clear();
+      focusNode.unfocus();
+    }
     final tempList = [...questions];
     var index =
         tempList.indexWhere((question) => question.id == currentQuestion.id);
@@ -164,22 +174,157 @@ class TestProgressProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setNumericAnswer(String value) {
+    if (_currentQuestion == null) return;
+
+    if (value.isNotEmpty) {
+      print("IF $value");
+      _currentQuestion = _currentQuestion?.copyWith(
+        userSelectedOption: value,
+        customAnswerStatus: AnswerStatus.ANSWERED,
+      );
+    } else {
+      print("ELSE $value");
+      _currentQuestion = _currentQuestion?.copyWith(
+        customAnswerStatus: AnswerStatus.NOT_ANSWERED,
+      );
+      _currentQuestion?.update(null);
+    }
+    print(_currentQuestion?.customAnswerStatus);
+    final index = currentQuestionIndex();
+    questions.removeAt(index);
+    questions.insert(index, _currentQuestion!);
+    notifyListeners();
+  }
+
+  void clearAnswer() {
+    if (_currentQuestion == null) return;
+    print(
+        "BEFORE :: ${_currentQuestion?.userSelectedOption}   ${_currentQuestion?.customAnswerStatus}");
+    _currentQuestion = _currentQuestion?.copyWith(
+      customAnswerStatus: AnswerStatus.NOT_ANSWERED,
+    );
+
+    _currentQuestion?.update(null);
+    print(
+        "AFTER :: ${_currentQuestion?.userSelectedOption}    ${_currentQuestion?.customAnswerStatus}");
+
+    final index = currentQuestionIndex();
+    questions.removeAt(index);
+    questions.insert(index, _currentQuestion!);
+    notifyListeners();
+  }
+
+  void setIntegerAnswer(int userSelectedOption) {
+    if (_currentQuestion == null) return;
+    _currentQuestion = _currentQuestion?.copyWith(
+      userSelectedOption: userSelectedOption.toString(),
+      customAnswerStatus: AnswerStatus.ANSWERED,
+    );
+
+    final index = currentQuestionIndex();
+    questions.removeAt(index);
+    questions.insert(index, _currentQuestion!);
+    notifyListeners();
+  }
+
   void hide() {
-    _hasHide = false;
+    hasHide = false;
     notifyListeners();
   }
 
   void show() {
-    _hasHide = true;
+    hasHide = true;
     notifyListeners();
   }
 
   Future<SubmitTestResponse?> submitTest() async {
+    // var unAttemptedQuestions = questions
+    //     .map((question) =>
+    //         question.customAnswerStatus == AnswerStatus.NOT_ANSWERED)
+    //     .toList()
+    //     .length;
+
     final questionResult = questions.map(
       (question) {
         final userGivenAnswers = [false, false, false, false];
-        question = question.copyWith(userSelectedOption: "A");
-        if (question.questionType == "Basic") {
+
+        print("  question Type  ${question.questionType}");
+        var status = 0;
+
+        //--------------INTEGER------------------
+        if (question.questionType == "Integer") {
+          if (question.customAnswerStatus == AnswerStatus.ANSWERED) {
+            if (question.solutionAvailable ?? false) {
+              final userSelectedOption = question.userSelectedOption == null
+                  ? -1
+                  : int.parse(question.userSelectedOption!);
+              List<bool> userGivenAnswers = List.generate(
+                  10, (index) => (index + 1) == userSelectedOption);
+              List.generate(10, (index) {
+                print("object");
+                print((index + 1));
+              });
+
+              const listEquality = ListEquality();
+              final isCorrect = listEquality.equals(
+                question.answerValidity ?? [],
+                userGivenAnswers,
+              );
+
+              status = isCorrect ? 1 : 0;
+            }
+          } else if (question.customAnswerStatus == AnswerStatus.NOT_ANSWERED ||
+              question.customAnswerStatus == AnswerStatus.NOT_VISITED) {
+            status = 2;
+          }
+        }
+
+        //--------------NUMERIC------------------
+        if (question.questionType == "Numeric") {
+          if (question.customAnswerStatus == AnswerStatus.ANSWERED) {
+            if (question.solutionAvailable ?? false) {
+              final numericAnswer = question.numericAnswer ?? -1;
+              if (numericAnswer != -1) {
+                if (numericAnswer == question.userSelectedOption) {
+                  status = 1;
+                } else {
+                  status = 0;
+                }
+              }
+            }
+          } else if (question.customAnswerStatus == AnswerStatus.NOT_ANSWERED ||
+              question.customAnswerStatus == AnswerStatus.NOT_VISITED) {
+            status = 2;
+          }
+        }
+
+        //--------------BASIC------------------
+        if (question.questionType == "Basic" ||
+            question.questionType == "Column Matching" ||
+            question.questionType == "COMPREHENSION" ||
+            question.questionType == "Matrix") {
+          String answer = "";
+
+          if (question.customAnswerStatus == AnswerStatus.ANSWERED) {
+            if (question.solutionAvailable ?? false) {
+              final availableAnswer = question.answerValidity ?? [];
+
+              if (availableAnswer.isNotEmpty) {
+                answer = _getCorrectAnswer(availableAnswer) ?? "";
+                if (question.userSelectedOption != null &&
+                    question.userSelectedOption == answer) {
+                  status = 1;
+                } else {
+                  status = 0;
+                }
+              }
+            }
+          } else if (question.customAnswerStatus == AnswerStatus.NOT_ANSWERED ||
+              question.customAnswerStatus == AnswerStatus.NOT_VISITED) {
+            status = 2;
+          }
+
           if (question.userSelectedOption != null) {
             if (question.userSelectedOption == "A") {
               userGivenAnswers[0] = true;
@@ -195,11 +340,13 @@ class TestProgressProvider with ChangeNotifier {
             }
           }
         }
+
+        print("STATUS :: $status");
         return QuestionResult(
           questionId: question.id!,
           userGivenAnswers: userGivenAnswers,
           timeTaken: 0,
-          status: 0,
+          status: status,
           userSelectedOption: question.userSelectedOption,
         );
       },
@@ -209,7 +356,7 @@ class TestProgressProvider with ChangeNotifier {
       correctAnswers: 0,
       isAutoSubmit: false,
       isLogActive: false,
-      totalQuestions: 0,
+      totalQuestions: questions.length,
       unAttemptedQuestions: 0,
       testId: testId,
       questionResult: questionResult,
@@ -218,11 +365,43 @@ class TestProgressProvider with ChangeNotifier {
     if (testResponse is TestDownloadResponse) {
       return await ref
           .read(testProvider)
-          .submitTest(testResultRequest: testResultRequest);
+          .submitTest(testResultRequest: testResultRequest)
+          .then((SubmitTestResponse submitTestResponse) {
+        submitTestResponse.questions =
+            (testResponse as TestDownloadResponse).questionMobileVos ?? [];
+
+        return submitTestResponse;
+      });
     } else if (testResponse is PracticeTestResponse) {
       return await ref
           .read(practiceTest)
-          .submitPracticeTest(testResultRequest: testResultRequest);
+          .submitPracticeTest(testResultRequest: testResultRequest)
+          .then((SubmitTestResponse submitTestResponse) {
+        submitTestResponse.questions =
+            (testResponse as PracticeTestResponse).questionMobileVos ?? [];
+
+        return submitTestResponse.copyWith(
+            questionIds:
+                (testResponse as PracticeTestResponse).questionIds ?? []);
+        // return null;
+      });
+    }
+    return null;
+  }
+
+  String? _getCorrectAnswer(List<bool> availableAnswer) {
+    if (availableAnswer.length < 4) {
+      return null;
+    }
+
+    if (availableAnswer[0]) {
+      return "A";
+    } else if (availableAnswer[1]) {
+      return "B";
+    } else if (availableAnswer[2]) {
+      return "C";
+    } else if (availableAnswer[3]) {
+      return "D";
     }
     return null;
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jeeni/pages/solution/view_questions_solution.dart';
 import 'package:jeeni/response_models/submit_test_response.dart';
 
 class ResultPage extends ConsumerWidget {
@@ -59,8 +60,10 @@ class ResultPage extends ConsumerWidget {
                         ),
                         _buildResultCell(
                             "Attempted Questions",
-                            submitTestResponse.attemptedQuestions?.toString() ??
-                                "",
+                            ((submitTestResponse.totalQuestions ?? 0) -
+                                    (submitTestResponse.unAttemptedQuestions ??
+                                        0))
+                                .toString(),
                             context),
                         const Divider(
                           color: Colors.black,
@@ -120,7 +123,9 @@ class ResultPage extends ConsumerWidget {
                 style: const ButtonStyle(
                   backgroundColor: MaterialStatePropertyAll(Color(0xff1c5e20)),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context, submitTestResponse);
+                },
                 child: const Text("View Answer"),
               ),
             ),

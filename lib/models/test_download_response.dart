@@ -316,6 +316,10 @@ class QuestionMobileVos {
     return data;
   }
 
+  void update(String? userSelectedOption) {
+    this.userSelectedOption = userSelectedOption;
+  }
+
   QuestionMobileVos copyWith({
     int? id,
     List<bool>? answerValidity,

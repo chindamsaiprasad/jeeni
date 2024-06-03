@@ -28,7 +28,7 @@ class OverlayLoader {
                         fontSize: 20,
                         color: Colors.white,
                       ),
-                      child: Text("$title..."),
+                      child: Text(title),
                     ),
                     LoadingAnimationWidget.staggeredDotsWave(
                       color: Colors.white,

@@ -10,6 +10,7 @@ import 'package:jeeni/providers/auth_provider.dart';
 import 'package:jeeni/providers/test_progress_provider.dart';
 import 'package:jeeni/response_models/practice_test_response.dart';
 import 'package:jeeni/response_models/submit_test_response.dart';
+import 'package:jeeni/utils/file_utils.dart';
 
 final practiceTest =
     ChangeNotifierProvider((ref) => PracticeTestProvider(ref: ref));
@@ -192,10 +193,6 @@ class PracticeTestProvider with ChangeNotifier {
 
     String jsonString = jsonEncode(jsonData);
 
-    // // Encode the JSON string as a URL-encoded string
-    // String urlEncodedString = Uri.encodeComponent(jsonString);
-    // print("urlEncodedString :: $urlEncodedString");
-
     final body = {
       "deviceHeight": 2180.toString(),
       "deviceWidth": 1080.toString(),
@@ -230,9 +227,9 @@ class PracticeTestProvider with ChangeNotifier {
     });
 
     final body = {
-      "correctAnswers": 0,
-      "isAutoSubmit": false,
-      "isLogActive": false,
+      // "correctAnswers": 0,
+      // "isAutoSubmit": false,
+      // "isLogActive": false,
       "questionResult": testResultRequest.questionResult != null
           ? testResultRequest.questionResult!
               .map(
@@ -240,23 +237,33 @@ class PracticeTestProvider with ChangeNotifier {
                   "questionId": e.questionId,
                   "status": e.status,
                   "timeTaken": e.timeTaken,
-                  "userGivenAnswers": e.userGivenAnswers,
+                  // "userGivenAnswers": e.userGivenAnswers,
                   "userSelectedOption": e.userSelectedOption
                 },
               )
               .toList()
           : [],
       "testId": testResultRequest.testId,
-      "totalQuestions": 0,
-      "unAttemptedQuestions": 0
+      // "totalQuestions": 0,
+      // "unAttemptedQuestions": 0
     };
 
     String jsonString = jsonEncode(body);
     return await http.post(Uri.parse("$BASE_URL/testmgmt/submitResult"),
         headers: headers, body: {"testResult": jsonString}).then((response) {
-      print("RESPONSE :: ${response.body}");
+      print("RESPONSE PRACTICE TEST:: ${response.body}");
       Map<String, dynamic> data = json.decode(response.body);
-      return SubmitTestResponse.fromJson(data);
+
+      // FileUtils.writeJsonToFile(data, "assets/res.json");
+      // return response.body;
+      final res = SubmitTestResponse.fromJson(data);
+      print("unAttemptedQuestions :: ${res.unAttemptedQuestions}");
+      print("correctAnswers       :: ${res.correctAnswers}");
+      print("inCorrectAnswer      :: ${res.inCorrectAnswer}");
+      print("totalQuestions       :: ${res.totalQuestions}");
+      print("${res.unAttemptedQuestions}");
+      print("${res.unAttemptedQuestions}");
+      return res;
     }).catchError((error) {
       // TODO :: ERROR HANDELING
       print("ERROR :: FETCH TEST");

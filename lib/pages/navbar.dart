@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/user_profile.dart';
+import 'package:jeeni/pages/widgets/logout_overlay.dart';
 import 'package:jeeni/providers/auth_provider.dart';
 import 'package:jeeni/providers/menu_provider.dart';
 import 'package:jeeni/utils/local_data_manager.dart';
@@ -13,8 +14,6 @@ class NavBar extends StatelessWidget {
     required this.callback,
   });
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -24,15 +23,14 @@ class NavBar extends StatelessWidget {
         String userName = '';
         String userEmail = '';
 
-      LocalDataManager().loadStudentFromLocal().then((student) {
-      // print(student.name);
-      // print(student.lastName);
-      // print(student.email);
+        LocalDataManager().loadStudentFromLocal().then((student) {
+          // print(student.name);
+          // print(student.lastName);
+          // print(student.email);
 
-      userName = student.name ?? '';
-      userEmail = student.email ?? '';
-
-    });
+          userName = student.name ?? '';
+          userEmail = student.email ?? '';
+        });
         return Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -151,7 +149,14 @@ class NavBar extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
+                  print("LOGOUT");
+                  // ref.read(menuProvider).setSelectedMenu(MenuType.logout);
+
                   ref.read(authenticationProvider.notifier).logOut();
+
+                  callback();
+
+                  // LogoutOverlay.show(context: context);
                 },
               )
             ],

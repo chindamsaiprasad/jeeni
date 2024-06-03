@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/dashboard/content/content_page.dart';
 import 'package:jeeni/pages/dashboard/practice_test/practice_test.dart';
 import 'package:jeeni/pages/dashboard/test/test_list_page.dart';
+import 'package:jeeni/pages/widgets/overlay_loader.dart';
 import 'package:jeeni/providers/content_provider.dart';
 import 'package:jeeni/providers/menu_provider.dart';
 import 'package:jeeni/providers/test_provider.dart';
@@ -21,6 +22,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       children: [
         ListTile(
           onTap: () {
+            OverlayLoader.show(context: context, title: "");
             ref
                 .read(contentProvider)
                 .getAllSubscribedCoursesFromJeeniServer()
@@ -37,7 +39,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     })
                 .catchError((error) {
               // TODO :: ERROR HANDELING
-            });
+            }).whenComplete(() => OverlayLoader.hide());
           },
           leading: const Icon(Icons.book),
           title: const Text("Content"),
@@ -67,6 +69,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         ListTile(
           onTap: () {
+            OverlayLoader.show(context: context, title: "Tests Loading...");
             ref
                 .read(testProvider)
                 .fetchAllTestsFromJeeniServer()
@@ -84,7 +87,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     })
                 .catchError((error) {
               // TODO :: ERROR HANDELING
-            });
+            }).whenComplete(() => OverlayLoader.hide());
           },
           leading: const Icon(Icons.book),
           title: const Text("Test"),

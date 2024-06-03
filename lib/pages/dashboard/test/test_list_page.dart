@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jeeni/pages/dashboard/test/result_page.dart';
 import 'package:jeeni/pages/dashboard/test/test_instructions.dart';
 import 'package:jeeni/pages/dashboard/test/test_page.dart';
 import 'package:jeeni/pages/widgets/overlay_loader.dart';
+import 'package:jeeni/pages/solution/view_questions_solution.dart';
 import 'package:jeeni/providers/test_provider.dart';
+import 'package:jeeni/response_models/submit_test_response.dart';
 import 'package:jeeni/utils/date_formator.dart';
 
 class TestListPage extends ConsumerStatefulWidget {
@@ -18,6 +21,8 @@ class _TestListPageState extends ConsumerState<TestListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final tests = ref.watch(testProvider).tests;
+
     return Scaffold(
       backgroundColor: Colors.grey[400],
       appBar: AppBar(
@@ -34,111 +39,155 @@ class _TestListPageState extends ConsumerState<TestListPage> {
               height: 10,
             ),
             Expanded(
-              child: ListView(
-                children: ref
-                    .read(testProvider)
-                    .tests
-                    .map(
-                      (test) => Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(test.name ?? ""),
-                                  ElevatedButton(
-                                    style: const ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(
-                                          Color(0xff1c5e20)),
-                                    ),
-                                    onPressed: () {
-                                      final deviceWidth =
-                                          MediaQuery.of(context).size.width;
-                                      final deviceHeight =
-                                          MediaQuery.of(context).size.height;
-
-                                      OverlayLoader.show(context: context);
-                                      final testId = test.id!;
-                                      ref
-                                          .read(testProvider)
-                                          .pretestDownload(
-                                              testId: testId,
-                                              deviceWidth: deviceWidth,
-                                              deviceHeight: deviceHeight)
-                                          .then((response) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                TestInstructions(
-                                              testDownloadResponse: response,
-                                            ),
-                                          ),
-                                        ).then((toStart) {
-                                          if (toStart) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => TestPage(
-                                                  testDownloadResponse:
-                                                      response,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        });
-                                        OverlayLoader.hide();
-                                      }).catchError((error) {
-                                        //TODO :: HANDLE ERROR
-                                      });
-                                    },
-                                    child: const Text("Download"),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black87,
-                                      ),
+              child: tests.isEmpty
+                  ? const Center(
+                      child: Text("Test are comming soon..."),
+                    )
+                  : ListView(
+                      children: tests
+                          .map(
+                            (test) => Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const TextSpan(text: "Start : "),
-                                        TextSpan(
-                                          text:
-                                              "${DateFormator.getFormatedDate(test.examDate ?? 0)}",
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.black26,
+                                        Text(test.name ?? ""),
+                                        ElevatedButton(
+                                          style: const ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    Color(0xff1c5e20)),
                                           ),
-                                        )
+                                          onPressed: () {
+                                            final deviceWidth =
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .width;
+                                            final deviceHeight =
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .height;
+
+                                            OverlayLoader.show(
+                                                context: context);
+                                            final testId = test.id!;
+                                            ref
+                                                .read(testProvider)
+                                                .pretestDownload(
+                                                    testId: testId,
+                                                    deviceWidth: deviceWidth,
+                                                    deviceHeight: deviceHeight)
+                                                .then((response) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      TestInstructions(
+                                                    testDownloadResponse:
+                                                        response,
+                                                  ),
+                                                ),
+                                              ).then((toStart) {
+                                                if (toStart) {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          TestPage(
+                                                        testDownloadResponse:
+                                                            response,
+                                                      ),
+                                                    ),
+                                                  ).then((value) {
+                                                    print(
+                                                        "111111111111111111 VALUE");
+                                                    if (value
+                                                        is SubmitTestResponse) {
+                                                      print(
+                                                          "22222222222222222 VALUE");
+                                                      Navigator.push<
+                                                          SubmitTestResponse>(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ResultPage(
+                                                                  submitTestResponse:
+                                                                      value),
+                                                        ),
+                                                      ).then(
+                                                          (submitTestResponse) {
+                                                        print(
+                                                            "11111111111111111111111111");
+                                                        if (submitTestResponse !=
+                                                            null) {
+                                                          // Navigator.push(context,
+                                                          //     MaterialPageRoute(
+                                                          //   builder: (context) {
+                                                          //     return ViewQuestionSolution(
+                                                          //         submitTestResponse:
+                                                          //             submitTestResponse);
+                                                          //   },
+                                                          // ));
+                                                        }
+                                                      });
+                                                    }
+                                                  });
+                                                }
+                                              }).then((value) {});
+                                              OverlayLoader.hide();
+                                            }).catchError((error) {
+                                              //TODO :: HANDLE ERROR
+                                            });
+                                          },
+                                          child: const Text("Download"),
+                                        ),
                                       ],
                                     ),
-                                  ),
-                                  Text(
-                                    "${test.numberOfQuestions} Questions (${test.durationInMinutes} min)",
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.black54,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black87,
+                                            ),
+                                            children: [
+                                              const TextSpan(text: "Start : "),
+                                              TextSpan(
+                                                text:
+                                                    "${DateFormator.getFormatedDate(test.examDate ?? 0)}",
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.black26,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Text(
+                                          "${test.numberOfQuestions} Questions (${test.durationInMinutes} min)",
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
             ),
           ],
         ),

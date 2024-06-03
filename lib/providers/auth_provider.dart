@@ -47,6 +47,13 @@ class AuthenticationNotifier extends StateNotifier<Student?> {
         }).catchError((error) {
           log("AUTH ERROR :: $error");
           state = null;
+          // final student = Student(
+          //     organizationVos: [],
+          //     hideFunctionalityIds: [],
+          //     image: [],
+          //     authenticationState: AuthenticationState.loggedIn);
+          // state = student.copyWith(
+          //     authenticationState: AuthenticationState.loggedIn);
         });
       },
     );

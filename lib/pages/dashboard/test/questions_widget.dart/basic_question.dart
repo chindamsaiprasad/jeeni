@@ -42,49 +42,98 @@ class _BasicQuestionState extends ConsumerState<BasicQuestion> {
               const Positioned(
                 bottom: 20,
                 right: 20,
-                child: ClipRRect(
-                  child: Text("Clear"),
-                ),
+                child: ClearButton(),
               )
             ],
           ),
         ),
         SizedBox(
           height: 50,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: options.length,
-            itemBuilder: (context, index) {
-              final option = options[index];
-              return Padding(
-                padding: const EdgeInsets.all(1),
-                child: SizedBox(
-                  height: 40,
-                  width: (MediaQuery.of(context).size.width / 4) - 3,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          ref.watch(testProgressProvider).userSelectedOption ==
-                                  null
-                              ? Colors.grey[600]
-                              : ref
-                                          .watch(testProgressProvider)
-                                          .userSelectedOption ==
-                                      option
-                                  ? Colors.green
-                                  : Colors.grey[600],
-                    ),
-                    onPressed: () {
-                      ref.read(testProgressProvider).setSelectedOption(option);
-                    },
-                    child: Text(option),
-                  ),
-                ),
-              );
-            },
-          ),
+          child: _buildOptionButtons(ref),
         ),
       ],
     );
+  
+  }
+
+  ListView _buildOptionButtons(WidgetRef ref) {
+    final userSelectedOption =
+        ref.watch(testProgressProvider).userSelectedOption;
+    print("_buildOptionButtons  $userSelectedOption");
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: options.length,
+      itemBuilder: (context, index) {
+        final option = options[index];
+        return Padding(
+          padding: const EdgeInsets.all(1),
+          child: SizedBox(
+            height: 40,
+            width: (MediaQuery.of(context).size.width / 4) - 3,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: userSelectedOption == null
+                    ? Colors.grey[600]
+                    : userSelectedOption == option
+                        ? Colors.green
+                        : Colors.grey[600],
+              ),
+              onPressed: () {
+                ref.read(testProgressProvider).setSelectedOption(option);
+              },
+              child: Text(option),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+}
+
+class ClearButton extends ConsumerWidget {
+  const ClearButton({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return CircleAvatar(
+      backgroundColor: Colors.red[400],
+      child: IconButton(
+        onPressed: () {
+          ref.read(testProgressProvider).clearAnswer();
+        },
+        icon: const Icon(
+          IconData(0xf72e,
+              fontFamily: CupertinoIcons.iconFont,
+              fontPackage: CupertinoIcons.iconFontPackage),
+        ),
+      ),
+    );
   }
 }
+
+// class ClearButton extends StatelessWidget {
+//   const ClearButton({
+//     super.key,
+//     required this.ref,
+//   });
+
+//   final WidgetRef ref;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return CircleAvatar(
+//       backgroundColor: Colors.red[400],
+//       child: IconButton(
+//         onPressed: () {
+//           ref.read(testProgressProvider).clearAnswer();
+//         },
+//         icon: const Icon(
+//           IconData(0xf72e,
+//               fontFamily: CupertinoIcons.iconFont,
+//               fontPackage: CupertinoIcons.iconFontPackage),
+//         ),
+//       ),
+//     );
+//   }
+// }

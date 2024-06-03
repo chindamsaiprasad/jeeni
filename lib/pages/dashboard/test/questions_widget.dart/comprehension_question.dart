@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/models/test_download_response.dart';
+import 'package:jeeni/pages/dashboard/test/questions_widget.dart/basic_question.dart';
 import 'package:jeeni/providers/test_progress_provider.dart';
 
 class ComprehensionQuestion extends ConsumerStatefulWidget {
@@ -26,6 +27,7 @@ class _ComprehensionQuestionState extends ConsumerState<ComprehensionQuestion> {
       children: [
         Expanded(
           child: Stack(
+            fit: StackFit.expand,
             children: [
               SingleChildScrollView(
                 child: Column(
@@ -40,12 +42,10 @@ class _ComprehensionQuestionState extends ConsumerState<ComprehensionQuestion> {
                   ],
                 ),
               ),
-              Positioned(
+              const Positioned(
                 bottom: 20,
                 right: 20,
-                child: ClipRRect(
-                  child: Text("Clear"),
-                ),
+                child: ClearButton(),
               )
             ],
           ),

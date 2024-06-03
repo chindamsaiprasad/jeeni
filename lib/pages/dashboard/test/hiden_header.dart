@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/providers/test_progress_provider.dart';
 import 'package:jeeni/utils/app_colour.dart';
+import 'package:provider/provider.dart';
 
 class HidenHeader extends ConsumerStatefulWidget {
   const HidenHeader({super.key});
@@ -42,6 +42,16 @@ class _HidenHeaderState extends ConsumerState<HidenHeader> {
     final currentQuestion = ref.watch(testProgressProvider).getCurrentQuestion;
     return Column(
       children: [
+        // Selector<TestProgressProvider, bool>(
+        //     selector: (_, provider) => provider.hasHide,
+        //     builder: (context, number1, child) {
+        //       print('Build num1');
+        //       return Container(
+        //         color: Colors.red,
+        //         padding: EdgeInsets.all(10),
+        //         child: Text('$number1'),
+        //       );
+        //     }),
         AnimatedContainer(
           height: !ref.read(testProgressProvider).getHasHiden ? 0 : 90,
           duration: const Duration(milliseconds: 400),
@@ -130,6 +140,7 @@ class _HidenHeaderState extends ConsumerState<HidenHeader> {
                   ),
           ),
         ),
+     
       ],
     );
   }

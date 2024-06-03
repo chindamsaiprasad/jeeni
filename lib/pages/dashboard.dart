@@ -6,6 +6,9 @@ import 'package:jeeni/pages/home_page.dart';
 import 'package:jeeni/pages/navbar.dart';
 import 'package:jeeni/pages/report_page.dart';
 import 'package:jeeni/pages/settings_page.dart';
+import 'package:jeeni/pages/solution/solution_provider.dart';
+import 'package:jeeni/pages/solution/view_questions_solution.dart';
+import 'package:jeeni/pages/widgets/logout_overlay.dart';
 import 'package:jeeni/providers/menu_provider.dart';
 
 class Dashboard extends ConsumerWidget {
@@ -18,7 +21,14 @@ class Dashboard extends ConsumerWidget {
     return Scaffold(
       key: _key,
       drawer: NavBar(
-        callback: () {},
+        callback: () {
+          print("callback");
+          if (ref.read(menuProvider).selectedMenu == MenuType.logout) {
+            print("callback11  ${ref.read(menuProvider).selectedMenu}");
+
+            LogoutOverlay.show(context: context);
+          }
+        },
       ),
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),

@@ -75,7 +75,7 @@ class _TestPageState extends ConsumerState<TestPage> {
                 .watch(testProgressProvider)
                 .getremaingDurationInSeconds
                 .toString(),
-            style: TextStyle(color: AppColour.white),
+            style: const TextStyle(color: AppColour.white),
           ),
           ElevatedButton(
             style: const ButtonStyle(
@@ -83,11 +83,15 @@ class _TestPageState extends ConsumerState<TestPage> {
             ),
             onPressed: () {
               OverlayLoader.show(context: context, title: "Submiting");
+              print("444444444444444444444444 VALUE");
               ref
                   .read(testProgressProvider)
                   .submitTest()
                   .then((response) {
+                    print("3333333333333333333333333 VALUE");
                     if (response != null) {
+                      print("3333333333333333333333333  if VALUE");
+
                       Navigator.pop(context, response);
                     }
                   })
@@ -209,7 +213,7 @@ class _TestPageState extends ConsumerState<TestPage> {
 
   Material _buildQuestionNumberList() {
     final questions = ref.watch(testProgressProvider).getQuestion;
-    print("_buildQuestionNumberList");
+
     return Material(
       elevation: 5,
       child: Container(
@@ -223,6 +227,10 @@ class _TestPageState extends ConsumerState<TestPage> {
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
             final question = questions[index];
+            if (question.questionType == "Integer") {
+              print("_buildQuestionNumberList ${question.customAnswerStatus}");
+            }
+
             return Stack(
               children: [
                 Container(
@@ -332,6 +340,7 @@ class _TestPageState extends ConsumerState<TestPage> {
         // ),
       ),
     );
+  
   }
 
   Expanded _buildQuestionContainer() {
@@ -345,23 +354,28 @@ class _TestPageState extends ConsumerState<TestPage> {
   }
 
   Widget getQuestionWidgetByType(QuestionMobileVos question) {
-    print("////////////////////////////// ${question.questionType}");
+    print("QUESTION ::${question.questionType}a");
     switch (question.questionType) {
       case QuestionType.BASIC:
         return BasicQuestion(question: question);
       case QuestionType.COMPREHENSION:
         return ComprehensionQuestion(question: question);
       case QuestionType.COLUMN_MATCHING:
-        return const Text("TODO :: COLUMN_MATCHING");
+        // return const Text("TODO :: COLUMN_MATCHING");
+        return BasicQuestion(question: question);
       case QuestionType.INTEGER:
         return IntegerQuestion(question: question);
       case QuestionType.MATRIX:
         return MatrixQuestion(question: question);
       case QuestionType.ASSERTION_AND_REASON:
+        return BasicQuestion(question: question);
         return const Text("TODO :: ASSERTION_AND_REASON");
       case QuestionType.NUMERIC:
         return NumericQuestion(question: question);
       default:
+        if (question.questionType?.contains("ASSERTION") ?? false) {
+          return BasicQuestion(question: question);
+        }
         return const Text("DATA NOT MATCH");
     }
   }

@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:jeeni/providers/test_progress_provider.dart';
 import 'package:jeeni/response_models/submit_test_response.dart';
 import 'package:jeeni/response_models/test_response.dart';
+import 'package:jeeni/utils/file_utils.dart';
 
 final testProvider = ChangeNotifierProvider((ref) => TestProvider(ref: ref));
 
@@ -72,9 +73,17 @@ class TestProvider with ChangeNotifier {
         .get(Uri.parse("$BASE_URL/mtest/pretestdownload/$testId/1080/2016"),
             headers: headers)
         .then((response) async {
-      // String fileData = await FileUtils.loadFile("assets/downloadtest.json");
-      print("RESPONSE ::");
-      print(response.body);
+      // String? fileData = await FileUtils.loadFile("integer.json");
+      // String? fileData = await FileUtils.loadFile("basic.json");
+      // String? fileData = await FileUtils.loadFile("comprehension.json");
+      // String? fileData = await FileUtils.loadFile("matrix.json");
+      // String? fileData = await FileUtils.loadFile("Numeric.json");
+      // String? fileData = await FileUtils.loadFile("Integer1.json");
+      // String? fileData = await FileUtils.loadFile("allType.json");
+
+      // print("RESPONSE ::   $fileData");
+      // print(response.body);
+      // FileUtils.writeJsonToFile(json.decode(response.body), "allType.json");
       Map<String, dynamic> data = json.decode(response.body);
       return TestDownloadResponse.fromJson(data);
     }).catchError((error) {
@@ -100,9 +109,9 @@ class TestProvider with ChangeNotifier {
     // String jsonString = jsonEncode(testResultRequest.toJson());
 
     final body = {
-      'correctAnswers': testResultRequest.correctAnswers,
-      'isAutoSubmit': testResultRequest.isAutoSubmit,
-      'isLogActive': testResultRequest.isLogActive,
+      // 'correctAnswers': testResultRequest.correctAnswers,
+      // 'isAutoSubmit': testResultRequest.isAutoSubmit,
+      // 'isLogActive': testResultRequest.isLogActive,
       "questionResult": testResultRequest.questionResult != null
           ? testResultRequest.questionResult!
               .map(
@@ -110,14 +119,14 @@ class TestProvider with ChangeNotifier {
                   "questionId": e.questionId,
                   "status": e.status,
                   "timeTaken": e.timeTaken,
-                  "userGivenAnswers": e.userGivenAnswers,
+                  // "userGivenAnswers": e.userGivenAnswers,
                   "userSelectedOption": e.userSelectedOption
                 },
               )
               .toList()
           : [],
       'testId': testResultRequest.testId,
-      'totalQuestions': testResultRequest.totalQuestions,
+      // 'totalQuestions': testResultRequest.totalQuestions,
       'unAttemptedQuestions': testResultRequest.unAttemptedQuestions,
     };
 
@@ -125,10 +134,62 @@ class TestProvider with ChangeNotifier {
     return http.post(Uri.parse(url),
         headers: headers, body: {"testResult": jsonString}).then((response) {
       print("RESPONSE :: ${response.statusCode}");
+      print("RESPONSE 11 :: ${response.body}");
+
+      if (response.statusCode != 200) {
+        throw Exception("${response.statusCode}  ${response.body}");
+      }
+
       Map<String, dynamic> data = json.decode(response.body);
-      return SubmitTestResponse.fromJson(data);
+      final submitTestResponse = SubmitTestResponse.fromJson(data);
+      removeTestLocally(submitTestResponse.testId);
+      return submitTestResponse;
     }).catchError((error) {
       print("ERROR :: $error");
     });
+  }
+
+  Map<int, String?> solutions = {};
+
+  Future<void> fetchQuestionSolution(List<int> questionIds, int testId) async {
+    for (var id in questionIds) {
+      solutions[id] = null;
+    }
+
+    final id = questionIds.first;
+    final jauth = ref.read(authenticationProvider)?.jauth;
+
+    Map<String, String> headers = {};
+
+    headers.addAll({
+      "Accept-Encoding": "gzip",
+      "Content-Type": "application/json",
+      "Jauth": jauth!
+    });
+    await http
+        .get(
+            Uri.parse(
+                "$BASE_URL/mtest/getQuestionImageByMockTestAndQuestionId/$id/$testId/1080/2180"),
+            headers: headers)
+        .then((response) {
+      print("RESPONSE SOLUTION:: ${response.body}");
+      print("RESPONSE SOLUTION:: ${response.statusCode}");
+      // var responseData = json.decode(response.body) as List;
+
+      // tests = responseData.map((test) => Test.fromJson(test));
+      print("LENGTH ${this.tests.length}");
+      // return true;
+    }).catchError((error) {
+      // TODO :: ERROR HANDELING
+      print("ERROR :: FETCH TEST");
+      throw Exception(error);
+    });
+  }
+
+  void removeTestLocally(int? testId) {
+    if (testId == null) return;
+
+    tests = tests.where((test) => test.id != testId);
+    notifyListeners();
   }
 }

@@ -6,8 +6,11 @@ import 'package:jeeni/pages/dashboard/practice_test/subject_list.dart';
 import 'package:jeeni/pages/dashboard/practice_test/topic_list.dart';
 import 'package:jeeni/pages/dashboard/test/result_page.dart';
 import 'package:jeeni/pages/dashboard/test/test_page.dart';
+import 'package:jeeni/pages/solution/solution_provider.dart';
 import 'package:jeeni/pages/widgets/overlay_loader.dart';
+import 'package:jeeni/pages/solution/view_questions_solution.dart';
 import 'package:jeeni/providers/practice_test_provider.dart';
+import 'package:jeeni/providers/test_provider.dart';
 import 'package:jeeni/response_models/submit_test_response.dart';
 import 'package:jeeni/utils/app_colour.dart';
 
@@ -423,14 +426,55 @@ class PracticeTest extends ConsumerWidget {
                                   TestPage(testDownloadResponse: response),
                             ),
                           ).then((value) {
+                            print("RESULT ");
+                            // if (value is String) {
+                            //   Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => Scaffold(
+                            //               body: SingleChildScrollView(
+                            //                   child: Text(
+                            //                 value,
+                            //                 style: TextStyle(fontSize: 20),
+                            //               )),
+                            //             )
+                            //         // ResultPage(submitTestResponse: value),
+                            //         ),
+                            //   );
+                            // }
                             if (value is SubmitTestResponse) {
-                              Navigator.push(
+                              print("RESULT IFIF");
+                              Navigator.push<SubmitTestResponse>(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       ResultPage(submitTestResponse: value),
                                 ),
-                              );
+                              ).then((submitTestResponse) {
+                                print("11111111111111111111111111");
+                                if (submitTestResponse != null) {
+                                  // final questionIds =
+                                  //     submitTestResponse.questionIds ?? [];
+                                  // final tetsId = submitTestResponse.testId;
+                                  // ref.read(testProvider).fetchQuestionSolution(
+                                  //     questionIds, tetsId!);
+                                  Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) {
+                                      print("sssssssssssss2222222222222");
+                                      return ViewQuestionSolution(
+                                        solutionProvider:
+                                            ChangeNotifierProvider(
+                                          (ref) => SolutionProvider(
+                                            submitTestResponse:
+                                                submitTestResponse,
+                                            ref: ref,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ));
+                                }
+                              });
                             }
                           });
                         })
@@ -440,7 +484,6 @@ class PracticeTest extends ConsumerWidget {
             child: const Text("Start Test"),
           ),
         ),
-      
       ],
     );
   }
