@@ -115,6 +115,26 @@ class NavBar extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(
+                  Icons.book,
+                  color: selectedMenu == MenuType.results
+                      ? Colors.green
+                      : Colors.black38,
+                ),
+                title: Text(
+                  "Results",
+                  style: TextStyle(
+                    color: selectedMenu == MenuType.results
+                        ? Colors.green
+                        : Colors.black,
+                  ),
+                ),
+                onTap: () {
+                  ref.read(menuProvider).setSelectedMenu(MenuType.results);
+                  callback();
+                },
+              ),
+              ListTile(
+                leading: Icon(
                   Icons.warning_amber,
                   color: selectedMenu == MenuType.issueReport
                       ? Colors.green

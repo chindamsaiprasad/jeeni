@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/auth/login_page.dart';
 import 'package:jeeni/pages/dashboard/practice_test/practice_test.dart';
+import 'package:jeeni/pages/dashboard/result/result_page.dart';
 import 'package:jeeni/pages/home_page.dart';
 import 'package:jeeni/pages/navbar.dart';
 import 'package:jeeni/pages/report_page.dart';
@@ -55,6 +56,8 @@ class Dashboard extends ConsumerWidget {
               return const PracticeTest();
             case MenuType.settings:
               return const SettingsPage();
+            case MenuType.results:
+              return const ResultsPage();
             case MenuType.issueReport:
               return const ReportIssuePage();
             case MenuType.logout:

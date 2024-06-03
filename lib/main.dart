@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/auth/login_page.dart';
 import 'package:jeeni/pages/dashboard.dart';
@@ -35,31 +36,35 @@ class MyApp extends StatelessWidget {
         //   ),
         // );
         if (user == null) {
-          return const MaterialApp(
+          return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'jeeni',
             home: LoginPage(),
+            builder: EasyLoading.init(),
           );
         }
 
         switch (user.authenticationState) {
           case AuthenticationState.loading:
-            return const MaterialApp(
+            return MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'jeeni',
               home: SplashPage(),
+              builder: EasyLoading.init(),
             );
           case AuthenticationState.loggedIn:
             return MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'jeeni',
               home: Dashboard(),
+              builder: EasyLoading.init(),
             );
           case AuthenticationState.loggedOut:
-            return const MaterialApp(
+            return MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'jeeni',
               home: LoginPage(),
+              builder: EasyLoading.init(),
             );
         }
 
