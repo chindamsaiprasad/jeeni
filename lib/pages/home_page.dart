@@ -7,6 +7,7 @@ import 'package:jeeni/pages/widgets/overlay_loader.dart';
 import 'package:jeeni/providers/content_provider.dart';
 import 'package:jeeni/providers/menu_provider.dart';
 import 'package:jeeni/providers/test_provider.dart';
+import 'package:jeeni/utils/app_colour.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -41,7 +42,8 @@ class _HomePageState extends ConsumerState<HomePage> {
               // TODO :: ERROR HANDELING
             }).whenComplete(() => OverlayLoader.hide());
           },
-          leading: const Icon(Icons.book),
+          leading:
+              const JeeniIcon(iconData: Icons.book), //const Icon(Icons.book),
           title: const Text("Content"),
           subtitle: const Text("Study material for student"),
           trailing: IconButton(
@@ -59,7 +61,8 @@ class _HomePageState extends ConsumerState<HomePage> {
             //   ),
             // );
           },
-          leading: const Icon(Icons.book),
+          leading: const JeeniIcon(
+              iconData: Icons.assessment), // const Icon(Icons.assignment),
           title: const Text("Self Practice"),
           subtitle: const Text("Practice here before test."),
           trailing: IconButton(
@@ -89,7 +92,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               // TODO :: ERROR HANDELING
             }).whenComplete(() => OverlayLoader.hide());
           },
-          leading: const Icon(Icons.book),
+          leading: const JeeniIcon(iconData: Icons.quiz),
           title: const Text("Test"),
           subtitle: const Text("Tests for student"),
           trailing: IconButton(
@@ -98,6 +101,26 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class JeeniIcon extends StatelessWidget {
+  final IconData iconData;
+  const JeeniIcon({
+    super.key,
+    required this.iconData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      maxRadius: 25,
+      backgroundColor: AppColour.darkGreen,
+      child: Icon(
+        iconData,
+        color: Colors.white,
+      ),
     );
   }
 }

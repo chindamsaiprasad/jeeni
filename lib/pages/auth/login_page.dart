@@ -1,8 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/auth/forgot_password_page.dart';
 import 'package:jeeni/providers/auth_provider.dart';
+import 'package:jeeni/utils/device_manager.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -104,24 +106,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         backgroundColor:
                             MaterialStatePropertyAll(Color(0xff1c5e20)),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         if (isLoading) return;
 
                         setState(() {
                           isLoading = true;
                         });
+                        final deviceId = await DeviceManager().getDeviceId();
 
                         ref
                             .read(authenticationProvider.notifier)
                             .loginWithIdAndPassword(
-                                userId: _userIdController.text,
-                                password: _passwordController.text,
-                                deviceIMEI: "")
+                              userId: _userIdController.text,
+                              password: _passwordController.text,
+                              deviceIMEI: deviceId,
+                            )
                             .catchError((error) {
-                          // TODO : Show Error popup
                           setState(() {
                             isLoading = false;
                           });
+                          EasyLoading.showError("ERROR CODE :: $error ");
                         });
                       },
                       child: isLoading

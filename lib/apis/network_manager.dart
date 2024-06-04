@@ -24,24 +24,27 @@ class NetworkManager {
     Map<String, String> body = {
       'loginId': userId,
       'password': password,
-      'deviceId': "44476",
+      'deviceId': deviceIMEI,
     };
 
     print("111111111111111111111111111111111111111111111111111");
-    return  await http
+    return await http
         .post(
       Uri.parse("$BASE_URL/login/processLoginAuthentication"),
       headers: headers,
       body: body,
     )
         .then((response) {
-      print("333333333333333333333333333333333333333333333333333");
-      final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-      return Student.fromMap(jsonResponse);
-    }).catchError((error) {
-      print("2222222222222222222222222222222222222222222222222222");
-      print("ERROR :: loginWithIdAndPassword ::  $error");
-      throw Exception("$error");
+      if (response.statusCode == 200) {
+        print(
+            "333333333333333333333333333333333333333333333333333  ${response.statusCode}");
+        print(
+            "222222222222222222222222222222222222222222222222222  ${response.body}");
+        final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
+        return Student.fromMap(jsonResponse);
+      } else {
+        throw Exception(response.statusCode);
+      }
     });
   }
 }

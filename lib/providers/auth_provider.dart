@@ -108,8 +108,7 @@ class AuthenticationNotifier extends StateNotifier<Student?> {
       state =
           student.copyWith(authenticationState: AuthenticationState.loggedIn);
     }).catchError((error) {
-      throw Exception("Invalid User");
-      //TODO :
+      throw Exception(error);
     });
   }
 }
