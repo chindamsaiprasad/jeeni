@@ -94,12 +94,12 @@ class AuthenticationNotifier extends StateNotifier<Student?> {
     );
   }
 
-  Future<void> loginWithIdAndPassword({
+  Future<bool> loginWithIdAndPassword({
     required String userId,
     required String password,
     required String deviceIMEI,
   }) async {
-    NetworkManager()
+   return NetworkManager()
         .loginWithIdAndPassword(
             userId: userId, password: password, deviceIMEI: deviceIMEI)
         .then((student) {
@@ -107,7 +107,9 @@ class AuthenticationNotifier extends StateNotifier<Student?> {
       print("JAUTH  ${student.jauth}");
       state =
           student.copyWith(authenticationState: AuthenticationState.loggedIn);
+          return true;
     }).catchError((error) {
+      print("EEEEEEEEEEEEEEEEEEE  $error");
       throw Exception(error);
     });
   }

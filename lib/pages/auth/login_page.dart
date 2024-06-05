@@ -120,7 +120,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               userId: _userIdController.text,
                               password: _passwordController.text,
                               deviceIMEI: deviceId,
-                            )
+                            ).then((value) {
+                                print("THEN THEN $value");
+
+                            })
                             .catchError((error) {
                           setState(() {
                             isLoading = false;
