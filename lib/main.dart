@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/models/student.dart';
 import 'package:jeeni/pages/auth/login_page.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
             ? const LoginPage()
             : user.authenticationState.getPage(user.authenticationState);
       }),
+      builder: EasyLoading.init(),
     );
   }
 }
