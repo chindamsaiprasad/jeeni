@@ -1,12 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/user_profile.dart';
 import 'package:jeeni/pages/widgets/logout_overlay.dart';
 import 'package:jeeni/providers/auth_provider.dart';
 import 'package:jeeni/providers/menu_provider.dart';
+import 'package:jeeni/providers/user_provider.dart';
 import 'package:jeeni/utils/local_data_manager.dart';
 
-class NavBar extends StatelessWidget {
+class NavBar extends StatefulWidget {
   final VoidCallback callback;
 
   const NavBar({
@@ -15,64 +18,97 @@ class NavBar extends StatelessWidget {
   });
 
   @override
+  State<NavBar> createState() => _NavBarState();
+}
+
+class _NavBarState extends State<NavBar> {
+  String userName = '';
+  String userEmail = '';
+  String userImageBase = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    updateProfileData(); // Call datamethod when initializing the state
+  }
+
+  void updateProfileData() {
+    // print("method call nav bar"); // Optional: Print a message indicating the function has started
+
+    LocalDataManager().loadStudentFromLocal().then((value) {
+      setState(() {
+        userName = value.name ?? ''; // Update userName state variable
+        userEmail = value.email ?? ''; // Update userEmail state variable
+        userImageBase = value.mobileProfileImage ??
+            ''; // Update userImageBase state variable
+      });
+
+      // Optional: Print the loaded data
+      // print("name  : ${value.name}");
+      // print("email : ${value.email}");
+      // print("profile password : ${value.mobileProfileImage}");
+    }).catchError((error) {
+      // Handle any errors that occur during loading
+      print("Error loading data: $error");
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
         final selectedMenu = ref.watch(menuProvider).selectedMenu;
 
-        String userName = '';
-        String userEmail = '';
-
-        LocalDataManager().loadStudentFromLocal().then((student) {
-          // print(student.name);
-          // print(student.lastName);
-          // print(student.email);
-
-          userName = student.name ?? '';
-          userEmail = student.email ?? '';
-        });
         return Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              UserAccountsDrawerHeader(
-                decoration: const BoxDecoration(color: Colors.white),
-                accountName: const Text(
-                  "example",
-                  style: TextStyle(color: Colors.black),
-                ),
-                accountEmail: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "example@gmail.com",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.edit, size: 22),
-                      color: Colors.black38,
-                      onPressed: () {
-                        // Navigate to another page
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const UserProfilePage()),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                currentAccountPicture: CircleAvatar(
-                  child: ClipOval(
-                    child: Image.network(
-                      "https://oflutter.com/wp-content/uploads/2021/02/girl-profile.png",
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
+              // UserAccountsDrawerHeader(
+              //   decoration: const BoxDecoration(color: Colors.white),
+              //   accountName: Padding(
+              //     padding: const EdgeInsets.all(2),
+              //     child: Text(
+              //       userName,
+              //       style: TextStyle(color: Colors.black),
+              //     ),
+              //   ),
+              //   accountEmail: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Text(
+              //         userEmail,
+              //         style: TextStyle(color: Colors.black),
+              //       ),
+              //       IconButton(
+              //         icon: const Icon(Icons.edit, size: 22),
+              //         color: Colors.black38,
+              //         onPressed: () {
+              //           // Navigate to another page
+              //           // callback();
+              //           Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => UserProfilePage(callback: updateProfileData)),
+              //           );
+              //         },
+              //       ),
+              //     ],
+              //   ),
+              //   currentAccountPicture: CircleAvatar(
+              //     child: ClipOval(
+              //       child: Image.memory(
+              //               base64Decode(userImageBase ?? ''),
+              //               fit: BoxFit.cover,
+              //               errorBuilder: (context, error, stackTrace) =>
+              //                   const Icon(Icons.error),
+              //             ),
+              //     ),
+              //   ),
+              // ),
+
+              userProfileBoxDisplay(),
+
               ListTile(
                 leading: Icon(
                   Icons.home,
@@ -90,7 +126,7 @@ class NavBar extends StatelessWidget {
                 ),
                 onTap: () {
                   ref.read(menuProvider).setSelectedMenu(MenuType.home);
-                  callback();
+                  widget.callback();
                 },
               ),
               ListTile(
@@ -110,7 +146,7 @@ class NavBar extends StatelessWidget {
                 ),
                 onTap: () {
                   ref.read(menuProvider).setSelectedMenu(MenuType.settings);
-                  callback();
+                  widget.callback();
                 },
               ),
               ListTile(
@@ -130,7 +166,7 @@ class NavBar extends StatelessWidget {
                 ),
                 onTap: () {
                   ref.read(menuProvider).setSelectedMenu(MenuType.results);
-                  callback();
+                  widget.callback();
                 },
               ),
               ListTile(
@@ -150,7 +186,7 @@ class NavBar extends StatelessWidget {
                 ),
                 onTap: () {
                   ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
-                  callback();
+                  widget.callback();
                 },
               ),
               ListTile(
@@ -185,6 +221,70 @@ class NavBar extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget userProfileBoxDisplay() {
+    Padding userProfileColumn() {
+      return Padding(
+        padding: EdgeInsets.only(top: 50, left: 10, right: 10, bottom: 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 80,
+              width: 100,
+              // color: Colors.red,
+              child: CircleAvatar(
+                child: ClipOval(
+                  child: Image.memory(
+                    base64Decode(userImageBase ?? ''),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.error),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 5,),
+            Text(userName.trim(),style: TextStyle(color: Colors.white, fontSize: 16),),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(userEmail.trim(),style: TextStyle(color: Colors.white, fontSize: 14),),
+                Container(
+  width: 30, // Adjust the width and height as needed for the desired size
+  height: 30,
+  child: Center(
+    child: IconButton(
+      icon: const Icon(Icons.edit, size: 18, color: Colors.white), // Adjust the size and color of the icon as needed
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UserProfilePage(callback: updateProfileData),
+          ),
+        );
+      },
+    ),
+  ),
+),
+
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      // height: 215,
+      // color: Color(0xff1c5e20),
+      decoration: BoxDecoration(
+        color: Color(0xff1c5e20),
+        border: Border.all(color: Colors.black26)
+      ),
+      child: userProfileColumn(),
     );
   }
 }

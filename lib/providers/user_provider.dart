@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:jeeni/apis/network_manager.dart';
 import 'package:jeeni/providers/auth_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:jeeni/utils/local_data_manager.dart';
 
 final userProvider =
     ChangeNotifierProvider((ref) => UserProviderClass(ref: ref));
@@ -17,6 +18,12 @@ class UserProviderClass with ChangeNotifier {
   UserProviderClass({
     required this.ref,
   });
+
+  String userName = '';
+  String userImageBase = '';
+  String userEmail = '';
+
+  final localDataManager = LocalDataManager();
 
   Future<Map<String, dynamic>> saveUserDetails() async {
     final jauth = ref.read(authenticationProvider)?.jauth;
@@ -40,7 +47,20 @@ class UserProviderClass with ChangeNotifier {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
-        // print("user data $data");
+
+        localDataManager
+            .updateStudent(
+                data['name'], data['email'], data['mobileProfileImage'])
+            .then((success) {
+          if (success) {
+            print("Student updated successfully.");
+          } else {
+            print("Failed to update student.");
+          }
+        }).catchError((error) {
+          print("Error updating student: $error");
+        });
+
         return data;
       } else {
         // Request failed
@@ -137,7 +157,8 @@ class UserProviderClass with ChangeNotifier {
         print('Profile updated successfully. ${response.body}');
         message = "ok ";
       } else {
-        print('Failed to update profile. Status code: ${response.statusCode} ${response.body},');
+        print(
+            'Failed to update profile. Status code: ${response.statusCode} ${response.body},');
         message = "some issues";
       }
     } catch (e) {
@@ -147,7 +168,6 @@ class UserProviderClass with ChangeNotifier {
 
     return message;
   }
-
 
 //   Future<String> uploadImage(XFile imageFile) async {
 //   String message = "";
@@ -165,7 +185,6 @@ class UserProviderClass with ChangeNotifier {
 //     "Accept": "application/json",
 //     "Jauth": jauth,
 //   };
-
 
 //   String fileName = imageFile.path.split('/').last;
 //   String base64Image = base64Encode(File(imageFile.path).readAsBytesSync());
@@ -201,53 +220,56 @@ class UserProviderClass with ChangeNotifier {
 //   return message;
 // }
 
-Future<String> uploadImage(XFile imageFile) async {
-  String message = "";
-  final jauth = ref.read(authenticationProvider)?.jauth;
+  Future<String> uploadImage(XFile imageFile) async {
+    String message = "";
+    final jauth = ref.read(authenticationProvider)?.jauth;
 
-  if (jauth == null) {
-    throw Exception('Authentication token (jauth) is null');
-  }
-
-  final url = Uri.parse('https://exam.jeeni.in/Jeeni/student/uploadImage');
-
-  try {
-    // Create a multipart request
-    var request = http.MultipartRequest('POST', url)
-      ..headers['Jauth'] = jauth
-      ..headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
-      ..headers['Accept-Encoding'] = 'gzip, deflate, br, zstd'
-      ..headers['Accept-Language'] = 'en-US,en;q=0.9'
-      ..headers['Cache-Control'] = 'max-age=0'
-      ..headers['Connection'] = 'keep-alive'
-      ..headers['Content-Type'] = 'multipart/form-data; boundary=----WebKitFormBoundaryxMtfqb4N1IFBHFM2';
-
-    // Create multipart file from image file
-    var multipartFile = await http.MultipartFile.fromPath(
-      'file',
-      imageFile.path,
-      filename: imageFile.name,
-    );
-
-    // Add file to multipart request
-    request.files.add(multipartFile);
-
-    // Send the request
-    var response = await http.Response.fromStream(await request.send());
-
-    if (response.statusCode == 200 || response.statusCode == 302) {
-      print('Image uploaded successfully. ${response.body}');
-      message = "Image uploaded successfully";
-    } else {
-      print('Failed to upload image. Status code: ${response.statusCode} ${response.body}');
-      message = "Failed to upload image. Please try again.";
+    if (jauth == null) {
+      throw Exception('Authentication token (jauth) is null');
     }
-  } catch (e) {
-    print('Error occurred while uploading image: $e');
-    message = "An error occurred while uploading the image. Please try again.";
+
+    final url = Uri.parse('https://exam.jeeni.in/Jeeni/student/uploadImage');
+
+    try {
+      // Create a multipart request
+      var request = http.MultipartRequest('POST', url)
+        ..headers['Jauth'] = jauth
+        ..headers['Accept'] =
+            'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+        ..headers['Accept-Encoding'] = 'gzip, deflate, br, zstd'
+        ..headers['Accept-Language'] = 'en-US,en;q=0.9'
+        ..headers['Cache-Control'] = 'max-age=0'
+        ..headers['Connection'] = 'keep-alive'
+        ..headers['Content-Type'] =
+            'multipart/form-data; boundary=----WebKitFormBoundaryxMtfqb4N1IFBHFM2';
+
+      // Create multipart file from image file
+      var multipartFile = await http.MultipartFile.fromPath(
+        'file',
+        imageFile.path,
+        filename: imageFile.name,
+      );
+
+      // Add file to multipart request
+      request.files.add(multipartFile);
+
+      // Send the request
+      var response = await http.Response.fromStream(await request.send());
+
+      if (response.statusCode == 200 || response.statusCode == 302) {
+        print('Image uploaded successfully. ${response.body}');
+        message = "Image uploaded successfully";
+      } else {
+        print(
+            'Failed to upload image. Status code: ${response.statusCode} ${response.body}');
+        message = "Failed to upload image. Please try again.";
+      }
+    } catch (e) {
+      print('Error occurred while uploading image: $e');
+      message =
+          "An error occurred while uploading the image. Please try again.";
+    }
+
+    return message;
   }
-
-  return message;
-}
-
 }

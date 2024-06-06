@@ -37,6 +37,16 @@ class LocalDataManager {
     });
   }
 
+  Future<bool> updateStudent(String newName, String newEmail, String mobileImage) async {
+    try {
+      final student = await loadStudentFromLocal();
+      final updatedStudent = student.copyWith(name: newName, email: newEmail, mobileProfileImage: mobileImage );
+      return await storeStudent(updatedStudent);
+    } catch (e) {
+      throw Exception("Failed to update student: $e");
+    }
+  }
+
   Future<bool> clearLocalDatabase() {
     return init().then((sharedPreferences) async {
       return sharedPreferences.setString("STUDENT", "");

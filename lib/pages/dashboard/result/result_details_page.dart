@@ -4,11 +4,13 @@ import "package:flutter/widgets.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 import "package:jeeni/pages/widgets/overlay_loader.dart";
 import "package:jeeni/providers/result_provider.dart";
+import "package:jeeni/response_models/result_list_response.dart";
 import "package:jeeni/utils/local_data_manager.dart";
 
 class ResultDetailsPage extends ConsumerStatefulWidget {
+  final ResultModelClass data;
   final int resultIdInt;
-  const ResultDetailsPage({super.key, required this.resultIdInt});
+  const ResultDetailsPage({super.key, required this.data, required this.resultIdInt});
 
   @override
   ResultDetailsPageState createState() => ResultDetailsPageState();
@@ -142,28 +144,28 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
 
     return Column(
       children: [
-        getResultDetails("Test Name",""),
+        getResultDetails("Test Name", widget.data.name),
 
         Divider(),
-        getResultDetails("Test Date",""),
+        getResultDetails("Test Date", widget.data.strExamDate),
 
         Divider(),
-        getResultDetails("Duration", ""),
+        getResultDetails("Duration", widget.data.durationInMinutes.toString()),
         
         Divider(),
-        getResultDetails("Total Questions", ""),
+        getResultDetails("Total Questions", widget.data.numberOfQuestions.toString()),
         
         Divider(),
-        getResultDetails("Attempted Questions", ""),
+        getResultDetails("Attempted Questions", widget.data.attemptedQuestions.toString()),
 
         Divider(),
-        getResultDetails("Correct Answers", ""),
+        getResultDetails("Correct Answers", widget.data.correctAnswer.toString()),
 
         Divider(),
-        getResultDetails("Incorrect Answers", ""),
+        getResultDetails("Incorrect Answers", widget.data.inCorrectAnswer.toString()),
 
         Divider(),
-        getResultDetails("Partial Answers", ""),
+        getResultDetails("Partial Answers", widget.data.partialAnswer.toString()),
 
         Divider(),
         getResultDetails("Marks Obtained", "$score out of $outOfScore"),
@@ -172,7 +174,7 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
         // getResultDetails("Total Marks", test["total_marks"].toString()),
 
         Divider(),
-        getResultDetails("Bonus Marks", ""),
+        getResultDetails("Bonus Marks", widget.data.bonus.toString()),
 
         Divider(), // Add a divider after each ListTile
       ],
