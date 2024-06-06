@@ -147,7 +147,7 @@ void dispose() {
                 //ToDo
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ResultDetailsPage(resultIdInt: data.id,)),
+                  MaterialPageRoute(builder: (context) => ResultDetailsPage(data: data,resultIdInt: data.id,)),
                 );
               },
               child: const Column(

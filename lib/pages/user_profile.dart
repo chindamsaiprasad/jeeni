@@ -13,7 +13,8 @@ import 'package:jeeni/utils/local_data_manager.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserProfilePage extends ConsumerStatefulWidget {
-  const UserProfilePage({super.key});
+  final VoidCallback callback;
+  const UserProfilePage({super.key, required this.callback});
 
   @override
   _UserProfilePageState createState() => _UserProfilePageState();
@@ -156,6 +157,18 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
         appBar: AppBar(
           backgroundColor: const Color(0xff1c5e20),
           title: const Text("Profile", style: TextStyle(color: Colors.white)),
+          leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            // if (widget.callback != null) {
+            //   widget.callback();
+            // }
+
+            widget.callback();
+            Navigator.pop(context);
+           
+          },
+        ),
         ),
         body: Stack(
           children: [
