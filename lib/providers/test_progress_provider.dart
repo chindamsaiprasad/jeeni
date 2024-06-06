@@ -40,6 +40,8 @@ class TestProgressProvider with ChangeNotifier {
 
   int get getremaingDurationInSeconds => _remaingDurationInSeconds;
   String? get userSelectedOption => _currentQuestion?.userSelectedOption;
+  List<bool> get multipleAnswer =>
+      _currentQuestion?.multipleAnswer ?? [false, false, false, false];
   bool get getIsLoading => isLoading;
   bool get getHasHiden => hasHide;
 
@@ -166,6 +168,36 @@ class TestProgressProvider with ChangeNotifier {
     _currentQuestion = _currentQuestion?.copyWith(
       userSelectedOption: selectedOption,
       customAnswerStatus: AnswerStatus.ANSWERED,
+    );
+
+    final index = currentQuestionIndex();
+    questions.removeAt(index);
+    questions.insert(index, _currentQuestion!);
+    notifyListeners();
+  }
+
+  void setMultipleOption(String selectedOption) {
+    if (_currentQuestion == null) return;
+
+    var multipleAnswer = _currentQuestion?.multipleAnswer ?? [];
+
+    print(" multipleAnswer :: $multipleAnswer");
+
+    if (selectedOption == "A") {
+      multipleAnswer[0] = !multipleAnswer[0];
+    } else if (selectedOption == "B") {
+      multipleAnswer[1] = !multipleAnswer[1];
+    } else if (selectedOption == "C") {
+      multipleAnswer[2] = !multipleAnswer[2];
+    } else if (selectedOption == "D") {
+      multipleAnswer[3] = !multipleAnswer[3];
+    }
+
+    int isAnswered = multipleAnswer.where((element) => element == true).length;
+    _currentQuestion = _currentQuestion?.copyWith(
+      multipleAnswer: multipleAnswer,
+      customAnswerStatus:
+          isAnswered > 0 ? AnswerStatus.ANSWERED : AnswerStatus.NOT_ANSWERED,
     );
 
     final index = currentQuestionIndex();
@@ -307,37 +339,45 @@ class TestProgressProvider with ChangeNotifier {
           String answer = "";
 
           if (question.customAnswerStatus == AnswerStatus.ANSWERED) {
-            if (question.solutionAvailable ?? false) {
-              final availableAnswer = question.answerValidity ?? [];
+            if (question.isMultipleAnswer ?? false) {
+              for (int index = 0;
+                  index < (question.multipleAnswer?.length ?? 0);
+                  index++) {
+                userGivenAnswers[index] = multipleAnswer[index];
+              }
+            } else { 
+              if (question.solutionAvailable ?? false) {
+                final availableAnswer = question.answerValidity ?? [];
 
-              if (availableAnswer.isNotEmpty) {
-                answer = _getCorrectAnswer(availableAnswer) ?? "";
-                if (question.userSelectedOption != null &&
-                    question.userSelectedOption == answer) {
-                  status = 1;
-                } else {
-                  status = 0;
+                if (availableAnswer.isNotEmpty) {
+                  answer = _getCorrectAnswer(availableAnswer) ?? "";
+                  if (question.userSelectedOption != null &&
+                      question.userSelectedOption == answer) {
+                    status = 1;
+                  } else {
+                    status = 0;
+                  }
+                }
+
+                if (question.userSelectedOption != null) {
+                  if (question.userSelectedOption == "A") {
+                    userGivenAnswers[0] = true;
+                  }
+                  if (question.userSelectedOption == "B") {
+                    userGivenAnswers[1] = true;
+                  }
+                  if (question.userSelectedOption == "C") {
+                    userGivenAnswers[2] = true;
+                  }
+                  if (question.userSelectedOption == "D") {
+                    userGivenAnswers[3] = true;
+                  }
                 }
               }
             }
           } else if (question.customAnswerStatus == AnswerStatus.NOT_ANSWERED ||
               question.customAnswerStatus == AnswerStatus.NOT_VISITED) {
             status = 2;
-          }
-
-          if (question.userSelectedOption != null) {
-            if (question.userSelectedOption == "A") {
-              userGivenAnswers[0] = true;
-            }
-            if (question.userSelectedOption == "B") {
-              userGivenAnswers[1] = true;
-            }
-            if (question.userSelectedOption == "C") {
-              userGivenAnswers[2] = true;
-            }
-            if (question.userSelectedOption == "D") {
-              userGivenAnswers[3] = true;
-            }
           }
         }
 

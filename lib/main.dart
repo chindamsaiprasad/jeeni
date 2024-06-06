@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
         final user = ref.watch(authenticationProvider);
 
         return user == null
-            ? const LoginPage()
+            ? const LoginPage() 
             : user.authenticationState.getPage(user.authenticationState);
       }),
       builder: EasyLoading.init(),

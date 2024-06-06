@@ -1,3 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class NetworkErrorProvider with ChangeNotifier {}
+final networkErrorProvider =
+    ChangeNotifierProvider((ref) => NetworkErrorProvider());
+
+class NetworkErrorProvider with ChangeNotifier {
+  void resolveError(error) {}
+}

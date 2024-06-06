@@ -6,6 +6,7 @@ import 'package:jeeni/pages/dashboard/test/test_list_page.dart';
 import 'package:jeeni/pages/widgets/overlay_loader.dart';
 import 'package:jeeni/providers/content_provider.dart';
 import 'package:jeeni/providers/menu_provider.dart';
+import 'package:jeeni/providers/network_error_provider.dart';
 import 'package:jeeni/providers/test_provider.dart';
 import 'package:jeeni/utils/app_colour.dart';
 
@@ -39,6 +40,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                         }
                     })
                 .catchError((error) {
+              print("getAllSubscribedCoursesFromJeeniServer   $error");
+              ref.read(networkErrorProvider).resolveError(error);
               // TODO :: ERROR HANDELING
             }).whenComplete(() => OverlayLoader.hide());
           },

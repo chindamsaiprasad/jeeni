@@ -24,6 +24,17 @@ class TestInstructions extends ConsumerStatefulWidget {
 class _TestInstructionsState extends ConsumerState<TestInstructions> {
   bool isStartEnable = false;
 
+  Duration? _duration;
+
+  @override
+  void initState() {
+    print("Start Time ${widget.test.startTime}");
+    DateTime startTime =
+        DateTime.fromMillisecondsSinceEpoch(widget.test.startTime ?? 0);
+    _duration = startTime.difference(DateTime.now());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -188,7 +199,9 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
                         ),
                       ),
                       StopWatch(
-                        duration: const Duration(seconds: 00),
+                        duration: (_duration?.inSeconds ?? 0) > 0
+                            ? _duration ?? const Duration(seconds: 00)
+                            : const Duration(seconds: 00),
                         callback: () {
                           setState(() {
                             isStartEnable = true;

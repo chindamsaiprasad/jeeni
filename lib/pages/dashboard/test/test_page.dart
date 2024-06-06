@@ -8,6 +8,7 @@ import 'package:jeeni/pages/dashboard/test/questions_widget.dart/basic_question.
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/comprehension_question.dart';
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/integer_question.dart';
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/matrix_question.dart';
+import 'package:jeeni/pages/dashboard/test/questions_widget.dart/multiple_question.dart';
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/numeric_question.dart';
 import 'package:jeeni/pages/widgets/overlay_loader.dart';
 import 'package:jeeni/providers/test_progress_provider.dart';
@@ -340,7 +341,6 @@ class _TestPageState extends ConsumerState<TestPage> {
         // ),
       ),
     );
-  
   }
 
   Expanded _buildQuestionContainer() {
@@ -356,20 +356,18 @@ class _TestPageState extends ConsumerState<TestPage> {
   Widget getQuestionWidgetByType(QuestionMobileVos question) {
     print("QUESTION ::${question.questionType}a");
     switch (question.questionType) {
-      case QuestionType.BASIC:
-        return BasicQuestion(question: question);
-      case QuestionType.COMPREHENSION:
-        return ComprehensionQuestion(question: question);
-      case QuestionType.COLUMN_MATCHING:
-        // return const Text("TODO :: COLUMN_MATCHING");
+      case QuestionType.BASIC ||
+            QuestionType.COMPREHENSION ||
+            QuestionType.ASSERTION_AND_REASON ||
+            QuestionType.COLUMN_MATCHING:
+        if (question.isMultipleAnswer ?? false) {
+          return MultipleQuestion(question: question);
+        }
         return BasicQuestion(question: question);
       case QuestionType.INTEGER:
         return IntegerQuestion(question: question);
       case QuestionType.MATRIX:
         return MatrixQuestion(question: question);
-      case QuestionType.ASSERTION_AND_REASON:
-        return BasicQuestion(question: question);
-        return const Text("TODO :: ASSERTION_AND_REASON");
       case QuestionType.NUMERIC:
         return NumericQuestion(question: question);
       default:

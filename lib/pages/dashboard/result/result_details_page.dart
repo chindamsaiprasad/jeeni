@@ -15,67 +15,69 @@ class ResultDetailsPage extends ConsumerStatefulWidget {
 }
 
 class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
-      
-      List<dynamic> testDetails=[];
+  List<dynamic> testDetails = [];
 
-    @override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    initializeResultsDetails();
-  });
+      initializeResultsDetails();
+    });
   }
 
   Future<void> initializeResultsDetails() async {
-  OverlayLoader.show(context: context, title: "Loading");
-  var student = await LocalDataManager().loadStudentFromLocal();
-  int studentId = student.id != null ? student.id! as int : 0;
-  try {
-
+    OverlayLoader.show(context: context, title: "Loading");
     var student = await LocalDataManager().loadStudentFromLocal();
+    int studentId = student.id != null ? student.id! as int : 0;
+    try {
+      var student = await LocalDataManager().loadStudentFromLocal();
 
-    Map<String, dynamic> responseData = await ref.read(resultProvider).getResultDetailsFromJeeniServer(widget.resultIdInt);
+      Map<String, dynamic> responseData = await ref
+          .read(resultProvider)
+          .getResultDetailsFromJeeniServer(widget.resultIdInt);
 
-    List<dynamic> testWise = responseData['testWise'];
+      List<dynamic> testWise = responseData['testWise'];
 
-    // Function to find student by studenId
-  Map<String, dynamic>? findStudentById(List<dynamic> students, int studenId) {
-    return students.firstWhere(
-      (student) => student['studenId'] == studenId,
-      orElse: () => null,
-    );
+      // Function to find student by studenId
+      Map<String, dynamic>? findStudentById(
+          List<dynamic> students, int studenId) {
+        return students.firstWhere(
+          (student) => student['studenId'] == studenId,
+          orElse: () => null,
+        );
+      }
+
+      // Find student with studenId == 111104 and store in a list
+      // int searchStudenId = 111104;
+      List<Map<String, dynamic>?> studentsList = [
+        findStudentById(testWise, studentId)
+      ];
+
+      // print("data $studentsList");
+      setState(() {
+        testDetails = studentsList;
+      });
+      // Now you can access resultData after fetching it from the server
+    } catch (error) {
+      // Handle errors
+      print('Error fetching data: $error');
+    } finally {
+      // Ensure the loading indicator is hidden regardless of success or failure
+      OverlayLoader.hide();
+    }
   }
-
-  // Find student with studenId == 111104 and store in a list
-  // int searchStudenId = 111104;
-  List<Map<String, dynamic>?> studentsList = [findStudentById(testWise, studentId)];
-
-    // print("data $studentsList");
-    setState(() {
-      testDetails = studentsList;
-    });
-    // Now you can access resultData after fetching it from the server
-  } catch (error) {
-    // Handle errors
-    print('Error fetching data: $error');
-  } finally {
-    // Ensure the loading indicator is hidden regardless of success or failure
-    OverlayLoader.hide();
-  }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
-        title:
-            Text("Result Details", style: TextStyle(color: Colors.white)),
+        title: Text("Result Details", style: TextStyle(color: Colors.white)),
       ),
       body: Column(
         children: [
-          Expanded(flex: 9,child: testResultContainerDetails()),
+          Expanded(flex: 9, child: testResultContainerDetails()),
           Padding(
             padding: const EdgeInsets.all(10),
             child: SizedBox(
@@ -90,8 +92,7 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
   }
 
   Widget testResultContainerDetails() {
-
-    Row getResultDetails(String titlename , String value){
+    Row getResultDetails(String titlename, String value) {
       return Row(
         children: [
           Expanded(
@@ -100,8 +101,9 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Flexible(
-                  child: Text(titlename,
-                  style: const TextStyle(fontSize: 18),
+                  child: Text(
+                    titlename,
+                    style: const TextStyle(fontSize: 18),
                   ),
                 ),
               ],
@@ -112,13 +114,18 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Flexible(child: Text(value,style: TextStyle(fontSize: 16),)),
+                Flexible(
+                    child: Text(
+                  value,
+                  style: TextStyle(fontSize: 16),
+                )),
               ],
             ),
           )
         ],
       );
     }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -133,71 +140,73 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
           color: Colors.white,
         ),
         child: ListView.builder(
-  itemCount: testDetails.length,
-  itemBuilder: (BuildContext context, int index) {
-    final test = testDetails[index];
+          itemCount: testDetails.length,
+          itemBuilder: (BuildContext context, int index) {
+            final test = testDetails[index];
 
-    var score = test['score'];
-    var outOfScore = test['outOfScore'];
+            var score = test['score'];
+            var outOfScore = test['outOfScore'];
 
-    return Column(
-      children: [
-        getResultDetails("Test Name",""),
+            return Column(
+              children: [
+                getResultDetails("Test Name", ""),
 
-        Divider(),
-        getResultDetails("Test Date",""),
+                Divider(),
+                getResultDetails("Test Date", ""),
 
-        Divider(),
-        getResultDetails("Duration", ""),
-        
-        Divider(),
-        getResultDetails("Total Questions", ""),
-        
-        Divider(),
-        getResultDetails("Attempted Questions", ""),
+                Divider(),
+                getResultDetails("Duration", ""),
 
-        Divider(),
-        getResultDetails("Correct Answers", ""),
+                Divider(),
+                getResultDetails("Total Questions", ""),
 
-        Divider(),
-        getResultDetails("Incorrect Answers", ""),
+                Divider(),
+                getResultDetails("Attempted Questions", ""),
 
-        Divider(),
-        getResultDetails("Partial Answers", ""),
+                Divider(),
+                getResultDetails("Correct Answers", ""),
 
-        Divider(),
-        getResultDetails("Marks Obtained", "$score out of $outOfScore"),
+                Divider(),
+                getResultDetails("Incorrect Answers", ""),
 
-        // Divider(),
-        // getResultDetails("Total Marks", test["total_marks"].toString()),
+                Divider(),
+                getResultDetails("Partial Answers", ""),
 
-        Divider(),
-        getResultDetails("Bonus Marks", ""),
+                Divider(),
+                getResultDetails("Marks Obtained", "$score out of $outOfScore"),
 
-        Divider(), // Add a divider after each ListTile
-      ],
-    );
-  },
-),
+                // Divider(),
+                // getResultDetails("Total Marks", test["total_marks"].toString()),
 
+                Divider(),
+                getResultDetails("Bonus Marks", ""),
+
+                Divider(), // Add a divider after each ListTile
+              ],
+            );
+          },
+        ),
       ),
     );
   }
 
-  Widget viewSolutionButton(){
+  Widget viewSolutionButton() {
     return ElevatedButton(
-                onPressed: () {
-                  // to do
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0), 
-                    ),
-                  ),
-                ),
-                child: Text("View Solutions",style: TextStyle(color: Colors.white),),
-              );
+      onPressed: () {
+        // to do
+      },
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+        ),
+      ),
+      child: Text(
+        "View Solutions",
+        style: TextStyle(color: Colors.white),
+      ),
+    );
   }
 }

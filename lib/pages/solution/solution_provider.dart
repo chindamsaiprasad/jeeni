@@ -131,7 +131,7 @@ class SolutionProvider with ChangeNotifier {
   final SubmitTestResponse submitTestResponse;
 
   List<QuestionMobileVos> _questions = [];
-  Map<int, QuestionResult> userSolutions = {};
+  // Map<int, QuestionResult> userSolutions = {};
 
   List<Result> _solution = [];
 
@@ -142,9 +142,6 @@ class SolutionProvider with ChangeNotifier {
     required this.submitTestResponse,
     required this.ref,
   }) {
-    print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-    _questions = submitTestResponse.questions ?? [];
-
     _questions = submitTestResponse.questions ?? [];
     final testId = submitTestResponse.testId;
     if (_questions.isNotEmpty) {

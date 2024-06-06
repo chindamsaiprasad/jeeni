@@ -214,6 +214,7 @@ class QuestionMobileVos {
   String? numericAnswer;
   AnswerStatus customAnswerStatus = AnswerStatus.NOT_VISITED;
   String? userSelectedOption;
+  List<bool>? multipleAnswer = [false, false, false, false];
 
   QuestionMobileVos({
     this.id,
@@ -236,9 +237,36 @@ class QuestionMobileVos {
     this.questionUrl,
     this.solutionUrl,
     this.numericAnswer,
-    this.customAnswerStatus = AnswerStatus.NOT_VISITED,
+    required this.customAnswerStatus,
     this.userSelectedOption,
+    this.multipleAnswer,
   });
+
+  // QuestionMobileVos({
+  //   this.id,
+  //   this.answerValidity,
+  //   this.type,
+  //   this.solutionAvailable,
+  //   this.durationInMinutes,
+  //   this.status,
+  //   this.questionTypeId,
+  //   this.section,
+  //   this.questionType,
+  //   this.isMultipleAnswer,
+  //   this.positiveMark,
+  //   this.negativeMark,
+  //   this.groupId,
+  //   this.answerStatus,
+  //   this.numericAnswerDifference,
+  //   this.partialRule,
+  //   this.columnMatchAnswer,
+  //   this.questionUrl,
+  //   this.solutionUrl,
+  //   this.numericAnswer,
+  //   this.customAnswerStatus = AnswerStatus.NOT_VISITED,
+  //   this.userSelectedOption,
+  //   this.multipleAnswer = const [false, false, false, false],
+  // });
 
   QuestionMobileVos.fromJson(Map<String, dynamic> json) {
     print("sssssssssssssssssssssssssssssssssssssss");
@@ -343,6 +371,7 @@ class QuestionMobileVos {
     String? numericAnswer,
     AnswerStatus? customAnswerStatus,
     String? userSelectedOption,
+    List<bool>? multipleAnswer,
   }) {
     return QuestionMobileVos(
       id: id ?? this.id,
@@ -368,6 +397,7 @@ class QuestionMobileVos {
       numericAnswer: numericAnswer ?? this.numericAnswer,
       customAnswerStatus: customAnswerStatus ?? this.customAnswerStatus,
       userSelectedOption: userSelectedOption ?? this.userSelectedOption,
+      multipleAnswer: multipleAnswer ?? this.multipleAnswer,
     );
   }
 }

@@ -19,20 +19,27 @@ class ContentProvider with ChangeNotifier {
   });
 
   Future<bool> getAllSubscribedCoursesFromJeeniServer() async {
-    final jauth = ref.read(authenticationProvider)?.jauth;
-
-    Map<String, String> headers = {};
-
-    headers.addAll({"Content-Type": "application/json", "Jauth": jauth!});
-    return await http
-        .get(Uri.parse("$BASE_URL/jca/content"), headers: headers)
-        .then((response) {
-      var responseData = json.decode(response.body);
-      contentResponse = ContentResponse.fromJson(responseData);
+    return ref
+        .read(networkProvider)
+        .getAllSubscribedCoursesFromJeeniServer()
+        .then((ContentResponse contentResponse) {
+      this.contentResponse = contentResponse;
       return true;
-    }).catchError((error) {
-      // TODO :: ERROR HANDELING
-      throw Exception(error);
     });
+    // final jauth = ref.read(authenticationProvider)?.jauth;
+
+    // Map<String, String> headers = {};
+
+    // headers.addAll({"Content-Type": "application/json", "Jauth": jauth!});
+    // return await http
+    //     .get(Uri.parse("$BASE_URL/jca/content"), headers: headers)
+    //     .then((response) {
+    //   var responseData = json.decode(response.body);
+    //   contentResponse = ContentResponse.fromJson(responseData);
+    //   return true;
+    // }).catchError((error) {
+    //   // TODO :: ERROR HANDELING
+    //   throw Exception(error);
+    // });
   }
 }
