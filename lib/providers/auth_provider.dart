@@ -2,11 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jeeni/Apis/network_manager.dart';
+import 'package:jeeni/apis/network_manager.dart';
 import 'package:jeeni/models/student.dart';
 import 'package:jeeni/pages/auth/login_page.dart';
 import 'package:jeeni/pages/dashboard.dart';
-import 'package:jeeni/pages/home_page.dart';
 import 'package:jeeni/pages/splash_page.dart';
 import 'package:jeeni/utils/local_data_manager.dart';
 
@@ -14,6 +13,7 @@ enum AuthenticationState {
   loading,
   loggedIn,
   loggedOut,
+  alreadyLogInPop,
   logoutPopUp;
 
   Widget getPage(AuthenticationState authenticationState) {
@@ -23,9 +23,9 @@ enum AuthenticationState {
       case AuthenticationState.loggedIn:
         return Dashboard();
       case AuthenticationState.loggedOut:
-        print("00000000000000000000000000000000000000000");
         return const LoginPage();
-      case AuthenticationState.logoutPopUp:
+      case AuthenticationState.logoutPopUp ||
+            AuthenticationState.alreadyLogInPop:
         return Dashboard();
     }
   }
@@ -33,7 +33,7 @@ enum AuthenticationState {
 
 final authenticationProvider =
     StateNotifierProvider<AuthenticationNotifier, Student?>((ref) {
-  return AuthenticationNotifier();
+  return AuthenticationNotifier(ref);
 });
 
 class SharedPreferencesKeys {
@@ -47,7 +47,8 @@ class SharedPreferencesKeys {
 }
 
 class AuthenticationNotifier extends StateNotifier<Student?> {
-  AuthenticationNotifier()
+  final Ref ref;
+  AuthenticationNotifier(this.ref)
       : super(
           Student.init(
             authenticationState: AuthenticationState.loading,
@@ -99,18 +100,25 @@ class AuthenticationNotifier extends StateNotifier<Student?> {
     required String password,
     required String deviceIMEI,
   }) async {
-   return NetworkManager()
+    return ref
+        .read(networkProvider.notifier)
         .loginWithIdAndPassword(
             userId: userId, password: password, deviceIMEI: deviceIMEI)
         .then((student) {
-      LocalDataManager().storeStudent(student);
+      final hasStored = LocalDataManager().storeStudent(student);
       print("JAUTH  ${student.jauth}");
       state =
           student.copyWith(authenticationState: AuthenticationState.loggedIn);
-          return true;
+      return true;
     }).catchError((error) {
       print("EEEEEEEEEEEEEEEEEEE  $error");
       throw Exception(error);
     });
+  }
+
+  void updateAuthState(AuthenticationState authState) {
+    state = state?.copyWith(
+      authenticationState: AuthenticationState.alreadyLogInPop,
+    );
   }
 }

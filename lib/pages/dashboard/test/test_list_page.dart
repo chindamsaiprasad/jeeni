@@ -90,8 +90,8 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       TestInstructions(
-                                                    testDownloadResponse:
-                                                        response,
+                                                    test:
+                                                        test,
                                                   ),
                                                 ),
                                               ).then((toStart) {
@@ -173,7 +173,7 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                               const TextSpan(text: "Start : "),
                                               TextSpan(
                                                 text:
-                                                    "${DateFormator.getFormatedDate(test.examDate ?? 0)}",
+                                                    "${DateFormator.getFormatedDate(test.startTime ?? 0)}",
                                                 style: const TextStyle(
                                                   fontSize: 12,
                                                   color: Colors.black26,

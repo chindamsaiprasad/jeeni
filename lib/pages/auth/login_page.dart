@@ -21,9 +21,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   late bool isLoading = false;
 
-  Container _buildLogo() {
-    return Container(
+  SizedBox _buildLogo() {
+    return SizedBox(
       height: 100,
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Image.asset("assets/images/jeeniloginimage.png"),
+      ),
     );
   }
 
@@ -120,11 +125,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               userId: _userIdController.text,
                               password: _passwordController.text,
                               deviceIMEI: deviceId,
-                            ).then((value) {
-                                print("THEN THEN $value");
-
-                            })
-                            .catchError((error) {
+                            )
+                            .then((value) {
+                          print("THEN THEN $value");
+                        }).catchError((error) {
                           setState(() {
                             isLoading = false;
                           });

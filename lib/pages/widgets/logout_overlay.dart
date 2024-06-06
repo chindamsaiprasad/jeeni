@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jeeni/providers/auth_provider.dart';
+import 'package:jeeni/utils/app_colour.dart';
 
 class LogoutOverlay {
   static OverlayEntry? _overlayEntry;
@@ -36,8 +35,9 @@ class LogoutOverlay {
         children: [
           Positioned.fill(
             child: Material(
+              color: Colors.transparent.withOpacity(0.5),
               child: Container(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.transparent,
                 alignment: Alignment.center,
                 child: Container(
                   padding: const EdgeInsets.all(10),
@@ -47,7 +47,6 @@ class LogoutOverlay {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    // mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const Text(
                         "Logout",
@@ -72,6 +71,84 @@ class LogoutOverlay {
                               child: const Text("YES"),
                             ),
                           ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  static void hide() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+}
+
+class AlreadyLoggedInOverlay {
+  static OverlayEntry? _overlayEntry;
+
+  static void show({
+    required BuildContext context,
+    String title = "",
+    required VoidCallback onTapYes,
+  }) {
+    _overlayEntry = OverlayEntry(
+      builder: (BuildContext context) => Stack(
+        children: [
+          Positioned.fill(
+            child: Material(
+              color: Colors.transparent.withOpacity(0.5),
+              child: Container(
+                color: Colors.transparent,
+                alignment: Alignment.center,
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  height: 200,
+                  width: MediaQuery.of(context).size.width * .80,
+                  color: Colors.white,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Text(
+                        "Warning",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                        ),
+                      ),
+                      const Divider(
+                        color: Colors.black,
+                        height: 1,
+                      ),
+                      const Text(
+                        "You have already logged-in somewhere else.",
+                        style: TextStyle(color: Colors.black, fontSize: 18),
+                      ),
+                      const Divider(
+                        color: Colors.black,
+                        height: 1,
+                      ),
+                      SizedBox(
+                        height: 50,
+                        width: double.infinity,
+                        child: TextButton(
+                          onPressed: onTapYes,
+                          child: const Text(
+                            "OK",
+                            style: TextStyle(
+                              color: AppColour.darkGreen,
+                            ),
+                          ),
                         ),
                       )
                     ],

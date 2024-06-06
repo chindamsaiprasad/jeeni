@@ -4,7 +4,6 @@ import 'package:jeeni/pages/auth/login_page.dart';
 import 'package:jeeni/pages/dashboard/practice_test/practice_test.dart';
 import 'package:jeeni/pages/dashboard/result/result_page.dart';
 import 'package:jeeni/pages/home_page.dart';
-import 'package:jeeni/pages/logout_popup_page.dart';
 import 'package:jeeni/pages/navbar.dart';
 import 'package:jeeni/pages/report_page.dart';
 import 'package:jeeni/pages/settings_page.dart';

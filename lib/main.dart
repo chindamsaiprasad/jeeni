@@ -42,6 +42,12 @@ class MyApp extends StatelessWidget {
                 LogoutOverlay.hide();
               },
             );
+          } else if (next != null &&
+              next.authenticationState == AuthenticationState.alreadyLogInPop) {
+            AlreadyLoggedInOverlay.show(
+              context: context,
+              onTapYes: () {},
+            );
           }
         });
 

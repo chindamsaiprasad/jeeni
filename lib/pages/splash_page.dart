@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class SplashPage extends ConsumerWidget {
   const SplashPage({super.key});
@@ -8,12 +7,7 @@ class SplashPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      body: Center(
-        child: LoadingAnimationWidget.staggeredDotsWave(
-          color: Colors.white,
-          size: 80,
-        ),
-      ),
+      body: Image.asset("assets/images/splash.png"),
     );
   }
 }

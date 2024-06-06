@@ -21,7 +21,7 @@ class TestProvider with ChangeNotifier {
     required this.ref,
   });
 
-  fetchAllTestsFromJeeniServer() async {
+  Future<bool> fetchAllTestsFromJeeniServer() async {
     final jauth = ref.read(authenticationProvider)?.jauth;
 
     Map<String, String> headers = {};
@@ -34,16 +34,22 @@ class TestProvider with ChangeNotifier {
     return await http
         .get(Uri.parse("$BASE_URL/mtest/getByStudentId"), headers: headers)
         .then((response) {
-      print("RESPONSE :: ${response.body}");
-      var responseData = json.decode(response.body) as List;
+      print("RESPONSE STATUS CODE:: ${response.statusCode}");
+      print("${response.headers}");
+      if (response.statusCode == 200) {
+        if (response.headers["content-type"] == "text/html;charset=UTF-8") {
+          throw AlreadyLoggedInOnOtherDeviceException();
+        } else {
+          var responseData = json.decode(response.body) as List;
 
-      tests = responseData.map((test) => Test.fromJson(test));
-      print("LENGTH ${this.tests.length}");
-      return true;
-    }).catchError((error) {
-      // TODO :: ERROR HANDELING
-      print("ERROR :: FETCH TEST");
-      throw Exception(error);
+          tests = responseData.map((test) => Test.fromJson(test));
+          print("LENGTH ${this.tests.length}");
+          return true;
+        }
+      } else if (response.statusCode == 302) {
+        throw SomethingWentWrongException();
+      }
+      return false;
     });
   }
 
@@ -73,17 +79,6 @@ class TestProvider with ChangeNotifier {
         .get(Uri.parse("$BASE_URL/mtest/pretestdownload/$testId/1080/2016"),
             headers: headers)
         .then((response) async {
-      // String? fileData = await FileUtils.loadFile("integer.json");
-      // String? fileData = await FileUtils.loadFile("basic.json");
-      // String? fileData = await FileUtils.loadFile("comprehension.json");
-      // String? fileData = await FileUtils.loadFile("matrix.json");
-      // String? fileData = await FileUtils.loadFile("Numeric.json");
-      // String? fileData = await FileUtils.loadFile("Integer1.json");
-      // String? fileData = await FileUtils.loadFile("allType.json");
-
-      // print("RESPONSE ::   $fileData");
-      // print(response.body);
-      // FileUtils.writeJsonToFile(json.decode(response.body), "allType.json");
       Map<String, dynamic> data = json.decode(response.body);
       return TestDownloadResponse.fromJson(data);
     }).catchError((error) {
@@ -106,8 +101,6 @@ class TestProvider with ChangeNotifier {
 
     const url = "https://exam.jeeni.in/Jeeni/rest/mtest/submitResult";
 
-    // String jsonString = jsonEncode(testResultRequest.toJson());
-
     final body = {
       // 'correctAnswers': testResultRequest.correctAnswers,
       // 'isAutoSubmit': testResultRequest.isAutoSubmit,
@@ -126,7 +119,6 @@ class TestProvider with ChangeNotifier {
               .toList()
           : [],
       'testId': testResultRequest.testId,
-      // 'totalQuestions': testResultRequest.totalQuestions,
       'unAttemptedQuestions': testResultRequest.unAttemptedQuestions,
     };
 
@@ -193,3 +185,7 @@ class TestProvider with ChangeNotifier {
     notifyListeners();
   }
 }
+
+class AlreadyLoggedInOnOtherDeviceException implements Exception {}
+
+class SomethingWentWrongException implements Exception {}

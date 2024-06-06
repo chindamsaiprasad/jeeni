@@ -1,17 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:jeeni/models/student.dart';
 
 const String BASE_URL = "https://exam.jeeni.in/Jeeni/rest";
 
-class NetworkManager {
-  static final NetworkManager _singleton = NetworkManager._internal();
-  NetworkManager._internal();
+final networkProvider =
+    ChangeNotifierProvider<NetworkManager>((ref) => NetworkManager(ref));
 
-  factory NetworkManager() {
-    return _singleton;
-  }
+class NetworkManager with ChangeNotifier {
+  final Ref ref;
+  NetworkManager(this.ref);
 
   Future<Student> loginWithIdAndPassword({
     required String userId,
@@ -27,7 +28,6 @@ class NetworkManager {
       'deviceId': deviceIMEI,
     };
 
-    print("111111111111111111111111111111111111111111111111111");
     return await http
         .post(
       Uri.parse("$BASE_URL/login/processLoginAuthentication"),
@@ -36,10 +36,6 @@ class NetworkManager {
     )
         .then((response) {
       if (response.statusCode == 200) {
-        print(
-            "333333333333333333333333333333333333333333333333333  ${response.statusCode}");
-        print(
-            "222222222222222222222222222222222222222222222222222  ${response.body}");
         final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
         return Student.fromMap(jsonResponse);
       } else {

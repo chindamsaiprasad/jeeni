@@ -46,30 +46,23 @@ class _HomePageState extends ConsumerState<HomePage> {
               const JeeniIcon(iconData: Icons.book), //const Icon(Icons.book),
           title: const Text("Content"),
           subtitle: const Text("Study material for student"),
-          trailing: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.arrow_right),
-          ),
+          trailing: const Icon(Icons.arrow_right),
         ),
         ListTile(
-          onTap: () {
-            ref.read(menuProvider).setSelectedMenu(MenuType.practiceTest);
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => const PracticeTest(),
-            //   ),
-            // );
-          },
-          leading: const JeeniIcon(
-              iconData: Icons.assessment), // const Icon(Icons.assignment),
-          title: const Text("Self Practice"),
-          subtitle: const Text("Practice here before test."),
-          trailing: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.arrow_right),
-          ),
-        ),
+            onTap: () {
+              ref.read(menuProvider).setSelectedMenu(MenuType.practiceTest);
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => const PracticeTest(),
+              //   ),
+              // );
+            },
+            leading: const JeeniIcon(
+                iconData: Icons.assessment), // const Icon(Icons.assignment),
+            title: const Text("Self Practice"),
+            subtitle: const Text("Practice here before test."),
+            trailing: const Icon(Icons.arrow_right)),
         ListTile(
           onTap: () {
             OverlayLoader.show(context: context, title: "Tests Loading...");
@@ -95,10 +88,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           leading: const JeeniIcon(iconData: Icons.quiz),
           title: const Text("Test"),
           subtitle: const Text("Tests for student"),
-          trailing: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.arrow_right),
-          ),
+          trailing: const Icon(Icons.arrow_right),
         ),
       ],
     );
