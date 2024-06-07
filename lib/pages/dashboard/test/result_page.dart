@@ -126,7 +126,7 @@ class ResultPage extends ConsumerWidget {
                 onPressed: () {
                   Navigator.pop(context, submitTestResponse);
                 },
-                child: const Text("View Answer"),
+                child: const Text("View Answer", style: TextStyle(color: Colors.white),),
               ),
             ),
           ],

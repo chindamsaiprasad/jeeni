@@ -25,7 +25,13 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
       backgroundColor: const Color(0xffebeae8),
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
-        title: const Text("Login"),
+        title: const Text("Forgot password", style: TextStyle(color: Colors.white),),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Column(
         children: [
@@ -78,10 +84,9 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                               backgroundColor: Colors.white,
                               color: Colors.green,
                             )
-                          : const Text("Send Password"),
+                          : const Text("Send Password" , style: TextStyle(color: Colors.white),),
                     ),
                   ),
-                
                 ],
               ),
             ),

@@ -28,7 +28,10 @@ class _TestListPageState extends ConsumerState<TestListPage> {
       backgroundColor: Colors.grey[400],
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
-        title: const Text("Test"),
+        title: const Text("Test",style: TextStyle(color: Colors.white,fontSize: 22),),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -155,7 +158,7 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                               //TODO :: HANDLE ERROR
                                             });
                                           },
-                                          child: const Text("Download"),
+                                          child: const Text("Download", style: TextStyle(color: Colors.white),),
                                         ),
                                       ],
                                     ),

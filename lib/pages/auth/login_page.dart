@@ -14,10 +14,15 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  final TextEditingController _userIdController =
-      TextEditingController(text: "joshi_352");
+  // final TextEditingController _userIdController =
+  //     TextEditingController(text: "joshi_352");
+  // final TextEditingController _passwordController =
+  //     TextEditingController(text: "Nish@nt1");
+
+    final TextEditingController _userIdController =
+      TextEditingController(text: "joshi3052");
   final TextEditingController _passwordController =
-      TextEditingController(text: "Nish@nt1");
+      TextEditingController(text: "123456");
 
   late bool isLoading = false;
 
@@ -38,7 +43,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       backgroundColor: const Color(0xffebeae8),
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
-        title: const Text("Login"),
+        title: const Text("Login",style: TextStyle(color: Colors.white),),
       ),
       body: Column(
         children: [
@@ -87,7 +92,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         const Spacer(),
                         Text.rich(
                           TextSpan(
-                            text: "forgot password?",
+                            text: "Forgot password?",
                             style: const TextStyle(color: Colors.blue),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
@@ -140,7 +145,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               backgroundColor: Colors.white,
                               color: Colors.green,
                             )
-                          : const Text("login"),
+                          : const Text("Login",style: TextStyle(color: Colors.white),),
                     ),
                   ),
                 ],

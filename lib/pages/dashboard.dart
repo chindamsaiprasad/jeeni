@@ -37,7 +37,10 @@ class Dashboard extends ConsumerWidget {
         backgroundColor: const Color(0xff1c5e20),
         title: Text(
           ref.watch(menuProvider).getDisplayName(),
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white, fontSize: 22),
+        ),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
         ),
       ),
       body: Consumer(

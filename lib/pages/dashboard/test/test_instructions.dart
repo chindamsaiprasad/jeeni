@@ -54,6 +54,9 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
             "Test Instructions",
             style: TextStyle(color: Colors.white),
           ),
+          iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -228,7 +231,7 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
                           Navigator.pop(context, true);
                         }
                       : null,
-                  child: const Text("Start Test"),
+                  child: const Text("Start Test", style: TextStyle(color: Colors.white),),
                 ),
               ),
             ],

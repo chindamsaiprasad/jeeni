@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,6 +8,7 @@ import 'package:jeeni/models/student.dart';
 import 'package:jeeni/providers/auth_provider.dart';
 import 'package:jeeni/providers/test_provider.dart';
 import 'package:jeeni/response_models/content_response.dart';
+import 'package:jeeni/utils/local_data_manager.dart';
 
 const String BASE_URL = "https://exam.jeeni.in/Jeeni/rest";
 
@@ -70,3 +72,114 @@ class NetworkManager with ChangeNotifier {
     });
   }
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+///
+
+
+enum RequestType {
+  get("GET"),
+  post("POST"),
+  put("PUT"),
+  delete("DELETE"),
+  multipart("MULTIPART");
+
+  const RequestType(this.text);
+  final String text;
+}
+
+
+class NetworkHandler {
+  NetworkHandler();
+
+  Future<http.Response> handler({
+    required String url,
+    Object? body,
+    Map<String, String>? headers,
+    required RequestType httpMethodType,
+  }) async {
+    final token = (await LocalDataManager().loadStudentFromLocal()).jauth;
+    print("jauth token $token");
+    
+    headers ??= <String, String>{};
+    headers['Authorization'] = 'Bearer $token';
+    headers['Content-Type'] = 'application/json; charset=UTF-8';
+    
+
+    late http.Response response;
+    late http.MultipartRequest responseTwo;
+
+    switch (httpMethodType) {
+      case RequestType.get:
+        response = await http.get(
+          Uri.parse(
+            url,
+          ),
+          headers: headers,
+        );
+
+      case RequestType.post:
+        response = await http.post(
+          Uri.parse(
+            url,
+          ),
+          headers: headers,
+          body: body,
+        );
+      case RequestType.put:
+        response = await http.put(
+          Uri.parse(
+            url,
+          ),
+          headers: headers,
+          body: body,
+        );
+      case RequestType.delete:
+        response = await http.delete(
+          Uri.parse(
+            url,
+          ),
+          headers: headers,
+          body: body,
+        );
+
+      case RequestType.multipart:
+        responseTwo = http.MultipartRequest('PUT', Uri.parse(url))
+          ..headers.addAll(headers)
+          ..files.add(http.MultipartFile.fromBytes(
+            'multipartFile',
+            body as Uint8List,
+            filename: 'filename.jpg',
+          ));
+        var streamedResponse = await responseTwo.send();
+        response = await http.Response.fromStream(streamedResponse);
+    }
+
+    if(response.statusCode == 200){
+      print("200 SUCCESS");
+    } else if(response.statusCode == 201){
+      print("201 SUCCESS");
+    } else if (response.statusCode == 302) {
+      print("302 ERROR");
+    } else if (response.statusCode == 401) {
+      print("401 ERROR");
+    } else if (response.statusCode == 403) {
+      print("403 ERROR");
+    }
+
+    print("*********************REQUEST*******************************");
+    print("URL  : $url");
+    print("BODY :  ${json.decode(body.toString())}");
+    print("*********************RESPONSE*******************************");
+    print("URL  : $url");
+    print("BODY :  ${utf8.decode(response.bodyBytes)}");
+
+    return response;
+  }
+}
+
+
+
+
+

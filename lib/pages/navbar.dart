@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/user_profile.dart';
 import 'package:jeeni/pages/widgets/logout_overlay.dart';
@@ -26,22 +28,25 @@ class _NavBarState extends State<NavBar> {
   String userEmail = '';
   String userImageBase = '';
 
+  Uint8List dataImage = Uint8List(0);
+
   @override
   void initState() {
     super.initState();
 
-    updateProfileData(); // Call datamethod when initializing the state
+    updateProfileData();
   }
 
   void updateProfileData() {
-    // print("method call nav bar"); // Optional: Print a message indicating the function has started
+    // print("method call nav bar");
 
     LocalDataManager().loadStudentFromLocal().then((value) {
       setState(() {
-        userName = value.name ?? ''; // Update userName state variable
-        userEmail = value.email ?? ''; // Update userEmail state variable
-        userImageBase = value.mobileProfileImage ??
-            ''; // Update userImageBase state variable
+        userName = value.name ?? '';
+        userEmail = value.email ?? '';
+        userImageBase = value.mobileProfileImage ?? '';
+
+        dataImage = base64Decode(value.mobileProfileImage ?? '');
       });
 
       // Optional: Print the loaded data
@@ -227,18 +232,19 @@ class _NavBarState extends State<NavBar> {
   Widget userProfileBoxDisplay() {
     Padding userProfileColumn() {
       return Padding(
-        padding: EdgeInsets.only(top: 50, left: 10, right: 10, bottom: 5),
+        padding: const EdgeInsets.only(top: 50, left: 10, right: 10, bottom: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               height: 80,
               width: 100,
               // color: Colors.red,
               child: CircleAvatar(
                 child: ClipOval(
                   child: Image.memory(
-                    base64Decode(userImageBase ?? ''),
+                    // base64Decode(userImageBase ?? ''),
+                    dataImage,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) =>
                         const Icon(Icons.error),
@@ -246,30 +252,54 @@ class _NavBarState extends State<NavBar> {
                 ),
               ),
             ),
-            SizedBox(height: 5,),
-            Text(userName.trim(),style: TextStyle(color: Colors.white, fontSize: 16),),
+            const SizedBox(height: 5,),
+            Text(
+              userName,
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(userEmail.trim(),style: TextStyle(color: Colors.white, fontSize: 14),),
+                Text(
+                  userEmail,
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
                 Container(
-  width: 30, // Adjust the width and height as needed for the desired size
-  height: 30,
-  child: Center(
-    child: IconButton(
-      icon: const Icon(Icons.edit, size: 18, color: Colors.white), // Adjust the size and color of the icon as needed
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => UserProfilePage(callback: updateProfileData),
-          ),
-        );
-      },
-    ),
-  ),
-),
-
+                  width: 25,
+                  height: 25,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: Stack(
+                    children: <Widget>[
+                      const Center(
+                        child: Icon(
+                          Icons.settings,
+                          size: 20,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(30),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UserProfilePage(
+                                      callback: updateProfileData),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ],
@@ -281,9 +311,7 @@ class _NavBarState extends State<NavBar> {
       // height: 215,
       // color: Color(0xff1c5e20),
       decoration: BoxDecoration(
-        color: Color(0xff1c5e20),
-        border: Border.all(color: Colors.black26)
-      ),
+          color: Color(0xff1c5e20), border: Border.all(color: Colors.black26)),
       child: userProfileColumn(),
     );
   }

@@ -28,7 +28,10 @@ class _ContentPageState extends ConsumerState<ContentPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
-        title: const Text("My Content"),
+        title: const Text("My Content", style: TextStyle(color: Colors.white,fontSize: 22),),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
       ),
       body: courses != null
           ? ListView(

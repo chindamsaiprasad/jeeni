@@ -32,7 +32,11 @@ class _CoursePageState extends ConsumerState<CoursePage> {
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
         title: Text(
-          widget.course.courseName ?? "",
+          widget.course.courseName ?? "", 
+          style: TextStyle(color: Colors.white, fontSize: 22),
+        ),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
         ),
       ),
       body: Column(

@@ -20,33 +20,35 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        OptionsContainer(),
-        TextFiledContianer(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 40,
-            width: MediaQuery.of(context).size.width,
-            child: ElevatedButton(
-              onPressed: () {},
-                              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0), 
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          OptionsContainer(),
+          TextFiledContianer(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 40,
+              width: MediaQuery.of(context).size.width,
+              child: ElevatedButton(
+                onPressed: () {},
+                                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0), 
+                      ),
                     ),
                   ),
+                child: Text(
+                  "Report",
+                  style: TextStyle(color: Colors.white),
                 ),
-              child: Text(
-                "Report",
-                style: TextStyle(color: Colors.white),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
