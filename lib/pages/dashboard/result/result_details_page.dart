@@ -9,9 +9,7 @@ import "package:jeeni/utils/local_data_manager.dart";
 
 class ResultDetailsPage extends ConsumerStatefulWidget {
   final ResultModelClass data;
-  final int resultIdInt;
-  const ResultDetailsPage(
-      {super.key, required this.data, required this.resultIdInt});
+  const ResultDetailsPage({super.key, required this.data});
 
   @override
   ResultDetailsPageState createState() => ResultDetailsPageState();
@@ -20,56 +18,41 @@ class ResultDetailsPage extends ConsumerStatefulWidget {
 class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
   List<dynamic> testDetails = [];
 
+  Map<String, dynamic>? resultDetails;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      initializeResultsDetails();
+    initMethod();
+  }
+
+  Future<void> initMethod() async {
+    var student = await LocalDataManager().loadStudentFromLocal();
+    int studentId = student.id != null ? student.id! as int : 0;
+
+    resultDetails = await ref.read(resultProvider).resultDetailsData;
+
+    List<dynamic> testWise = resultDetails!['testWise'];
+
+    // Function to find student by studenId
+    Map<String, dynamic>? findStudentById(
+        List<dynamic> students, int studenId) {
+      return students.firstWhere(
+        (student) => student['studenId'] == studenId,
+        orElse: () => null,
+      );
+    }
+
+    List<Map<String, dynamic>?> studentsList = [
+      findStudentById(testWise, studentId)
+    ];
+
+    setState(() {
+      testDetails = studentsList;
     });
   }
 
-  Future<void> initializeResultsDetails() async {
-    OverlayLoader.show(context: context, title: "Loading");
-    var student = await LocalDataManager().loadStudentFromLocal();
-    int studentId = student.id != null ? student.id! as int : 0;
-    try {
-      var student = await LocalDataManager().loadStudentFromLocal();
-
-      Map<String, dynamic> responseData = await ref
-          .read(resultProvider)
-          .getResultDetailsFromJeeniServer(widget.resultIdInt);
-
-      List<dynamic> testWise = responseData['testWise'];
-
-      // Function to find student by studenId
-      Map<String, dynamic>? findStudentById(
-          List<dynamic> students, int studenId) {
-        return students.firstWhere(
-          (student) => student['studenId'] == studenId,
-          orElse: () => null,
-        );
-      }
-
-      // Find student with studenId == 111104 and store in a list
-      // int searchStudenId = 111104;
-      List<Map<String, dynamic>?> studentsList = [
-        findStudentById(testWise, studentId)
-      ];
-
-      // print("data $studentsList");
-      setState(() {
-        testDetails = studentsList;
-      });
-      // Now you can access resultData after fetching it from the server
-    } catch (error) {
-      // Handle errors
-      print('Error fetching data: $error');
-    } finally {
-      // Ensure the loading indicator is hidden regardless of success or failure
-      OverlayLoader.hide();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,12 +163,6 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
                 Divider(),
                 getResultDetails(
                     "Partial Answers", widget.data.partialAnswer.toString()),
-
-                Divider(),
-                getResultDetails("Incorrect Answers", ""),
-
-                Divider(),
-                getResultDetails("Partial Answers", ""),
 
                 Divider(),
                 getResultDetails("Marks Obtained", "$score out of $outOfScore"),

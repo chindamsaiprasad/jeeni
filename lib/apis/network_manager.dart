@@ -61,50 +61,38 @@ class NetworkManager with ChangeNotifier {
     return await http
         .get(Uri.parse("$BASE_URL/jca/content"), headers: headers)
         .then((response) {
+          print("${response.statusCode}");
+          print("HEADER ${response.headers}");
       if (response.statusCode == 200) {
         var responseData = json.decode(response.body);
         return ContentResponse.fromJson(responseData);
-      } else if (response.statusCode == 302) {
+      } else if (response.statusCode == 401) {
         throw AlreadyLoggedInOnOtherDeviceException();
       } else {
         throw SomethingWentWrongException();
       }
     });
   }
-}
 
+  //////////////////////////////////////////////////////////////
+  /// netowrk handler 
+  
 
-/////////////////////////////////////////////////////////////////////////////////////
-///
-
-
-enum RequestType {
-  get("GET"),
-  post("POST"),
-  put("PUT"),
-  delete("DELETE"),
-  multipart("MULTIPART");
-
-  const RequestType(this.text);
-  final String text;
-}
-
-
-class NetworkHandler {
-  NetworkHandler();
-
-  Future<http.Response> handler({
+    Future<http.Response> networkHandlerMethod({
     required String url,
     Object? body,
     Map<String, String>? headers,
     required RequestType httpMethodType,
   }) async {
-    final token = (await LocalDataManager().loadStudentFromLocal()).jauth;
-    print("jauth token $token");
+    final jauth = ref.read(authenticationProvider)?.jauth;
+    // print("jauth token $jauth");
     
     headers ??= <String, String>{};
-    headers['Authorization'] = 'Bearer $token';
-    headers['Content-Type'] = 'application/json; charset=UTF-8';
+    headers['jauth'] = jauth ?? '';
+    headers['Content-Type'] = 'application/json';
+    headers['Accept'] = 'application/json';
+    headers['Accept-Encoding'] = 'gzip, deflate, br, zstd';
+
     
 
     late http.Response response;
@@ -156,28 +144,53 @@ class NetworkHandler {
         response = await http.Response.fromStream(streamedResponse);
     }
 
+    return response;
     if(response.statusCode == 200){
       print("200 SUCCESS");
+      return response;
+
     } else if(response.statusCode == 201){
       print("201 SUCCESS");
     } else if (response.statusCode == 302) {
       print("302 ERROR");
     } else if (response.statusCode == 401) {
       print("401 ERROR");
+      // ref.read(authenticationProvider.notifier).updateAuthState(AuthenticationState.alreadyLogInPop);
+      // ref.read(authenticationProvider.notifier).logOut();
+      // throw AlreadyLoggedInOnOtherDeviceException();
     } else if (response.statusCode == 403) {
       print("403 ERROR");
     }
 
     print("*********************REQUEST*******************************");
     print("URL  : $url");
+    print("Response Code : ${response.statusCode}");
     print("BODY :  ${json.decode(body.toString())}");
     print("*********************RESPONSE*******************************");
-    print("URL  : $url");
-    print("BODY :  ${utf8.decode(response.bodyBytes)}");
+    print("URL    : $url");
+    print("BODY   :  ${utf8.decode(response.bodyBytes)}");
 
-    return response;
   }
+  
+
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+///
+
+enum RequestType {
+  get("GET"),
+  post("POST"),
+  put("PUT"),
+  delete("DELETE"),
+  multipart("MULTIPART");
+
+  const RequestType(this.text);
+  final String text;
+}
+
+
 
 
 

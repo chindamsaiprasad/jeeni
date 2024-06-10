@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/dashboard/result/result_details_page.dart';
+import 'package:jeeni/pages/widgets/overlay_loader.dart';
+import 'package:jeeni/providers/auth_provider.dart';
+import 'package:jeeni/providers/network_error_provider.dart';
 import 'package:jeeni/providers/result_provider.dart';
 import 'package:jeeni/response_models/result_list_response.dart';
 
@@ -12,55 +15,55 @@ class ResultsPage extends ConsumerStatefulWidget {
 }
 
 class ResultsPageState extends ConsumerState<ResultsPage> {
-  
   bool isLoading = true;
   List<ResultModelClass> resultData = [];
 
+  TextEditingController searchTextController = TextEditingController();
+  List<ResultModelClass> filteredResults = [];
 
- TextEditingController searchTextController = TextEditingController();
- List<ResultModelClass> filteredResults = [];
-
- void filterResults(String searchText) {
-  setState(() {
-    filteredResults = resultData
-        .where((result) => result.name.toLowerCase().contains(searchText.toLowerCase()))
-        .toList();
-  });
-}
-
+  void filterResults(String searchText) {
+    setState(() {
+      filteredResults = resultData
+          .where((result) =>
+              result.name.toLowerCase().contains(searchText.toLowerCase()))
+          .toList();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    initializeResults();
+
+    resultData = ref.read(resultProvider).resultData;
+    filteredResults = resultData;
   }
 
+// Future<void> initializeResults() async {
+//   try {
+//     resultData = await ref.read(resultProvider).getAllResultsFromJeeniServer();
+//     setState(() {
+//       filteredResults = resultData;
+//     });
+//     // Now you can access resultData after fetching it from the server
+//   } catch (error) {
+//     // Handle errors
 
+//     // ref.read(networkErrorProvider.notifier).resolveError(error);
+//     ref.read(authenticationProvider.notifier).updateAuthState(AuthenticationState.alreadyLogInPop);
 
+//     print('Error fetching data: $error');
+//   } finally{
+//     // setState(() {
+//     //   isLoading = false;
+//     // });
+//   }
+// }
 
-
-Future<void> initializeResults() async {
-  try {
-    resultData = await ref.read(resultProvider).getAllResultsFromJeeniServer();
-    setState(() {
-      filteredResults = resultData;
-    });
-    // Now you can access resultData after fetching it from the server
-  } catch (error) {
-    // Handle errors
-    print('Error fetching data:');
-  } finally{
-    setState(() {
-      isLoading = false;
-    });
+  @override
+  void dispose() {
+    searchTextController.dispose();
+    super.dispose();
   }
-}
-
-@override
-void dispose() {
-  searchTextController.dispose();
-  super.dispose();
-}
 
   @override
   Widget build(BuildContext context) {
@@ -69,26 +72,26 @@ void dispose() {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
-              controller: searchTextController,
-              decoration: InputDecoration(
-                hintText: 'Enter test name...',
-                
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () {
-                    filterResults(searchTextController.text);
-                  },
-                ),
+            controller: searchTextController,
+            decoration: InputDecoration(
+              hintText: 'Enter test name...',
+              suffixIcon: IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  filterResults(searchTextController.text);
+                },
               ),
-              onChanged: filterResults,
             ),
+            onChanged: filterResults,
+          ),
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(top: 4,bottom:10,left: 2,right: 2 ),
+            padding:
+                const EdgeInsets.only(top: 4, bottom: 10, left: 2, right: 2),
             child: SizedBox(
               // color: Colors.green,
-              child:isLoading ? Center(child: Container(width: 40,height: 40,child: CircularProgressIndicator()))  : ListView.builder(
+              child: ListView.builder(
                 itemCount: filteredResults.length,
                 itemBuilder: (context, index) {
                   ResultModelClass data = filteredResults[index];
@@ -109,11 +112,14 @@ void dispose() {
           children: [
             const TextSpan(
               text: "Attempted on : ",
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,color: Colors.black),
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
             TextSpan(
               text: "${data.examDate} ( Duration ${data.durationInMinutes} )",
-              style: TextStyle(fontSize: 12,color: Colors.black),
+              style: TextStyle(fontSize: 12, color: Colors.black),
             ),
           ],
         ),
@@ -145,10 +151,23 @@ void dispose() {
             TextButton(
               onPressed: () {
                 //ToDo
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ResultDetailsPage(data: data,resultIdInt: data.id,)),
-                );
+                OverlayLoader.show(context: context, title: "loading");
+                ref
+                    .read(resultProvider)
+                    .getResultDetailsFromJeeniServer(data.id)
+                    .then((value) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ResultDetailsPage(data: data)),
+                  );
+                }).catchError((error) {
+                  print('Failed to fetch results: $error');
+                  ref.read(networkErrorProvider).resolveError(error);
+                }).whenComplete(() {
+                  OverlayLoader.hide();
+                });
+
               },
               child: const Column(
                 mainAxisSize: MainAxisSize.min,
@@ -191,7 +210,7 @@ void dispose() {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 4,bottom: 4,left: 8,right: 8),
+      padding: const EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

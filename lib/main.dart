@@ -46,7 +46,11 @@ class MyApp extends StatelessWidget {
               next.authenticationState == AuthenticationState.alreadyLogInPop) {
             AlreadyLoggedInOverlay.show(
               context: context,
-              onTapYes: () {},
+              onTapYes: () {
+                
+                ref.read(authenticationProvider.notifier).logOut().then((value) => AlreadyLoggedInOverlay.hide());
+                ref.read(menuProvider).setSelectedMenu(MenuType.home);
+              },
             );
           }
         });

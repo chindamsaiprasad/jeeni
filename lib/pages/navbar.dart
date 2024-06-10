@@ -6,8 +6,11 @@ import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/user_profile.dart';
 import 'package:jeeni/pages/widgets/logout_overlay.dart';
+import 'package:jeeni/pages/widgets/overlay_loader.dart';
 import 'package:jeeni/providers/auth_provider.dart';
 import 'package:jeeni/providers/menu_provider.dart';
+import 'package:jeeni/providers/network_error_provider.dart';
+import 'package:jeeni/providers/result_provider.dart';
 import 'package:jeeni/providers/user_provider.dart';
 import 'package:jeeni/utils/local_data_manager.dart';
 
@@ -170,8 +173,23 @@ class _NavBarState extends State<NavBar> {
                   ),
                 ),
                 onTap: () {
+                  if(MenuType.results == ref.read(menuProvider).selectedMenu){
+
+                  } else{
                   ref.read(menuProvider).setSelectedMenu(MenuType.results);
-                  widget.callback();
+                  OverlayLoader.show(context: context, title: "Results");
+
+                  ref.read(resultProvider).getAllResultsFromJeeniServer().then((value) {
+                    widget.callback();
+                  }).catchError((error) {
+                    print('Failed to fetch results: $error');
+                    ref.read(networkErrorProvider).resolveError(error);
+                  }).whenComplete(() {
+                    OverlayLoader.hide();
+                  });
+                  }
+                  // ref.read(menuProvider).setSelectedMenu(MenuType.results);
+                  // widget.callback();
                 },
               ),
               ListTile(
@@ -211,14 +229,11 @@ class _NavBarState extends State<NavBar> {
                 ),
                 onTap: () {
                   print("LOGOUT");
-                  // ref.read(menuProvider).toggleLogoutPopUp(true);
 
                   ref.read(authenticationProvider.notifier).logOutPopUp();
 
                   // ref.read(menuProvider).setLogOut(MenuType.logoutPopUp);
-
                   // callback();
-
                   // LogoutOverlay.show(context: context);
                 },
               )
@@ -252,7 +267,9 @@ class _NavBarState extends State<NavBar> {
                 ),
               ),
             ),
-            const SizedBox(height: 5,),
+            const SizedBox(
+              height: 5,
+            ),
             Text(
               userName,
               style: const TextStyle(color: Colors.white, fontSize: 16),

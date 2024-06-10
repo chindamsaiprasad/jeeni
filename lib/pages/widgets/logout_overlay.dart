@@ -143,10 +143,13 @@ class AlreadyLoggedInOverlay {
                         width: double.infinity,
                         child: TextButton(
                           onPressed: onTapYes,
-                          child: const Text(
-                            "OK",
-                            style: TextStyle(
-                              color: AppColour.darkGreen,
+                          child: TextButton(
+                            onPressed: onTapYes,
+                            child: const Text(
+                              'Login Again',
+                              style: TextStyle(
+                                color: AppColour.darkGreen,
+                              ),
                             ),
                           ),
                         ),

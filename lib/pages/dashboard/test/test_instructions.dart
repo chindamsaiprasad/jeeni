@@ -186,32 +186,35 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
                 ),
               ),
               const Spacer(),
-              Material(
-                elevation: 4,
-                child: SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: Column(
-                    children: [
-                      const Text(
-                        "You can start your test now!",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: AppColour.darkGreen,
+              SizedBox(
+                height: 60,
+                child: Material(
+                  elevation: 4,
+                  child: SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        const Text(
+                          "You can start your test now!",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: AppColour.darkGreen,
+                          ),
                         ),
-                      ),
-                      StopWatch(
-                        duration: (_duration?.inSeconds ?? 0) > 0
-                            ? _duration ?? const Duration(seconds: 00)
-                            : const Duration(seconds: 00),
-                        callback: () {
-                          setState(() {
-                            isStartEnable = true;
-                          });
-                        },
-                      )
-                    ],
+                        StopWatch(
+                          duration: (_duration?.inSeconds ?? 0) > 0
+                              ? _duration ?? const Duration(seconds: 00)
+                              : const Duration(seconds: 00),
+                          callback: () {
+                            setState(() {
+                              isStartEnable = true;
+                            });
+                          },
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

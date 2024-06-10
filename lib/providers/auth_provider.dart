@@ -118,7 +118,7 @@ class AuthenticationNotifier extends StateNotifier<Student?> {
 
   void updateAuthState(AuthenticationState authState) {
     state = state?.copyWith(
-      authenticationState: AuthenticationState.alreadyLogInPop,
+      authenticationState: authState,
     );
   }
 }

@@ -1,9 +1,23 @@
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jeeni/providers/auth_provider.dart';
+import 'package:jeeni/providers/test_provider.dart';
 
 final networkErrorProvider =
-    ChangeNotifierProvider((ref) => NetworkErrorProvider());
+    ChangeNotifierProvider((ref) => NetworkErrorProvider(ref));
 
 class NetworkErrorProvider with ChangeNotifier {
-  void resolveError(error) {}
+
+  Ref ref;
+  NetworkErrorProvider(this.ref);
+
+
+
+  void resolveError(error) {
+      // if (error is AlreadyLoggedInOnOtherDeviceException) {
+        ref.read(authenticationProvider.notifier).updateAuthState(AuthenticationState.alreadyLogInPop);
+      // }
+      // else if (error is SomethingWentWrongException) {}
+  }
 }
