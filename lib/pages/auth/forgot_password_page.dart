@@ -84,7 +84,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                               backgroundColor: Colors.white,
                               color: Colors.green,
                             )
-                          : const Text("Send Password" , style: TextStyle(color: Colors.white),),
+                          : const Text("Send password" , style: TextStyle(color: Colors.white),),
                     ),
                   ),
                 ],

@@ -21,7 +21,8 @@ class PracticeTest extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        Expanded(
+        Container(
+          height: 120,
           child: Material(
             elevation: 10,
             child: InkWell(
@@ -92,6 +93,7 @@ class PracticeTest extends ConsumerWidget {
                     .whenComplete(() => OverlayLoader.hide());
               },
               child: Container(
+                height: 20,
                 color: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -141,7 +143,8 @@ class PracticeTest extends ConsumerWidget {
             ),
           ),
         ),
-        Expanded(
+        Container(
+          height: 120,
           child: InkWell(
             onTap: ref.read(practiceTest).selectedCourse == null
                 ? null
@@ -243,7 +246,8 @@ class PracticeTest extends ConsumerWidget {
             ),
           ),
         ),
-        Expanded(
+        Container(
+          height: 120,
           child: InkWell(
             onTap: ref.read(practiceTest).selectedSubject == null
                 ? null
@@ -320,7 +324,8 @@ class PracticeTest extends ConsumerWidget {
             ),
           ),
         ),
-        Expanded(
+        Container(
+          height: 120,
           child: InkWell(
             onTap: ref.read(practiceTest).selectedCourse == null &&
                     ref.read(practiceTest).selectedSubject == null &&
@@ -401,87 +406,95 @@ class PracticeTest extends ConsumerWidget {
             ),
           ),
         ),
-        SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton(
-            style: const ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(Color(0xff1c5e20)),
-            ),
-            onPressed: ref.read(practiceTest).selectedCourse == null &&
-                    ref.read(practiceTest).selectedSubject == null &&
-                    ref.read(practiceTest).selectedChapter == null
-                ? null
-                : () {
-                    OverlayLoader.show(context: context, title: "Loading");
-                    ref
-                        .read(practiceTest)
-                        .fetchPracticeTest()
-                        .then((response) {
-                          OverlayLoader.hide();
-                          return Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  TestPage(testDownloadResponse: response),
-                            ),
-                          ).then((value) {
-                            print("RESULT ");
-                            // if (value is String) {
-                            //   Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => Scaffold(
-                            //               body: SingleChildScrollView(
-                            //                   child: Text(
-                            //                 value,
-                            //                 style: TextStyle(fontSize: 20),
-                            //               )),
-                            //             )
-                            //         // ResultPage(submitTestResponse: value),
-                            //         ),
-                            //   );
-                            // }
-                            if (value is SubmitTestResponse) {
-                              print("RESULT IFIF");
-                              Navigator.push<SubmitTestResponse>(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      ResultPage(submitTestResponse: value),
-                                ),
-                              ).then((submitTestResponse) {
-                                print("11111111111111111111111111");
-                                if (submitTestResponse != null) {
-                                  // final questionIds =
-                                  //     submitTestResponse.questionIds ?? [];
-                                  // final tetsId = submitTestResponse.testId;
-                                  // ref.read(testProvider).fetchQuestionSolution(
-                                  //     questionIds, tetsId!);
-                                  Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) {
-                                      print("sssssssssssss2222222222222");
-                                      return ViewQuestionSolution(
-                                        solutionProvider:
-                                            ChangeNotifierProvider(
-                                          (ref) => SolutionProvider(
-                                            submitTestResponse:
-                                                submitTestResponse,
-                                            ref: ref,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                ),
+              onPressed: ref.read(practiceTest).selectedCourse == null &&
+                      ref.read(practiceTest).selectedSubject == null &&
+                      ref.read(practiceTest).selectedChapter == null
+                  ? null
+                  : () {
+                      OverlayLoader.show(context: context, title: "Loading");
+                      ref
+                          .read(practiceTest)
+                          .fetchPracticeTest()
+                          .then((response) {
+                            OverlayLoader.hide();
+                            return Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    TestPage(testDownloadResponse: response),
+                              ),
+                            ).then((value) {
+                              print("RESULT ");
+                              // if (value is String) {
+                              //   Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => Scaffold(
+                              //               body: SingleChildScrollView(
+                              //                   child: Text(
+                              //                 value,
+                              //                 style: TextStyle(fontSize: 20),
+                              //               )),
+                              //             )
+                              //         // ResultPage(submitTestResponse: value),
+                              //         ),
+                              //   );
+                              // }
+                              if (value is SubmitTestResponse) {
+                                print("RESULT IFIF");
+                                Navigator.push<SubmitTestResponse>(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ResultPage(submitTestResponse: value),
+                                  ),
+                                ).then((submitTestResponse) {
+                                  print("11111111111111111111111111");
+                                  if (submitTestResponse != null) {
+                                    // final questionIds =
+                                    //     submitTestResponse.questionIds ?? [];
+                                    // final tetsId = submitTestResponse.testId;
+                                    // ref.read(testProvider).fetchQuestionSolution(
+                                    //     questionIds, tetsId!);
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        print("sssssssssssss2222222222222");
+                                        return ViewQuestionSolution(
+                                          solutionProvider:
+                                              ChangeNotifierProvider(
+                                            (ref) => SolutionProvider(
+                                              submitTestResponse:
+                                                  submitTestResponse,
+                                              ref: ref,
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  ));
-                                }
-                              });
-                            }
-                          });
-                        })
-                        .catchError((onError) {})
-                        .whenComplete(() => OverlayLoader.hide());
-                  },
-            child: const Text("Start Test"),
+                                        );
+                                      },
+                                    ));
+                                  }
+                                });
+                              }
+                            });
+                          })
+                          .catchError((onError) {})
+                          .whenComplete(() => OverlayLoader.hide());
+                    },
+              child: const Text("Start Test",style: TextStyle(color: Colors.white),),
+            ),
           ),
         ),
       ],

@@ -76,7 +76,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     controller: _passwordController,
                     obscureText: true,
                     decoration: const InputDecoration(
-                      labelText: "password",
+                      labelText: "Password",
                       labelStyle: TextStyle(
                         color: Colors.black45,
                         fontWeight: FontWeight.w400,

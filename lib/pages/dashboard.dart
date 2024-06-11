@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/auth/login_page.dart';
 import 'package:jeeni/pages/dashboard/practice_test/practice_test.dart';
 import 'package:jeeni/pages/dashboard/result/result_page.dart';
+import 'package:jeeni/pages/dashboard/test/test_list_page.dart';
 import 'package:jeeni/pages/home_page.dart';
 import 'package:jeeni/pages/navbar.dart';
 import 'package:jeeni/pages/report_page.dart';
@@ -58,14 +59,22 @@ class Dashboard extends ConsumerWidget {
           switch (selectedMenu) {
             case MenuType.home:
               return const HomePage();
+              
+            
+            case MenuType.content:
+              return const TestListPage();
+            case MenuType.test:
+              return const TestListPage();
+            case MenuType.selfTest:
+              return const PracticeTest();
             case MenuType.practiceTest:
               return const PracticeTest();
-            case MenuType.settings:
-              return const SettingsPage();
             case MenuType.results:
               return const ResultsPage();
             case MenuType.issueReport:
               return const ReportIssuePage();
+            case MenuType.aboutUs:
+              return const HomePage();
             case MenuType.logout:
               return const LoginPage();
             // case MenuType.logoutPopUp:

@@ -4,13 +4,17 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jeeni/pages/dashboard/content/content_page.dart';
+import 'package:jeeni/pages/dashboard/test/test_list_page.dart';
 import 'package:jeeni/pages/user_profile.dart';
 import 'package:jeeni/pages/widgets/logout_overlay.dart';
 import 'package:jeeni/pages/widgets/overlay_loader.dart';
 import 'package:jeeni/providers/auth_provider.dart';
+import 'package:jeeni/providers/content_provider.dart';
 import 'package:jeeni/providers/menu_provider.dart';
 import 'package:jeeni/providers/network_error_provider.dart';
 import 'package:jeeni/providers/result_provider.dart';
+import 'package:jeeni/providers/test_provider.dart';
 import 'package:jeeni/providers/user_provider.dart';
 import 'package:jeeni/utils/local_data_manager.dart';
 
@@ -139,27 +143,111 @@ class _NavBarState extends State<NavBar> {
               ),
               ListTile(
                 leading: Icon(
-                  Icons.settings,
-                  color: selectedMenu == MenuType.settings
+                  Icons.menu_book,
+                  color: selectedMenu == MenuType.content
                       ? Colors.green
                       : Colors.black38,
                 ),
                 title: Text(
-                  "Settings",
+                  "Content",
                   style: TextStyle(
-                    color: selectedMenu == MenuType.settings
+                    color: selectedMenu == MenuType.content
                         ? Colors.green
                         : Colors.black,
                   ),
                 ),
                 onTap: () {
-                  ref.read(menuProvider).setSelectedMenu(MenuType.settings);
+                  // ref.read(menuProvider).setSelectedMenu(MenuType.content);
+
+                  OverlayLoader.show(context: context, title: "");
+                  ref
+                      .read(contentProvider)
+                      .getAllSubscribedCoursesFromJeeniServer()
+                      .then((isSuccess) => {
+                            if (isSuccess)
+                              {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ContentPage(),
+                                  ),
+                                )
+                              }
+                          })
+                      .catchError((error) {
+                    print("getAllSubscribedCoursesFromJeeniServer   $error");
+                    ref.read(networkErrorProvider).resolveError(error);
+                    // TODO :: ERROR HANDELING
+                  }).whenComplete(() => OverlayLoader.hide());
+
                   widget.callback();
                 },
               ),
               ListTile(
                 leading: Icon(
-                  Icons.book,
+                  Icons.table_restaurant,
+                  color: selectedMenu == MenuType.selfTest
+                      ? Colors.green
+                      : Colors.black38,
+                ),
+                title: Text(
+                  "Self Practice",
+                  style: TextStyle(
+                    color: selectedMenu == MenuType.selfTest
+                        ? Colors.green
+                        : Colors.black,
+                  ),
+                ),
+                onTap: () {
+                  ref.read(menuProvider).setSelectedMenu(MenuType.selfTest);
+                  widget.callback();
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.quiz,
+                  color: selectedMenu == MenuType.test
+                      ? Colors.green
+                      : Colors.black38,
+                ),
+                title: Text(
+                  "Test",
+                  style: TextStyle(
+                    color: selectedMenu == MenuType.test
+                        ? Colors.green
+                        : Colors.black,
+                  ),
+                ),
+                onTap: () {
+                  // ref.read(menuProvider).setSelectedMenu(MenuType.selfTest);
+
+                  OverlayLoader.show(
+                      context: context, title: "Tests Loading...");
+                  ref
+                      .read(testProvider)
+                      .fetchAllTestsFromJeeniServer()
+                      .then((isSuccess) => {
+                            if (isSuccess)
+                              {
+                                print(isSuccess),
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const TestListPage(),
+                                  ),
+                                )
+                              }
+                          })
+                      .catchError((error) {
+                    // TODO :: ERROR HANDELING
+                  }).whenComplete(() => OverlayLoader.hide());
+
+                  widget.callback();
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.note,
                   color: selectedMenu == MenuType.results
                       ? Colors.green
                       : Colors.black38,
@@ -173,20 +261,22 @@ class _NavBarState extends State<NavBar> {
                   ),
                 ),
                 onTap: () {
-                  if(MenuType.results == ref.read(menuProvider).selectedMenu){
+                  if (MenuType.results == ref.read(menuProvider).selectedMenu) {
+                  } else {
+                    ref.read(menuProvider).setSelectedMenu(MenuType.results);
+                    OverlayLoader.show(context: context, title: "Results");
 
-                  } else{
-                  ref.read(menuProvider).setSelectedMenu(MenuType.results);
-                  OverlayLoader.show(context: context, title: "Results");
-
-                  ref.read(resultProvider).getAllResultsFromJeeniServer().then((value) {
-                    widget.callback();
-                  }).catchError((error) {
-                    print('Failed to fetch results: $error');
-                    ref.read(networkErrorProvider).resolveError(error);
-                  }).whenComplete(() {
-                    OverlayLoader.hide();
-                  });
+                    ref
+                        .read(resultProvider)
+                        .getAllResultsFromJeeniServer()
+                        .then((value) {
+                      widget.callback();
+                    }).catchError((error) {
+                      print('Failed to fetch results: $error');
+                      ref.read(networkErrorProvider).resolveError(error);
+                    }).whenComplete(() {
+                      OverlayLoader.hide();
+                    });
                   }
                   // ref.read(menuProvider).setSelectedMenu(MenuType.results);
                   // widget.callback();
@@ -209,6 +299,28 @@ class _NavBarState extends State<NavBar> {
                 ),
                 onTap: () {
                   ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
+                  widget.callback();
+                },
+              ),
+
+              Divider(),
+              ListTile(
+                leading: Icon(
+                  Icons.info,
+                  color: selectedMenu == MenuType.aboutUs
+                      ? Colors.green
+                      : Colors.black38,
+                ),
+                title: Text(
+                  "About us",
+                  style: TextStyle(
+                    color: selectedMenu == MenuType.aboutUs
+                        ? Colors.green
+                        : Colors.black,
+                  ),
+                ),
+                onTap: () {
+                  // ref.read(menuProvider).setSelectedMenu(MenuType.selfTest);
                   widget.callback();
                 },
               ),

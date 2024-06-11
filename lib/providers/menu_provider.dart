@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-enum MenuType { home, settings, issueReport,results, logout, practiceTest }
+enum MenuType { home, content, selfTest, test,  results, issueReport, aboutUs , logout, practiceTest }
 
 final menuProvider = ChangeNotifierProvider((ref) => MenuProvider(ref: ref));
 
@@ -25,18 +25,26 @@ class MenuProvider with ChangeNotifier {
     switch (selectedMenu) {
       case MenuType.home:
         return "Home";
-      case MenuType.settings:
-        return "Settings";
+      case MenuType.content:
+        return "Content";
+      case MenuType.selfTest:
+        return "Self Practice";
+      case MenuType.test:
+        return "Test";
       case MenuType.issueReport:
         return "Report Issues";
       case MenuType.results:
         return "Attempted Test";
+      case MenuType.aboutUs:
+        return "About Us";
       case MenuType.logout:
         return "Logout";
       case MenuType.practiceTest:
         return "Practice Test";
       // case MenuType.logoutPopUp:
-      //   return "";
+      //    return "";
+      default:
+        return "";
     }
   }
 
