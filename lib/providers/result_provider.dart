@@ -35,6 +35,10 @@ class ResultProvider with ChangeNotifier {
         List<dynamic> jsonList = jsonDecode(value.body);
         resultData = jsonList.map((json) => ResultModelClass.fromJson(json)).toList();
 
+        // print("method leng ${resultData.length}");
+
+        notifyListeners();
+
         return true;
       } else if (value.statusCode == 401) { 
         throw AlreadyLoggedInOnOtherDeviceException();
@@ -51,6 +55,8 @@ class ResultProvider with ChangeNotifier {
         url: "$BASE_URL/report/getRank/${resultID}",
         httpMethodType: RequestType.get);
         resultDetailsData = jsonDecode(responseData.body);
+
+    notifyListeners();
 
     return true;
   }

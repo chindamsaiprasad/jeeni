@@ -16,48 +16,12 @@ class ResultsPage extends ConsumerStatefulWidget {
 
 class ResultsPageState extends ConsumerState<ResultsPage> {
   bool isLoading = true;
-  List<ResultModelClass> resultData = [];
 
   TextEditingController searchTextController = TextEditingController();
-  List<ResultModelClass> filteredResults = [];
 
-  void filterResults(String searchText) {
-    setState(() {
-      filteredResults = resultData
-          .where((result) =>
-              result.name.toLowerCase().contains(searchText.toLowerCase()))
-          .toList();
-    });
-  }
+  List<ResultModelClass> resultData = [];
 
-  @override
-  void initState() {
-    super.initState();
 
-    resultData = ref.read(resultProvider).resultData;
-    filteredResults = resultData;
-  }
-
-// Future<void> initializeResults() async {
-//   try {
-//     resultData = await ref.read(resultProvider).getAllResultsFromJeeniServer();
-//     setState(() {
-//       filteredResults = resultData;
-//     });
-//     // Now you can access resultData after fetching it from the server
-//   } catch (error) {
-//     // Handle errors
-
-//     // ref.read(networkErrorProvider.notifier).resolveError(error);
-//     ref.read(authenticationProvider.notifier).updateAuthState(AuthenticationState.alreadyLogInPop);
-
-//     print('Error fetching data: $error');
-//   } finally{
-//     // setState(() {
-//     //   isLoading = false;
-//     // });
-//   }
-// }
 
   @override
   void dispose() {
@@ -78,30 +42,47 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
               suffixIcon: IconButton(
                 icon: Icon(Icons.search),
                 onPressed: () {
-                  filterResults(searchTextController.text);
+                  setState(() {});
                 },
               ),
             ),
-            onChanged: filterResults,
+            // onChanged: filterResults,
+            onChanged: (value) {
+              setState(() {});
+            },
           ),
         ),
         Expanded(
           child: Padding(
             padding:
                 const EdgeInsets.only(top: 4, bottom: 10, left: 2, right: 2),
-            child: SizedBox(
-              // color: Colors.green,
-              child: ListView.builder(
-                itemCount: filteredResults.length,
-                itemBuilder: (context, index) {
-                  ResultModelClass data = filteredResults[index];
-                  return resultCard(data);
-                },
-              ),
-            ),
+            child: getResultsList(),
           ),
         ),
       ],
+    );
+  }
+
+  Widget getResultsList() {
+    resultData = ref.watch(resultProvider).resultData;
+
+    final String searchText = searchTextController.text;
+
+    final filteredResultData = resultData.where((data) {
+      return data.name.toLowerCase().contains(searchText.toLowerCase());
+    }).toList();
+
+    // print("ok widget check ${resultData.length}  , and filterr ${filteredResultData.length}");
+
+    return SizedBox(
+      // color: Colors.green,
+      child: ListView.builder(
+        itemCount: filteredResultData.length,
+        itemBuilder: (context, index) {
+          ResultModelClass data = filteredResultData[index];
+          return resultCard(data);
+        },
+      ),
     );
   }
 
@@ -167,7 +148,6 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
                 }).whenComplete(() {
                   OverlayLoader.hide();
                 });
-
               },
               child: const Column(
                 mainAxisSize: MainAxisSize.min,
