@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -169,57 +169,6 @@ class UserProviderClass with ChangeNotifier {
     return message;
   }
 
-//   Future<String> uploadImage(XFile imageFile) async {
-//   String message = "";
-//   final jauth = ref.read(authenticationProvider)?.jauth;
-
-//   if (jauth == null) {
-//     throw Exception('Authentication token (jauth) is null');
-//   }
-
-//   final url = Uri.parse('https://exam.jeeni.in/Jeeni/student/uploadImage');
-
-//   Map<String, String> headers = {
-//     "Accept-Encoding": "gzip, deflate, br, zstd",
-//     "Content-Type": "multipart/form-data; boundary=----",
-//     "Accept": "application/json",
-//     "Jauth": jauth,
-//   };
-
-//   String fileName = imageFile.path.split('/').last;
-//   String base64Image = base64Encode(File(imageFile.path).readAsBytesSync());
-
-//   print("data of $fileName  and $base64Image");
-
-//   try {
-//     // Create a multipart request
-//     var request = http.MultipartRequest('POST', url)
-//       ..headers.addAll(headers)
-//       ..files.add(http.MultipartFile.fromString('file', base64Image,
-//           filename: fileName));
-
-//     // Send the request
-//     var streamedResponse = await request.send();
-//     var response = await http.Response.fromStream(streamedResponse);
-
-//     if (response.statusCode == 200) {
-//       print('Image uploaded successfully. ${response.body}');
-//       message = "Image uploaded successfully";
-//     } else if (response.statusCode == 302) {
-//       print('Image upload request was redirected. ${response.body}');
-//       message = "Image uploaded successfully (redirected)";
-//     } else {
-//       print('Failed to upload image. Status code: ${response.statusCode} ${response.body}');
-//       message = "Failed to upload image. Please try again.";
-//     }
-//   } catch (e) {
-//     print('Error occurred while uploading image: $e');
-//     message = "An error occurred while uploading the image. Please try again.";
-//   }
-
-//   return message;
-// }
-
   Future<String> uploadImage(XFile imageFile) async {
     String message = "";
     final jauth = ref.read(authenticationProvider)?.jauth;
@@ -272,4 +221,47 @@ class UserProviderClass with ChangeNotifier {
 
     return message;
   }
+
+  /////////////////////////////////////////////////////////////////////////////////
+  Future<void> sendScreenshotLogs(File file) async {
+  final String url = 'https://exam.jeeni.in/Jeeni/rest/login/sendScreenshotLogs';
+
+  final jauth = ref.read(authenticationProvider)?.jauth;
+  try {
+    Map<String, String> headers = {
+      "Accept-Encoding": "gzip, deflate, br, zstd",
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "Accept": "application/json",
+      "Jauth": jauth!,
+    };
+    // Create a multipart request
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+
+    request.headers.addAll(headers);
+
+    // Add the file to the request
+    var multipartFile = await http.MultipartFile.fromPath(
+      'files',
+      file.path,
+    );
+    request.files.add(multipartFile);
+
+    // Send the request
+    var response = await request.send();
+
+    // Check the response status
+    if (response.statusCode == 200) {
+      // Read the response
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      print('Response: $responseString');
+    } else {
+      print('Failed to send screenshot logs. Status code: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+
+
 }

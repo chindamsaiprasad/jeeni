@@ -31,35 +31,44 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            controller: searchTextController,
-            decoration: InputDecoration(
-              hintText: 'Enter test name...',
-              suffixIcon: IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  setState(() {});
-                },
+    return Scaffold(
+      appBar:AppBar(
+        backgroundColor: const Color(0xff1c5e20),
+        title: const Text("Results", style: TextStyle(color: Colors.white,fontSize: 22),),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchTextController,
+              decoration: InputDecoration(
+                hintText: 'Enter test name...',
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    setState(() {});
+                  },
+                ),
               ),
+              // onChanged: filterResults,
+              onChanged: (value) {
+                setState(() {});
+              },
             ),
-            // onChanged: filterResults,
-            onChanged: (value) {
-              setState(() {});
-            },
           ),
-        ),
-        Expanded(
-          child: Padding(
-            padding:
-                const EdgeInsets.only(top: 4, bottom: 10, left: 2, right: 2),
-            child: getResultsList(),
+          Expanded(
+            child: Padding(
+              padding:
+                  const EdgeInsets.only(top: 4, bottom: 10, left: 2, right: 2),
+              child: getResultsList(),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

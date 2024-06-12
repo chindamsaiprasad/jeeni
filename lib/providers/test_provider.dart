@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:jeeni/providers/test_progress_provider.dart';
 import 'package:jeeni/response_models/submit_test_response.dart';
 import 'package:jeeni/response_models/test_response.dart';
+import 'package:jeeni/response_models/test_soultion.dart';
 import 'package:jeeni/utils/file_utils.dart';
 
 final testProvider = ChangeNotifierProvider((ref) => TestProvider(ref: ref));
@@ -80,6 +81,8 @@ class TestProvider with ChangeNotifier {
             headers: headers)
         .then((response) async {
       Map<String, dynamic> data = json.decode(response.body);
+
+      print("test download $data");
       return TestDownloadResponse.fromJson(data);
     }).catchError((error) {
       // TODO :: ERROR HANDELING
@@ -184,6 +187,33 @@ class TestProvider with ChangeNotifier {
     tests = tests.where((test) => test.id != testId);
     notifyListeners();
   }
+
+
+  /////////////////////////////////////////////////////////////////////////
+  
+  Future<TestSoltuionsModelClass> viewSolutions({    ///TestSoltuionsModelClass
+    required int testId,
+  }) async {
+    final jauth = ref.read(authenticationProvider)?.jauth;
+
+    Map<String, String> headers = {};
+    headers.addAll({"Content-Type": "application/json", "Jauth": jauth!});
+
+    return await http
+        .get(Uri.parse("$BASE_URL/mtest/getMockTestQuestionsForWeb/$testId/1080/2028/1?isMobile=true"),
+            headers: headers)
+        .then((response) async {
+          print("test solutions ${response.body}");
+        Map<String, dynamic> data = json.decode(response.body);
+      return TestSoltuionsModelClass.fromJson(data);
+
+    }).catchError((error) {
+      // TODO :: ERROR HANDELING
+      throw Exception(error);
+    });
+  }
+
+
 }
 
 class AlreadyLoggedInOnOtherDeviceException implements Exception {}

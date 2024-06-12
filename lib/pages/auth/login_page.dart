@@ -138,7 +138,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             isLoading = false;
                           });
                           EasyLoading.showError("ERROR CODE :: $error ");
-                        });
+                        }).whenComplete(() => 
+                          setState(() {
+                            isLoading = false;
+                          })
+                        );
                       },
                       child: isLoading
                           ? const CircularProgressIndicator(

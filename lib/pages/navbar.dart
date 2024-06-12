@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/dashboard/content/content_page.dart';
+import 'package:jeeni/pages/dashboard/result/result_page.dart';
 import 'package:jeeni/pages/dashboard/test/test_list_page.dart';
+import 'package:jeeni/pages/report_page.dart';
 import 'package:jeeni/pages/user_profile.dart';
 import 'package:jeeni/pages/widgets/logout_overlay.dart';
 import 'package:jeeni/pages/widgets/overlay_loader.dart';
@@ -159,7 +161,7 @@ class _NavBarState extends State<NavBar> {
                 onTap: () {
                   // ref.read(menuProvider).setSelectedMenu(MenuType.content);
 
-                  OverlayLoader.show(context: context, title: "");
+                  OverlayLoader.show(context: context, title: "Loading...");
                   ref
                       .read(contentProvider)
                       .getAllSubscribedCoursesFromJeeniServer()
@@ -183,26 +185,26 @@ class _NavBarState extends State<NavBar> {
                   widget.callback();
                 },
               ),
-              ListTile(
-                leading: Icon(
-                  Icons.table_restaurant,
-                  color: selectedMenu == MenuType.selfTest
-                      ? Colors.green
-                      : Colors.black38,
-                ),
-                title: Text(
-                  "Self Practice",
-                  style: TextStyle(
-                    color: selectedMenu == MenuType.selfTest
-                        ? Colors.green
-                        : Colors.black,
-                  ),
-                ),
-                onTap: () {
-                  ref.read(menuProvider).setSelectedMenu(MenuType.selfTest);
-                  widget.callback();
-                },
-              ),
+              // ListTile(
+              //   leading: Icon(
+              //     Icons.table_restaurant,
+              //     color: selectedMenu == MenuType.selfTest
+              //         ? Colors.green
+              //         : Colors.black38,
+              //   ),
+              //   title: Text(
+              //     "Self Practice",
+              //     style: TextStyle(
+              //       color: selectedMenu == MenuType.selfTest
+              //           ? Colors.green
+              //           : Colors.black,
+              //     ),
+              //   ),
+              //   onTap: () {
+              //     ref.read(menuProvider).setSelectedMenu(MenuType.selfTest);
+              //     widget.callback();
+              //   },
+              // ),
               ListTile(
                 leading: Icon(
                   Icons.quiz,
@@ -263,13 +265,19 @@ class _NavBarState extends State<NavBar> {
                 onTap: () {
                   if (MenuType.results == ref.read(menuProvider).selectedMenu) {
                   } else {
-                    ref.read(menuProvider).setSelectedMenu(MenuType.results);
-                    OverlayLoader.show(context: context, title: "Results");
+                    // ref.read(menuProvider).setSelectedMenu(MenuType.results);
+                    OverlayLoader.show(context: context, title: "Loading...");
 
                     ref
                         .read(resultProvider)
                         .getAllResultsFromJeeniServer()
                         .then((value) {
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ResultsPage(),
+                          ),
+                        );
                       widget.callback();
                     }).catchError((error) {
                       print('Failed to fetch results: $error');
@@ -298,7 +306,13 @@ class _NavBarState extends State<NavBar> {
                   ),
                 ),
                 onTap: () {
-                  ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
+                  // ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
+                  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ReportIssuePage(),
+                          ),
+                        );
                   widget.callback();
                 },
               ),

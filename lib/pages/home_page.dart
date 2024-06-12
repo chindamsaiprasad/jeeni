@@ -4,6 +4,7 @@ import 'package:jeeni/pages/dashboard/content/content_page.dart';
 import 'package:jeeni/pages/dashboard/practice_test/practice_test.dart';
 import 'package:jeeni/pages/dashboard/result/result_page.dart';
 import 'package:jeeni/pages/dashboard/test/test_list_page.dart';
+import 'package:jeeni/pages/report_page.dart';
 import 'package:jeeni/pages/widgets/overlay_loader.dart';
 import 'package:jeeni/providers/content_provider.dart';
 import 'package:jeeni/providers/menu_provider.dart';
@@ -124,10 +125,10 @@ class _HomePageState extends ConsumerState<HomePage> {
         }, Icons.menu_book, "Content", "Study material for student",
             Icons.arrow_right),
 
-        navigationList(() {
-          ref.read(menuProvider).setSelectedMenu(MenuType.practiceTest);
-        }, Icons.table_restaurant, "Self Practice", "Practice here before test.",
-            Icons.arrow_right),
+        // navigationList(() {
+        //   ref.read(menuProvider).setSelectedMenu(MenuType.practiceTest);
+        // }, Icons.table_restaurant, "Self Practice", "Practice here before test.",
+        //     Icons.arrow_right),
 
         navigationList(() {
           OverlayLoader.show(context: context, title: "Tests Loading...");
@@ -155,7 +156,13 @@ class _HomePageState extends ConsumerState<HomePage> {
           OverlayLoader.show(context: context, title: "loading...");
 
           ref.read(resultProvider).getAllResultsFromJeeniServer().then((value) {
-            ref.read(menuProvider).setSelectedMenu(MenuType.results);
+            // ref.read(menuProvider).setSelectedMenu(MenuType.results);
+            Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ResultsPage(),
+                          ),
+                        );
           }).catchError((error) {
             print('Failed to fetch results: $error');
             ref.read(networkErrorProvider).resolveError(error);
@@ -165,7 +172,13 @@ class _HomePageState extends ConsumerState<HomePage> {
         }, Icons.note, "Results", "See the results", Icons.arrow_right),
 
         navigationList(() {
-          ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
+          // ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
+           Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ReportIssuePage(),
+                          ),
+                        );
         }, Icons.warning_amber, "Issue Reporting", "Report the issue here", Icons.arrow_right),
       ],
     );

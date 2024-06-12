@@ -69,16 +69,17 @@ class Dashboard extends ConsumerWidget {
               return const PracticeTest();
             case MenuType.practiceTest:
               return const PracticeTest();
-            case MenuType.results:
-              return const ResultsPage();
-            case MenuType.issueReport:
-              return const ReportIssuePage();
+            // case MenuType.issueReport:
+            //   return const ReportIssuePage();
             case MenuType.aboutUs:
               return const HomePage();
             case MenuType.logout:
               return const LoginPage();
             // case MenuType.logoutPopUp:
             //   return const LogoutPopUpPage();
+
+            default:
+             return HomePage();
           }
         },
       ),

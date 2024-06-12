@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jeeni/providers/user_provider.dart';
 
 enum SingingCharacter {
   unableLogin,
@@ -8,46 +12,34 @@ enum SingingCharacter {
   others
 }
 
-class ReportIssuePage extends StatefulWidget {
+class ReportIssuePage extends ConsumerStatefulWidget {
   const ReportIssuePage({super.key});
 
   @override
-  State<ReportIssuePage> createState() => _ReportIssuePageState();
+  _ReportIssuePageState createState() => _ReportIssuePageState();
 }
 
-class _ReportIssuePageState extends State<ReportIssuePage> {
+class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
   SingingCharacter? _character;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          OptionsContainer(),
-          TextFiledContianer(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 40,
-              width: MediaQuery.of(context).size.width,
-              child: ElevatedButton(
-                onPressed: () {},
-                                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0), 
-                      ),
-                    ),
-                  ),
-                child: Text(
-                  "Report",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-          ),
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xff1c5e20),
+        title: const Text("Report Issues", style: TextStyle(color: Colors.white,fontSize: 22),),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            OptionsContainer(),
+            TextFiledContianer(),
+            reportButton(),
+          ],
+        ),
       ),
     );
   }
@@ -156,5 +148,34 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
         ),
       ),
     );
+  }
+
+  Widget reportButton(){
+    return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 40,
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
+                  onPressed: () async{
+                    File emptyImageFile = await File('path_to_empty_image.png');
+
+                    ref.read(userProvider).sendScreenshotLogs(emptyImageFile);
+                  },
+                                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0), 
+                        ),
+                      ),
+                    ),
+                  child: Text(
+                    "Report",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            );
   }
 }

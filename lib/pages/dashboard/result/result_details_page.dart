@@ -2,9 +2,14 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
+import "package:jeeni/pages/dashboard/test/test_instructions.dart";
+import "package:jeeni/pages/solution/solution_provider.dart";
+import "package:jeeni/pages/solution/view_questions_solution.dart";
 import "package:jeeni/pages/widgets/overlay_loader.dart";
 import "package:jeeni/providers/result_provider.dart";
+import "package:jeeni/providers/test_provider.dart";
 import "package:jeeni/response_models/result_list_response.dart";
+import "package:jeeni/response_models/submit_test_response.dart";
 import "package:jeeni/utils/local_data_manager.dart";
 
 class ResultDetailsPage extends ConsumerStatefulWidget {
@@ -60,6 +65,9 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
         title: Text("Result Details", style: TextStyle(color: Colors.white)),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
       ),
       body: Column(
         children: [
@@ -186,9 +194,7 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
 
   Widget viewSolutionButton() {
     return ElevatedButton(
-      onPressed: () {
-        // to do
-      },
+      onPressed: () => _handleButtonPress(context),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -197,10 +203,61 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
           ),
         ),
       ),
-      child: Text(
+      child: const Text(
         "View Solutions",
         style: TextStyle(color: Colors.white),
       ),
     );
   }
+
+
+  _handleButtonPress(BuildContext context) {
+    try {
+      // Show an overlay loader (assuming OverlayLoader.show is implemented)
+      OverlayLoader.show(context: context);
+
+      // Get the width and height of the device
+      final deviceWidth = MediaQuery.of(context).size.width;
+      final deviceHeight = MediaQuery.of(context).size.height;
+
+      // Get the test ID from the widget data
+      int testId = widget.data.id;
+      print("Test ID: $testId");
+
+      ref
+      .read(testProvider)
+      .viewSolutions(testId: testId)
+      .then((response) {
+        print("Response: ${response}");
+
+        
+
+        // Navigator.push(context,MaterialPageRoute(builder: (context) {
+        //       return ViewQuestionSolution(solutionProvider: ChangeNotifierProvider((ref) => 
+        //       SolutionProvider( submitTestResponse: SubmitTestResponse, ref: ref,),
+        //                                                         ),
+        //                                                       );
+        //                                                     },
+        //                                                   ));
+
+
+
+      })
+      .catchError((error) {
+        print("Error: $error");
+      })
+      .whenComplete(() {
+        // Hide the overlay loader after the operation completes
+        OverlayLoader.hide();
+      });
+
+    } catch (error) {
+      // Handle the error properly
+      print("Error: $error");
+    } finally {
+      // Hide the overlay loader (assuming OverlayLoader.hide is implemented)
+      OverlayLoader.hide();
+    }
+  }
+
 }
