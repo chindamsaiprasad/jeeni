@@ -54,6 +54,20 @@ class TestProgressProvider with ChangeNotifier {
         .indexWhere((question) => question.id == currentQuestion.id);
   }
 
+  void updateCurrentQuestion(int questionId) {
+    // final currentQuestion = getCurrentQuestion;
+    if (questionId == 0) return;
+
+    final tempList = [...questions];
+    var index =
+        tempList.indexWhere((question) => question.id == questionId);
+
+        // print("ok provider checking $index ${tempList.elementAt(index).copyWith().id}");
+        _currentQuestion = tempList.elementAt(index).copyWith();
+    _reset();
+    notifyListeners();
+  }
+
   void _reset() {
     hasHide = true;
     Future.delayed(

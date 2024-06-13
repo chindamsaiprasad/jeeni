@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/models/test_download_response.dart';
 import 'package:jeeni/pages/widgets/rich_text.dart';
 import 'package:jeeni/pages/widgets/stop_watch.dart';
+import 'package:jeeni/providers/test_time._provider.dart';
 import 'package:jeeni/response_models/test_response.dart';
 import 'package:jeeni/utils/app_colour.dart';
 
@@ -32,11 +33,23 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
     DateTime startTime =
         DateTime.fromMillisecondsSinceEpoch(widget.test.startTime ?? 0);
     _duration = startTime.difference(DateTime.now());
+
+    setTimerprovier();
     super.initState();
+  }
+
+  setTimerprovier() async{
+    ref.read(timerProvider).updateDuration(widget.test.durationInMinutes ?? 0);
   }
 
   @override
   Widget build(BuildContext context) {
+
+    final timerService = ref.watch(timerProvider);
+    int hours = timerService.duration.inHours;
+    int minutes = timerService.duration.inMinutes.remainder(60);
+    int seconds = timerService.duration.inSeconds.remainder(60);
+
     return WillPopScope(
       onWillPop: () {
         Navigator.pop(context, false);
@@ -203,16 +216,18 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
                             color: AppColour.darkGreen,
                           ),
                         ),
-                        StopWatch(
-                          duration: (_duration?.inSeconds ?? 0) > 0
-                              ? _duration ?? const Duration(seconds: 00)
-                              : const Duration(seconds: 00),
-                          callback: () {
-                            setState(() {
-                              isStartEnable = true;
-                            });
-                          },
-                        )
+                        // StopWatch(
+                        //   duration: (_duration?.inSeconds ?? 0) > 0
+                        //       ? _duration ?? const Duration(seconds: 00)
+                        //       : const Duration(seconds: 00),
+                        //   callback: () {
+                        //     setState(() {
+                        //       isStartEnable = true;
+                        //     });
+                        //   },
+                        // )
+                        Text('${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                        style: const TextStyle(fontSize: 26),),
                       ],
                     ),
                   ),
@@ -229,11 +244,19 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
                     backgroundColor:
                         MaterialStatePropertyAll(AppColour.darkGreen),
                   ),
-                  onPressed: isStartEnable
-                      ? () {
-                          Navigator.pop(context, true);
-                        }
-                      : null,
+                  onPressed: () {
+                    timerService.startTimer();
+                    Navigator.pop(context, true);
+                  },
+                  // onPressed: isStartEnable
+                  //     ? () {
+                  //         Navigator.pop(context, true);
+                  //       }
+                  //     : null,
+                  // onPressed: () {
+                  //   timerService.startTimer();
+                  //   // timerService.stopTimer();
+                  // },
                   child: const Text("Start Test", style: TextStyle(color: Colors.white),),
                 ),
               ),

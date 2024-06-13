@@ -12,6 +12,8 @@ import 'package:jeeni/pages/dashboard/test/questions_widget.dart/multiple_questi
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/numeric_question.dart';
 import 'package:jeeni/pages/widgets/overlay_loader.dart';
 import 'package:jeeni/providers/test_progress_provider.dart';
+import 'package:jeeni/providers/test_provider.dart';
+import 'package:jeeni/providers/test_time._provider.dart';
 import 'package:jeeni/utils/app_colour.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -38,7 +40,30 @@ class _TestPageState extends ConsumerState<TestPage> {
         ref.read(testProgressProvider).init(widget.testDownloadResponse);
       },
     );
+
+    //    WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   checkAndSubmitTest();
+    // });
   }
+
+  void checkAndSubmitTest() {
+    final timerService = ref.read(timerProvider);
+    if (timerService.duration == Duration.zero) {
+      // OverlayLoader.show(context: context, title: "Submitting");
+      print("this wroks");
+      // ref.read(testProgressProvider).submitTest().then((response) {
+      //   print("3333333333333333333333333 VALUE");
+      //   if (response != null) {
+      //     print("3333333333333333333333333 if VALUE");
+      //     timerService.stopTimer();
+      //     Navigator.pop(context, response);
+      //   }
+      // }).catchError((onError) {
+      //   // Handle error
+      // }).whenComplete(() => OverlayLoader.hide());
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +84,21 @@ class _TestPageState extends ConsumerState<TestPage> {
   }
 
   Container _buildAppBar() {
+    final timerService = ref.watch(timerProvider);
+    int hours = timerService.duration.inHours;
+    int minutes = timerService.duration.inMinutes.remainder(60);
+    int seconds = timerService.duration.inSeconds.remainder(60);
+
+//     if (timerService.duration == Duration.zero) {
+//       print("ok time over");
+//       // Trigger test submission check every time the duration changes
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       checkAndSubmitTest();
+//     });
+// } else {
+//   // print("Time is not over");
+// }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 55,
@@ -71,13 +111,15 @@ class _TestPageState extends ConsumerState<TestPage> {
             "Mock Test",
             style: TextStyle(color: AppColour.white),
           ),
-          Text(
-            ref
-                .watch(testProgressProvider)
-                .getremaingDurationInSeconds
-                .toString(),
-            style: const TextStyle(color: AppColour.white),
-          ),
+          Text('${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                        style: const TextStyle(fontSize: 18,color: Colors.white),),
+          // Text(
+          //   ref
+          //       .watch(testProgressProvider)
+          //       .getremaingDurationInSeconds
+          //       .toString(),
+          //   style: const TextStyle(color: AppColour.white),
+          // ),
           ElevatedButton(
             style: const ButtonStyle(
               backgroundColor: MaterialStatePropertyAll(AppColour.green),
@@ -93,6 +135,7 @@ class _TestPageState extends ConsumerState<TestPage> {
                     if (response != null) {
                       print("3333333333333333333333333  if VALUE");
 
+                      timerService.stopTimer();
                       Navigator.pop(context, response);
                     }
                   })
@@ -229,116 +272,66 @@ class _TestPageState extends ConsumerState<TestPage> {
           itemBuilder: (context, index) {
             final question = questions[index];
             if (question.questionType == "Integer") {
-              print("_buildQuestionNumberList ${question.customAnswerStatus}");
+              // print("_buildQuestionNumberList ${question.customAnswerStatus}");
             }
 
-            return Stack(
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(5),
-                  alignment: Alignment.center,
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    border:
-                        ref.read(testProgressProvider).getCurrentQuestion?.id ==
-                                question.id
-                            ? Border.all(
-                                width: 3,
-                                color: const Color.fromARGB(255, 4, 109, 122),
-                              )
-                            : Border.all(
-                                width: 1,
-                                color: Colors.black,
-                              ),
-                    borderRadius: const BorderRadius.all(Radius.circular(25)),
-                    color: question.customAnswerStatus.backgroundColur,
-                  ),
-                  child: Text(
-                    'Q${index + 1}',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
+            return InkWell(
+              onTap: () {
+                // print("question id ${index} ${question.id}");
+                ref.read(testProgressProvider).updateCurrentQuestion(question.id ?? 0);
+              },
+              child: Stack(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(5),
+                    alignment: Alignment.center,
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      border:
+                          ref.read(testProgressProvider).getCurrentQuestion?.id ==
+                                  question.id
+                              ? Border.all(
+                                  width: 3,
+                                  color: const Color.fromARGB(255, 4, 109, 122),
+                                )
+                              : Border.all(
+                                  width: 1,
+                                  color: Colors.black,
+                                ),
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
+                      color: question.customAnswerStatus.backgroundColur,
+                    ),
+                    child: Text(
+                      'Q${index + 1}',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
-                ),
-                question.customAnswerStatus ==
-                        AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW
-                    ? Positioned(
-                        top: 8,
-                        right: 10,
-                        child: Container(
-                          margin: const EdgeInsets.all(5),
-                          alignment: Alignment.center,
-                          height: 9,
-                          width: 9,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(25)),
-                            color: TestPageColour.answeredColor,
+                  question.customAnswerStatus ==
+                          AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW
+                      ? Positioned(
+                          top: 8,
+                          right: 10,
+                          child: Container(
+                            margin: const EdgeInsets.all(5),
+                            alignment: Alignment.center,
+                            height: 9,
+                            width: 9,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(25)),
+                              color: TestPageColour.answeredColor,
+                            ),
                           ),
-                        ),
-                      )
-                    : Container(),
-              ],
+                        )
+                      : Container(),
+                ],
+              ),
             );
           },
         ),
-        // child: ListView(
-        //   scrollDirection: Axis.horizontal,
-        //   children: questions.asMap().entries.map((entry) {
-        //     final index = entry.key;
-        //     final question = entry.value;
-        //     return Stack(
-        //       children: [
-        //         Container(
-        //           margin: const EdgeInsets.all(5),
-        //           alignment: Alignment.center,
-        //           height: 50,
-        //           width: 50,
-        //           decoration: BoxDecoration(
-        //             border:
-        //                 ref.read(testProgressProvider).getCurrentQuestion?.id ==
-        //                         question.id
-        //                     ? Border.all(
-        //                         width: 3,
-        //                         color: const Color.fromARGB(255, 4, 109, 122),
-        //                       )
-        //                     : Border.all(
-        //                         width: 1,
-        //                         color: Colors.black,
-        //                       ),
-        //             borderRadius: const BorderRadius.all(Radius.circular(25)),
-        //             color: question.customAnswerStatus.backgroundColur,
-        //           ),
-        //           child: Text(
-        //             'Q${index + 1}',
-        //             style: const TextStyle(
-        //               color: Colors.black,
-        //               fontSize: 14,
-        //             ),
-        //           ),
-        //         ),
-        //         question.customAnswerStatus ==
-        //                 AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW
-        //             ? Positioned(
-        //                 top: 8,
-        //                 right: 10,
-        //                 child: Container(
-        //                   margin: const EdgeInsets.all(5),
-        //                   alignment: Alignment.center,
-        //                   height: 9,
-        //                   width: 9,
-        //                   decoration: const BoxDecoration(
-        //                     borderRadius: BorderRadius.all(Radius.circular(25)),
-        //                     color: TestPageColour.answeredColor,
-        //                   ),
-        //                 ),
-        //               )
-        //             : Container(),
-        //       ],
-        //     );
-        //   }).toList(),
-        // ),
       ),
     );
   }
@@ -354,7 +347,7 @@ class _TestPageState extends ConsumerState<TestPage> {
   }
 
   Widget getQuestionWidgetByType(QuestionMobileVos question) {
-    print("QUESTION ::${question.questionType}a");
+    print("QUESTION ::${question.questionType}");
     switch (question.questionType) {
       case QuestionType.BASIC ||
             QuestionType.COMPREHENSION ||

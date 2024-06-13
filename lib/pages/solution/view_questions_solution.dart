@@ -34,6 +34,9 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
             "Test Verification",
             style: TextStyle(color: Colors.white),
           ),
+          iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         ),
         body: Column(
           children: [

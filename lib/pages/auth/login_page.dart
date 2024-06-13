@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/auth/forgot_password_page.dart';
 import 'package:jeeni/providers/auth_provider.dart';
 import 'package:jeeni/utils/device_manager.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -25,6 +26,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       TextEditingController(text: "123456");
 
   late bool isLoading = false;
+
+
+  Future<String> getDeviceId() async {
+  if (kIsWeb) {
+    return ''; // Return an empty string if the platform is web
+  } else {
+    return await DeviceManager().getDeviceId();
+  }
+}
+
 
   SizedBox _buildLogo() {
     return SizedBox(
@@ -122,7 +133,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         setState(() {
                           isLoading = true;
                         });
-                        final deviceId = await DeviceManager().getDeviceId();
+                        
+                        
+                        final deviceId = await getDeviceId();
 
                         ref
                             .read(authenticationProvider.notifier)
@@ -133,11 +146,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             )
                             .then((value) {
                           print("THEN THEN $value");
+                          // EasyLoading.showSuccess("Sucessfully logged in");
                         }).catchError((error) {
                           setState(() {
                             isLoading = false;
                           });
-                          EasyLoading.showError("ERROR CODE :: $error ");
+
+                          // print("data : $error");
+                          EasyLoading.showError("Please check your internet connection or try again later.");
+
+
+
                         }).whenComplete(() => 
                           setState(() {
                             isLoading = false;

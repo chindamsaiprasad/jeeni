@@ -1,11 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:jeeni/utils/app_colour.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class OverlayLoader {
   static OverlayEntry? _overlayEntry;
+  static Timer? _timer;
+  static bool _showButton = false;
 
   static void show({required BuildContext context, String title = ""}) {
+    _showButton = false; // Reset button visibility
+    _timer = Timer(Duration(seconds: 40), () {
+      _showButton = true;
+      _overlayEntry?.markNeedsBuild();
+    });
+
     _overlayEntry = OverlayEntry(
       builder: (BuildContext context) => Stack(
         children: [
@@ -14,12 +24,10 @@ class OverlayLoader {
               color: Colors.black.withOpacity(0.5),
               alignment: Alignment.center,
               child: Container(
-                // padding: const EdgeInsets.all(50),
                 height: 200,
                 width: MediaQuery.of(context).size.width * .70,
                 color: AppColour.darkGreen,
                 child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Material(
@@ -34,6 +42,16 @@ class OverlayLoader {
                       color: Colors.white,
                       size: 80,
                     ),
+                    if (_showButton)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            hide();
+                          },
+                          child: Text('Cancel'),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -47,6 +65,7 @@ class OverlayLoader {
   }
 
   static void hide() {
+    _timer?.cancel();
     _overlayEntry?.remove();
     _overlayEntry = null;
   }

@@ -30,7 +30,7 @@ enum AnswerStatus {
     switch (this) {
       case AnswerStatus.NOT_VISITED:
       case AnswerStatus.NOT_ANSWERED:
-        return Colors.grey[300];
+        return Colors.red;
       case AnswerStatus.ANSWERED:
         return TestPageColour.answeredColor;
       case AnswerStatus.MARK_FOR_REVIEW:

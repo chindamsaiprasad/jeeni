@@ -66,8 +66,8 @@ class _MultipleQuestionState extends ConsumerState<MultipleQuestion> {
       itemCount: options.length,
       itemBuilder: (context, index) {
         final option = options[index];
-        print("1111111111111111111111111");
-        print(multipleAnswer[index]);
+        // print("1111111111111111111111111");
+        // print(multipleAnswer[index]);
         return Padding(
           padding: const EdgeInsets.all(1),
           child: SizedBox(
