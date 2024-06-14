@@ -37,6 +37,15 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
           iconTheme: const IconThemeData(
           color: Colors.white,
         ),
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.print),
+        //     onPressed: () {
+        //       final questions = ref.watch(widget.solutionProvider).getQuestion;
+        //       print("questions ${questions.length}");
+        //     },
+        //   ),
+        // ],
         ),
         body: Column(
           children: [
@@ -145,56 +154,64 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
           itemBuilder: (context, index) {
             final question = questions[index];
 
-            return Stack(
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(5),
-                  alignment: Alignment.center,
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    color: question.status.getColor(),
-                    border: ref
-                                .read(widget.solutionProvider)
-                                .getCurrentQuestion
-                                ?.questionId ==
-                            question.questionId
-                        ? Border.all(
-                            width: 3,
-                            color: const Color.fromARGB(255, 4, 109, 122),
-                          )
-                        : Border.all(
-                            width: 1,
-                            color: Colors.black38,
-                          ),
-                    borderRadius: const BorderRadius.all(Radius.circular(25)),
-                  ),
-                  child: Text(
-                    'Q${index + 1}',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
+            return InkWell(
+              onTap: () {
+                // print("sotions ${question.questionId}");
+                ref.read(widget.solutionProvider).updateCurrentQuestion(question.questionId);
+                ref.read(widget.solutionProvider).showSolutionImage = true;
+                // ref.read(widget.solutionProvider).solutionImage();
+              },
+              child: Stack(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(5),
+                    alignment: Alignment.center,
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      color: question.status.getColor(),
+                      border: ref
+                                  .read(widget.solutionProvider)
+                                  .getCurrentQuestion
+                                  ?.questionId ==
+                              question.questionId
+                          ? Border.all(
+                              width: 3,
+                              color: const Color.fromARGB(255, 4, 109, 122),
+                            )
+                          : Border.all(
+                              width: 1,
+                              color: Colors.black38,
+                            ),
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
+                    ),
+                    child: Text(
+                      'Q${index + 1}',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
-                ),
-                // question.customAnswerStatus ==
-                //         AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW
-                //     ? Positioned(
-                //         top: 8,
-                //         right: 10,
-                //         child: Container(
-                //           margin: const EdgeInsets.all(5),
-                //           alignment: Alignment.center,
-                //           height: 9,
-                //           width: 9,
-                //           decoration: const BoxDecoration(
-                //             borderRadius: BorderRadius.all(Radius.circular(25)),
-                //             color: TestPageColour.answeredColor,
-                //           ),
-                //         ),
-                //       )
-                //     : Container(),
-              ],
+                  // question.customAnswerStatus ==
+                  //         AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW
+                  //     ? Positioned(
+                  //         top: 8,
+                  //         right: 10,
+                  //         child: Container(
+                  //           margin: const EdgeInsets.all(5),
+                  //           alignment: Alignment.center,
+                  //           height: 9,
+                  //           width: 9,
+                  //           decoration: const BoxDecoration(
+                  //             borderRadius: BorderRadius.all(Radius.circular(25)),
+                  //             color: TestPageColour.answeredColor,
+                  //           ),
+                  //         ),
+                  //       )
+                  //     : Container(),
+                ],
+              ),
             );
           },
         ),

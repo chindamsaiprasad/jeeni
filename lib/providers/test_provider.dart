@@ -17,6 +17,8 @@ final testProvider = ChangeNotifierProvider((ref) => TestProvider(ref: ref));
 class TestProvider with ChangeNotifier {
   Iterable<Test> tests = [];
 
+  List<QuestionMobileVosTwo> questions = [];
+
   final Ref ref;
   TestProvider({
     required this.ref,
@@ -203,8 +205,24 @@ class TestProvider with ChangeNotifier {
         .get(Uri.parse("$BASE_URL/mtest/getMockTestQuestionsForWeb/$testId/1080/2028/1?isMobile=true"),
             headers: headers)
         .then((response) async {
-          print("test solutions ${response.body}");
-        Map<String, dynamic> data = json.decode(response.body);
+          // print("test solutions ${response.body}");
+  Map<String, dynamic> data = json.decode(response.body);
+
+  // // Accessing the 'questionMobileVos' list from the decoded JSON
+  // List<dynamic> jsonQuestions = data['questionMobileVos'];
+
+  // // Mapping JSON list to List<QuestionMobileVosTwo>
+  // List<QuestionMobileVosTwo> questions = jsonQuestions.map((questionJson) {
+  //   return QuestionMobileVosTwo.fromJson(questionJson);
+  // }).toList();
+
+  //   // print("object ${questions.length}");
+
+  //   return questions;
+
+    // final SubmitTestResponse submitTestResponse  = SubmitTestResponse.fromJson(data);
+    // print("data subm ${submitTestResponse.batchId}");
+
       return TestSoltuionsModelClass.fromJson(data);
 
     }).catchError((error) {
@@ -212,6 +230,9 @@ class TestProvider with ChangeNotifier {
       throw Exception(error);
     });
   }
+
+
+
 
 
 }

@@ -1,3 +1,5 @@
+import "dart:convert";
+
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
@@ -222,7 +224,7 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
 
       // Get the test ID from the widget data
       int testId = widget.data.id;
-      print("Test ID: $testId");
+      // print("Test ID: $testId");
 
       ref
       .read(testProvider)
@@ -230,16 +232,14 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
       .then((response) {
         print("Response: ${response}");
 
-        
-
-        // Navigator.push(context,MaterialPageRoute(builder: (context) {
-        //       return ViewQuestionSolution(solutionProvider: ChangeNotifierProvider((ref) => 
-        //       SolutionProvider( submitTestResponse: SubmitTestResponse, ref: ref,),
-        //                                                         ),
+        // Navigator.push(context,MaterialPageRoute(
+        //           builder: (context) {
+        //            return ViewQuestionSolution( solutionProvider:
+        //                           ChangeNotifierProvider((ref) => SolutionProvider( submitTestResponse:
+        //                           response, ref: ref,),),
         //                                                       );
         //                                                     },
         //                                                   ));
-
 
 
       })

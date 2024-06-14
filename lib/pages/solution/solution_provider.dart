@@ -282,6 +282,20 @@ class SolutionProvider with ChangeNotifier {
   //   }
   // }
 
+  void updateCurrentQuestion(int questionId) {
+    // final currentQuestion = getCurrentQuestion;
+    if (questionId == 0) return;
+
+    final tempList = [..._solution];
+    var index =
+        tempList.indexWhere((question) => question.questionId == questionId);
+
+        // print("ok provider checking $index ${tempList.elementAt(index).copyWith().id}");
+        _currentQuestion = tempList.elementAt(index).copyWith();
+    // _reset();
+    notifyListeners();
+  }
+
   void next() {
     final currentQuestion = getCurrentQuestion;
     if (currentQuestion == null) return;

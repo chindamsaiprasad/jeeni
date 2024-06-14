@@ -44,7 +44,7 @@ class TestSoltuionsModelClass {
   late final String name;
   late final int durationInMinutes;
   late final int spentTimeInMinutes;
-  late final List<QuestionMobileVos> questionMobileVos;
+  late final List<QuestionMobileVosTwo> questionMobileVos;
   late final int testType;
   late final int examDate;
   late final int startTime;
@@ -90,7 +90,7 @@ class TestSoltuionsModelClass {
   spentTimeInMinutes = json['spentTimeInMinutes'];
   // print("4. spentTimeInMinutes: $spentTimeInMinutes");
   questionMobileVos = (json['questionMobileVos'] as List<dynamic>)
-      .map((e) => QuestionMobileVos.fromJson(e))
+      .map((e) => QuestionMobileVosTwo.fromJson(e))
       .toList();
   // print("5. questionMobileVos: ${json['questionMobileVos']}");
 
@@ -210,8 +210,8 @@ class TestSoltuionsModelClass {
   }
 }
 
-class QuestionMobileVos {
-  QuestionMobileVos({
+class QuestionMobileVosTwo {
+  QuestionMobileVosTwo({
     required this.id,
     required this.answerValidity,
     required this.type,
@@ -254,7 +254,7 @@ class QuestionMobileVos {
   late final String questionUrl;
   late final String solutionUrl;
   
-  QuestionMobileVos.fromJson(Map<String, dynamic> json){
+  QuestionMobileVosTwo.fromJson(Map<String, dynamic> json){
     id = json['id'];
     answerValidity = List.castFrom<dynamic, bool>(json['answerValidity']);
     type = json['type'];

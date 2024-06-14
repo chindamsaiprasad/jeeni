@@ -49,18 +49,18 @@ class _TestPageState extends ConsumerState<TestPage> {
   void checkAndSubmitTest() {
     final timerService = ref.read(timerProvider);
     if (timerService.duration == Duration.zero) {
-      // OverlayLoader.show(context: context, title: "Submitting");
+      OverlayLoader.show(context: context, title: "Submitting");
       print("this wroks");
-      // ref.read(testProgressProvider).submitTest().then((response) {
-      //   print("3333333333333333333333333 VALUE");
-      //   if (response != null) {
-      //     print("3333333333333333333333333 if VALUE");
-      //     timerService.stopTimer();
-      //     Navigator.pop(context, response);
-      //   }
-      // }).catchError((onError) {
-      //   // Handle error
-      // }).whenComplete(() => OverlayLoader.hide());
+      ref.read(testProgressProvider).submitTest().then((response) {
+        print("3333333333333333333333333 VALUE");
+        if (response != null) {
+          print("3333333333333333333333333 if VALUE");
+          timerService.stopTimer();
+          Navigator.pop(context, response);
+        }
+      }).catchError((onError) {
+        // Handle error
+      }).whenComplete(() => OverlayLoader.hide());
     }
   }
 
@@ -89,15 +89,15 @@ class _TestPageState extends ConsumerState<TestPage> {
     int minutes = timerService.duration.inMinutes.remainder(60);
     int seconds = timerService.duration.inSeconds.remainder(60);
 
-//     if (timerService.duration == Duration.zero) {
-//       print("ok time over");
-//       // Trigger test submission check every time the duration changes
-//     WidgetsBinding.instance.addPostFrameCallback((_) {
-//       checkAndSubmitTest();
-//     });
-// } else {
-//   // print("Time is not over");
-// }
+    if (timerService.duration == Duration.zero) {
+      print("ok time over");
+      // Trigger test submission check every time the duration changes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkAndSubmitTest();
+    });
+} else {
+  // print("Time is not over");
+}
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),

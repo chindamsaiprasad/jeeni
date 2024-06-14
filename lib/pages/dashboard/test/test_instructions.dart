@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/models/test_download_response.dart';
@@ -33,14 +34,18 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
     DateTime startTime =
         DateTime.fromMillisecondsSinceEpoch(widget.test.startTime ?? 0);
     _duration = startTime.difference(DateTime.now());
-
-    setTimerprovier();
+    
+    // ref.read(timerProvider).updateDuration(widget.test.durationInMinutes ?? 0);
+    // setTimerprovier();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+    ref.read(timerProvider).updateDuration(widget.test.durationInMinutes ?? 0);
+  });
     super.initState();
   }
 
-  setTimerprovier() async{
-    ref.read(timerProvider).updateDuration(widget.test.durationInMinutes ?? 0);
-  }
+  // setTimerprovier() async{
+  //   ref.read(timerProvider).updateDuration(widget.test.durationInMinutes ?? 0);
+  // }
 
   @override
   Widget build(BuildContext context) {
