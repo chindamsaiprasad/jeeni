@@ -4,7 +4,9 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
+import "package:jeeni/pages/dashboard/test/result_page.dart";
 import "package:jeeni/pages/dashboard/test/test_instructions.dart";
+import "package:jeeni/pages/dashboard/test/test_page.dart";
 import "package:jeeni/pages/solution/solution_provider.dart";
 import "package:jeeni/pages/solution/view_questions_solution.dart";
 import "package:jeeni/pages/widgets/overlay_loader.dart";
@@ -79,7 +81,7 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
             child: SizedBox(
               height: 40,
               width: MediaQuery.of(context).size.width,
-              child: viewSolutionButton(),
+              // child: viewSolutionButton(),
             ),
           ),
         ],
@@ -182,8 +184,8 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
                 // Divider(),
                 // getResultDetails("Total Marks", test["total_marks"].toString()),
 
-                Divider(),
-                getResultDetails("Bonus Marks", ""),
+                // Divider(),
+                // getResultDetails("Bonus Marks", ""),
 
                 Divider(), // Add a divider after each ListTile
               ],
@@ -230,16 +232,70 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
       .read(testProvider)
       .viewSolutions(testId: testId)
       .then((response) {
-        print("Response: ${response}");
+        // print("Response: ${response}");
 
-        // Navigator.push(context,MaterialPageRoute(
-        //           builder: (context) {
-        //            return ViewQuestionSolution( solutionProvider:
-        //                           ChangeNotifierProvider((ref) => SolutionProvider( submitTestResponse:
-        //                           response, ref: ref,),),
-        //                                                       );
-        //                                                     },
-        //                                                   ));
+        print("first step $response");
+                                                  
+                                                  // print("second steep $response");
+                                                  // Navigator.push(
+                                                  //   context,
+                                                  //   MaterialPageRoute(
+                                                  //     builder: (context) =>
+                                                  //         TestPage(
+                                                  //       testDownloadResponse:
+                                                  //           response,
+                                                  //           diffrentBool: true,
+                                                  //     ),
+                                                  //   ),
+                                                  // ).then((value) {
+                                                  //   print(
+                                                  //       "111111111111111111111111111");
+                                                  //       print("third steep $value");
+
+                                                  //   if (value
+                                                  //       is SubmitTestResponse) {
+                                                  //     print(
+                                                  //         "22222222222222222222222222222  if");
+                                                  //         print("fourth step ${value.batchId}");
+                                                  //     Navigator.push<
+                                                  //         SubmitTestResponse>(
+                                                  //       context,
+                                                  //       MaterialPageRoute(
+                                                  //         builder: (context) =>
+                                                  //             ResultPage(
+                                                  //                 submitTestResponse:
+                                                  //                     value),
+                                                  //       ),
+                                                  //     ).then(
+                                                  //         (submitTestResponse) {
+                                                  //       print(
+                                                  //           "11111111111111111111111111 result ${value.testId} ${submitTestResponse?.batchId}");
+                                                  //       if (submitTestResponse !=
+                                                  //           null) {
+                                                  //         Navigator.push(
+                                                  //             context,
+                                                  //             MaterialPageRoute(
+                                                  //           builder: (context) {
+                                                  //             return ViewQuestionSolution(
+                                                  //               solutionProvider:
+                                                  //                   ChangeNotifierProvider(
+                                                  //                 (ref) =>
+                                                  //                     SolutionProvider(
+                                                  //                   submitTestResponse:
+                                                  //                       submitTestResponse,
+                                                  //                   ref: ref,
+                                                  //                 ),
+                                                  //               ),
+                                                  //             );
+                                                  //           },
+                                                  //         ));
+                                                  //       }
+                                                  //     });
+                                                  //   }
+                                                  // });
+                                                
+                                              
+                                              // OverlayLoader.hide();
 
 
       })

@@ -88,6 +88,8 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                     deviceWidth: deviceWidth,
                                                     deviceHeight: deviceHeight)
                                                 .then((response) {
+
+                                                  print("first step ${response.toString()}");
                                                   
                                               Navigator.push(
                                                 context,
@@ -100,6 +102,7 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                 ),
                                               ).then((toStart) {
                                                 if (toStart) {
+                                                  print("second steep $response");
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
@@ -112,10 +115,13 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                   ).then((value) {
                                                     print(
                                                         "111111111111111111111111111");
+                                                        print("third steep $value");
+
                                                     if (value
                                                         is SubmitTestResponse) {
                                                       print(
                                                           "22222222222222222222222222222  if");
+                                                          print("fourth step $value");
                                                       Navigator.push<
                                                           SubmitTestResponse>(
                                                         context,

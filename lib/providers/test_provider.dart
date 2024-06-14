@@ -193,7 +193,7 @@ class TestProvider with ChangeNotifier {
 
   /////////////////////////////////////////////////////////////////////////
   
-  Future<TestSoltuionsModelClass> viewSolutions({    ///TestSoltuionsModelClass
+  Future<TestDownloadResponse> viewSolutions({    ///TestSoltuionsModelClass
     required int testId,
   }) async {
     final jauth = ref.read(authenticationProvider)?.jauth;
@@ -223,7 +223,7 @@ class TestProvider with ChangeNotifier {
     // final SubmitTestResponse submitTestResponse  = SubmitTestResponse.fromJson(data);
     // print("data subm ${submitTestResponse.batchId}");
 
-      return TestSoltuionsModelClass.fromJson(data);
+      return TestDownloadResponse.fromJson(data);
 
     }).catchError((error) {
       // TODO :: ERROR HANDELING

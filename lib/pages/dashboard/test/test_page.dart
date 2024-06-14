@@ -19,8 +19,10 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class TestPage extends ConsumerStatefulWidget {
   final TestResponse testDownloadResponse;
+  final bool diffrentBool;
   const TestPage({
     required this.testDownloadResponse,
+    this.diffrentBool = false,
     super.key,
   });
 
@@ -64,7 +66,6 @@ class _TestPageState extends ConsumerState<TestPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -92,12 +93,12 @@ class _TestPageState extends ConsumerState<TestPage> {
     if (timerService.duration == Duration.zero) {
       print("ok time over");
       // Trigger test submission check every time the duration changes
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      checkAndSubmitTest();
-    });
-} else {
-  // print("Time is not over");
-}
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        checkAndSubmitTest();
+      });
+    } else {
+      // print("Time is not over");
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -111,8 +112,10 @@ class _TestPageState extends ConsumerState<TestPage> {
             "Mock Test",
             style: TextStyle(color: AppColour.white),
           ),
-          Text('${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                        style: const TextStyle(fontSize: 18,color: Colors.white),),
+          Text(
+            '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+            style: const TextStyle(fontSize: 18, color: Colors.white),
+          ),
           // Text(
           //   ref
           //       .watch(testProgressProvider)
@@ -125,22 +128,29 @@ class _TestPageState extends ConsumerState<TestPage> {
               backgroundColor: MaterialStatePropertyAll(AppColour.green),
             ),
             onPressed: () {
-              OverlayLoader.show(context: context, title: "Submiting");
-              print("444444444444444444444444 VALUE");
-              ref
-                  .read(testProgressProvider)
-                  .submitTest()
-                  .then((response) {
-                    print("3333333333333333333333333 VALUE");
-                    if (response != null) {
-                      print("3333333333333333333333333  if VALUE");
+              if (widget.diffrentBool) {
+                print("heellow");
 
-                      timerService.stopTimer();
-                      Navigator.pop(context, response);
-                    }
-                  })
-                  .catchError((onError) {})
-                  .whenComplete(() => OverlayLoader.hide());
+              } else {
+                OverlayLoader.show(context: context, title: "Submiting");
+                print("444444444444444444444444 VALUE");
+                ref
+                    .read(testProgressProvider)
+                    .submitTest()
+                    .then((response) {
+                      print("3333333333333333333333333 VALUE");
+                      if (response != null) {
+                        print("3333333333333333333333333  if VALUE");
+
+                        timerService.stopTimer();
+
+                        print("responsetest page $response");
+                        Navigator.pop(context, response);
+                      }
+                    })
+                    .catchError((onError) {})
+                    .whenComplete(() => OverlayLoader.hide());
+              }
             },
             child: const Text(
               "Submit Test",
@@ -278,7 +288,9 @@ class _TestPageState extends ConsumerState<TestPage> {
             return InkWell(
               onTap: () {
                 // print("question id ${index} ${question.id}");
-                ref.read(testProgressProvider).updateCurrentQuestion(question.id ?? 0);
+                ref
+                    .read(testProgressProvider)
+                    .updateCurrentQuestion(question.id ?? 0);
               },
               child: Stack(
                 children: [
@@ -288,17 +300,19 @@ class _TestPageState extends ConsumerState<TestPage> {
                     height: 50,
                     width: 50,
                     decoration: BoxDecoration(
-                      border:
-                          ref.read(testProgressProvider).getCurrentQuestion?.id ==
-                                  question.id
-                              ? Border.all(
-                                  width: 3,
-                                  color: const Color.fromARGB(255, 4, 109, 122),
-                                )
-                              : Border.all(
-                                  width: 1,
-                                  color: Colors.black,
-                                ),
+                      border: ref
+                                  .read(testProgressProvider)
+                                  .getCurrentQuestion
+                                  ?.id ==
+                              question.id
+                          ? Border.all(
+                              width: 3,
+                              color: const Color.fromARGB(255, 4, 109, 122),
+                            )
+                          : Border.all(
+                              width: 1,
+                              color: Colors.black,
+                            ),
                       borderRadius: const BorderRadius.all(Radius.circular(25)),
                       color: question.customAnswerStatus.backgroundColur,
                     ),
@@ -321,7 +335,8 @@ class _TestPageState extends ConsumerState<TestPage> {
                             height: 9,
                             width: 9,
                             decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(25)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(25)),
                               color: TestPageColour.answeredColor,
                             ),
                           ),
