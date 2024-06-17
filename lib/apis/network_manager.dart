@@ -20,7 +20,7 @@ class NetworkManager with ChangeNotifier {
   NetworkManager(this.ref);
 
   //********************AUTH*********************//
-  Future<Student> loginWithIdAndPassword({
+  Future<http.Response> loginWithIdAndPassword({
     required String userId,
     required String password,
     required String deviceIMEI,
@@ -34,51 +34,27 @@ class NetworkManager with ChangeNotifier {
       'deviceId': deviceIMEI,
     };
 
-    return await http
-        .post(
-      Uri.parse("$BASE_URL/login/processLoginAuthentication"),
+    final response = await networkHandlerMethod(
+      url: "$BASE_URL/login/processLoginAuthentication",
+      httpMethodType: RequestType.post,
       headers: headers,
       body: body,
-    )
-        .then((response) {
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-        return Student.fromMap(jsonResponse);
-      } else {
-        throw Exception(response.statusCode);
-      }
-    });
+    );
+
+    return response;
   }
 
   //********************CONTENT******************//
 
-  Future<ContentResponse> getAllSubscribedCoursesFromJeeniServer() async {
-    final jauth = ref.read(authenticationProvider)?.jauth;
-
-    Map<String, String> headers = {};
-
-    headers.addAll({"Content-Type": "application/json", "Jauth": jauth!});
-    return await http
-        .get(Uri.parse("$BASE_URL/jca/content"), headers: headers)
-        .then((response) {
-          print("${response.statusCode}");
-          print("HEADER ${response.headers}");
-      if (response.statusCode == 200) {
-        var responseData = json.decode(response.body);
-        return ContentResponse.fromJson(responseData);
-      } else if (response.statusCode == 401) {
-        throw AlreadyLoggedInOnOtherDeviceException();
-      } else {
-        throw SomethingWentWrongException();
-      }
-    });
+  Future<http.Response> getAllSubscribedCoursesFromJeeniServer() async {
+    final response = networkHandlerMethod(url: "$BASE_URL/jca/content", httpMethodType: RequestType.get);
+    return response;
   }
 
   //////////////////////////////////////////////////////////////
-  /// netowrk handler 
-  
+  /// netowrk handler
 
-    Future<http.Response> networkHandlerMethod({
+  Future<http.Response> networkHandlerMethod({
     required String url,
     Object? body,
     Map<String, String>? headers,
@@ -86,14 +62,12 @@ class NetworkManager with ChangeNotifier {
   }) async {
     final jauth = ref.read(authenticationProvider)?.jauth;
     // print("jauth token $jauth");
-    
+
     headers ??= <String, String>{};
     headers['jauth'] = jauth ?? '';
-    headers['Content-Type'] = 'application/json';
+    // headers['Content-Type'] = 'application/json';
     headers['Accept'] = 'application/json';
     headers['Accept-Encoding'] = 'gzip, deflate, br, zstd';
-
-    
 
     late http.Response response;
     late http.MultipartRequest responseTwo;
@@ -144,22 +118,43 @@ class NetworkManager with ChangeNotifier {
         response = await http.Response.fromStream(streamedResponse);
     }
 
-    return response;
-    if(response.statusCode == 200){
-      print("200 SUCCESS");
-      return response;
-
-    } else if(response.statusCode == 201){
-      print("201 SUCCESS");
-    } else if (response.statusCode == 302) {
-      print("302 ERROR");
-    } else if (response.statusCode == 401) {
-      print("401 ERROR");
-      // ref.read(authenticationProvider.notifier).updateAuthState(AuthenticationState.alreadyLogInPop);
-      // ref.read(authenticationProvider.notifier).logOut();
-      // throw AlreadyLoggedInOnOtherDeviceException();
-    } else if (response.statusCode == 403) {
-      print("403 ERROR");
+    // Handle different HTTP status codes
+    switch (response.statusCode) {
+      case 200:
+        print("200 SUCCESS");
+        return response;
+      case 201:
+        print("201 SUCCESS");
+        return response;
+      case 301:
+        print("301 ERROR");
+        return response;
+      case 302:
+        print("302 ERROR");
+        return response;
+      case 401:
+        print("401 ERROR");
+        return http.Response(
+          json.encode({'message': 'Invalid UserName or Password'}),
+          401,
+          headers: response.headers,
+        );
+      case 403:
+        print("403 ERROR");
+        return http.Response(
+          json.encode({'message': 'Forbidden'}),
+          403,
+          headers: response.headers,
+        );
+      case 500:
+        print("500 ERROR");
+        return http.Response(
+          json.encode({'message': 'Internal Server Error'}),
+          500,
+          headers: response.headers,
+        );
+      default:
+        print("Unhandled status code: ${response.statusCode}");
     }
 
     print("*********************REQUEST*******************************");
@@ -170,14 +165,11 @@ class NetworkManager with ChangeNotifier {
     print("URL    : $url");
     print("BODY   :  ${utf8.decode(response.bodyBytes)}");
 
+    return response;
   }
-  
-
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////
-///
 
 enum RequestType {
   get("GET"),
@@ -189,10 +181,3 @@ enum RequestType {
   const RequestType(this.text);
   final String text;
 }
-
-
-
-
-
-
-

@@ -153,7 +153,7 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
                   );
                 }).catchError((error) {
                   print('Failed to fetch results: $error');
-                  ref.read(networkErrorProvider).resolveError(error);
+                  ref.read(networkErrorProvider).resolveError();
                 }).whenComplete(() {
                   OverlayLoader.hide();
                 });

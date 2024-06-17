@@ -102,26 +102,25 @@ class _HomePageState extends ConsumerState<HomePage> {
         ///////////////////////////////////////////////////////////////////////////////////////
 
         navigationList(() {
-          OverlayLoader.show(context: context, title: "");
+          OverlayLoader.show(context: context, title: "loading...");
           ref
-              .read(contentProvider)
-              .getAllSubscribedCoursesFromJeeniServer()
-              .then((isSuccess) => {
-                    if (isSuccess)
-                      {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ContentPage(),
-                          ),
-                        )
-                      }
-                  })
-              .catchError((error) {
-            print("getAllSubscribedCoursesFromJeeniServer   $error");
-            ref.read(networkErrorProvider).resolveError(error);
-            // TODO :: ERROR HANDELING
-          }).whenComplete(() => OverlayLoader.hide());
+  .read(contentProvider) 
+  .getAllSubscribedCoursesFromJeeniServer() 
+  .then((response) { 
+    if (response.statusCode == 200) { 
+      Navigator.push( 
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ContentPage(),
+        ),
+      );
+    } else if (response.statusCode == 401) { 
+      ref.read(networkErrorProvider).resolveError();
+    }
+  })
+  .catchError((error) {
+
+  }).whenComplete(() => OverlayLoader.hide());
         }, Icons.menu_book, "Content", "Study material for student",
             Icons.arrow_right),
 
@@ -165,7 +164,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         );
           }).catchError((error) {
             print('Failed to fetch results: $error');
-            ref.read(networkErrorProvider).resolveError(error);
+            ref.read(networkErrorProvider).resolveError();
           }).whenComplete(() {
             OverlayLoader.hide();
           });

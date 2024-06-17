@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart';
 import 'package:jeeni/apis/network_manager.dart';
 import 'package:jeeni/models/student.dart';
 import 'package:jeeni/pages/auth/login_page.dart';
@@ -95,25 +99,34 @@ class AuthenticationNotifier extends StateNotifier<Student?> {
     );
   }
 
-  Future<bool> loginWithIdAndPassword({
+  Future<Response> loginWithIdAndPassword({
     required String userId,
     required String password,
     required String deviceIMEI,
   }) async {
-    return ref
-        .read(networkProvider.notifier)
-        .loginWithIdAndPassword(
-            userId: userId, password: password, deviceIMEI: deviceIMEI)
-        .then((student) {
-      final hasStored = LocalDataManager().storeStudent(student);
-      print("JAUTH  ${student.jauth}");
-      state =
-          student.copyWith(authenticationState: AuthenticationState.loggedIn);
-      return true;
-    }).catchError((error) {
-      print("EEEEEEEEEEEEEEEEEEE  $error");
-      throw Exception(error);
-    });
+
+    final response = await ref.read(networkProvider.notifier).loginWithIdAndPassword(
+      userId: userId,
+      password: password,
+      deviceIMEI: deviceIMEI,
+    );
+
+    if (response.statusCode == 200) {
+      
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      final Student student = Student.fromMap(jsonResponse);
+      final hasStored = await LocalDataManager().storeStudent(student);
+
+      print("JAUTH ${student.jauth}");
+      state = student.copyWith(authenticationState: AuthenticationState.loggedIn);
+      return response;
+    } else if(response.statusCode == 401){
+      return response;
+    } else {
+      print("response ${response.body}");
+      return response;
+    }
+
   }
 
   void updateAuthState(AuthenticationState authState) {

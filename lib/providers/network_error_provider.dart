@@ -14,10 +14,7 @@ class NetworkErrorProvider with ChangeNotifier {
 
 
 
-  void resolveError(error) {
-      // if (error is AlreadyLoggedInOnOtherDeviceException) {
+  void resolveError() {
         ref.read(authenticationProvider.notifier).updateAuthState(AuthenticationState.alreadyLogInPop);
-      // }
-      // else if (error is SomethingWentWrongException) {}
   }
 }
