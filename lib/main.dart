@@ -30,10 +30,7 @@ class MyApp extends StatelessWidget {
             LogoutOverlay.show(
               context: context,
               onTapYes: () {
-                ref
-                    .read(authenticationProvider.notifier)
-                    .logOut()
-                    .whenComplete(() {
+                ref.read(authenticationProvider.notifier).logOut().whenComplete(() {
                   ref.read(menuProvider).setSelectedMenu(MenuType.home);
                   LogoutOverlay.hide();
                 });

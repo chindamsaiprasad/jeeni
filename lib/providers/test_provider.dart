@@ -24,36 +24,18 @@ class TestProvider with ChangeNotifier {
     required this.ref,
   });
 
-  Future<bool> fetchAllTestsFromJeeniServer() async {
-    final jauth = ref.read(authenticationProvider)?.jauth;
+  Future<http.Response> fetchAllTestsFromJeeniServer() async {
+    
+    final response = await ref.read(networkProvider).networkHandlerMethod(url: "$BASE_URL/mtest/getByStudentId", httpMethodType: RequestType.get);
 
-    Map<String, String> headers = {};
-
-    headers.addAll({
-      "Accept-Encoding": "gzip",
-      "Content-Type": "application/json",
-      "Jauth": jauth!
-    });
-    return await http
-        .get(Uri.parse("$BASE_URL/mtest/getByStudentId"), headers: headers)
-        .then((response) {
-      print("RESPONSE STATUS CODE:: ${response.statusCode}");
-      print("${response.headers}");
+    print("RESPONSE STATUS CODE:: ${response.statusCode}");
       if (response.statusCode == 200) {
-        if (response.headers["content-type"] == "text/html;charset=UTF-8") {
-          throw AlreadyLoggedInOnOtherDeviceException();
-        } else {
           var responseData = json.decode(response.body) as List;
-
           tests = responseData.map((test) => Test.fromJson(test));
           print("LENGTH ${this.tests.length}");
-          return true;
-        }
-      } else if (response.statusCode == 302) {
-        throw SomethingWentWrongException();
       }
-      return false;
-    });
+    return response;
+
   }
 
   saveAndroidActivity() {

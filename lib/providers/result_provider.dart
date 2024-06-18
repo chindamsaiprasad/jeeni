@@ -22,41 +22,34 @@ class ResultProvider with ChangeNotifier {
   List<ResultModelClass> resultData=[];
   Map<String, dynamic>? resultDetailsData;
 
-  Future<bool> getAllResultsFromJeeniServer() async {
-    return await ref
-        .read(networkProvider)
-        .networkHandlerMethod(
-            url:
-                "https://exam.jeeni.in/Jeeni/rest/mtest/getAttemptedTestByStudentId",
-            httpMethodType: RequestType.get)
-        .then((value) {
-      if (value.statusCode == 200) {
-        // print("response ${value.body}");
-        List<dynamic> jsonList = jsonDecode(value.body);
+  Future<http.Response> getAllResultsFromJeeniServer() async {
+    final response = await ref.read(networkProvider).networkHandlerMethod(url: "$BASE_URL/mtest/getAttemptedTestByStudentId", httpMethodType: RequestType.get);
+
+    if (response.statusCode == 200) {
+        List<dynamic> jsonList = jsonDecode(response.body);
         resultData = jsonList.map((json) => ResultModelClass.fromJson(json)).toList();
-
-        // print("method leng ${resultData.length}");
-
         notifyListeners();
-
-        return true;
-      } else if (value.statusCode == 401) { 
-        throw AlreadyLoggedInOnOtherDeviceException();
-      } else {
-        throw SomethingWentWrongException();
       }
-    });
 
-    // return results;
+      return response;
+
   }
 
   Future<bool> getResultDetailsFromJeeniServer(int resultID) async {
+    Map<String, String> headers = {"Content-Type": "application/json",};
+    
     final responseData = await ref.read(networkProvider).networkHandlerMethod(
         url: "$BASE_URL/report/getRank/${resultID}",
-        httpMethodType: RequestType.get);
-        resultDetailsData = jsonDecode(responseData.body);
+        httpMethodType: RequestType.get,headers: headers);
 
-    notifyListeners();
+        if(responseData.statusCode == 200){
+          // print("data ${responseData.body}");
+          resultDetailsData = jsonDecode(responseData.body);
+          notifyListeners();
+        }
+        // resultDetailsData = jsonDecode(responseData.body);
+
+    
 
     return true;
   }

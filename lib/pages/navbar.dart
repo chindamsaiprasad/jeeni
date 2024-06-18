@@ -78,49 +78,7 @@ class _NavBarState extends State<NavBar> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              // UserAccountsDrawerHeader(
-              //   decoration: const BoxDecoration(color: Colors.white),
-              //   accountName: Padding(
-              //     padding: const EdgeInsets.all(2),
-              //     child: Text(
-              //       userName,
-              //       style: TextStyle(color: Colors.black),
-              //     ),
-              //   ),
-              //   accountEmail: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Text(
-              //         userEmail,
-              //         style: TextStyle(color: Colors.black),
-              //       ),
-              //       IconButton(
-              //         icon: const Icon(Icons.edit, size: 22),
-              //         color: Colors.black38,
-              //         onPressed: () {
-              //           // Navigate to another page
-              //           // callback();
-              //           Navigator.push(
-              //             context,
-              //             MaterialPageRoute(
-              //                 builder: (context) => UserProfilePage(callback: updateProfileData)),
-              //           );
-              //         },
-              //       ),
-              //     ],
-              //   ),
-              //   currentAccountPicture: CircleAvatar(
-              //     child: ClipOval(
-              //       child: Image.memory(
-              //               base64Decode(userImageBase ?? ''),
-              //               fit: BoxFit.cover,
-              //               errorBuilder: (context, error, stackTrace) =>
-              //                   const Icon(Icons.error),
-              //             ),
-              //     ),
-              //   ),
-              // ),
-
+              
               userProfileBoxDisplay(),
 
               ListTile(
@@ -162,24 +120,18 @@ class _NavBarState extends State<NavBar> {
                   // ref.read(menuProvider).setSelectedMenu(MenuType.content);
 
                   OverlayLoader.show(context: context, title: "Loading...");
-                  ref
-  .read(contentProvider)
-  .getAllSubscribedCoursesFromJeeniServer() 
-  .then((response) { 
-    if (response.statusCode == 200) { 
-      Navigator.push( 
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ContentPage(),
-        ),
-      );
-    } else if (response.statusCode == 401) { 
-      ref.read(networkErrorProvider).resolveError(); 
-    }
-  })
-  .catchError((error) {
-  })
-  .whenComplete(() => OverlayLoader.hide());
+                  ref.read(contentProvider).getAllSubscribedCoursesFromJeeniServer().then((response) {
+                        if (response.statusCode == 200) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ContentPage(),
+                            ),
+                          );
+                        } else if (response.statusCode == 401) {
+                          ref.read(networkErrorProvider).resolveError();
+                        }
+                  }).catchError((error) {}).whenComplete(() => OverlayLoader.hide());
 
                   widget.callback();
                 },
@@ -222,26 +174,20 @@ class _NavBarState extends State<NavBar> {
                 onTap: () {
                   // ref.read(menuProvider).setSelectedMenu(MenuType.selfTest);
 
-                  OverlayLoader.show(
-                      context: context, title: "Tests Loading...");
-                  ref
-                      .read(testProvider)
-                      .fetchAllTestsFromJeeniServer()
-                      .then((isSuccess) => {
-                            if (isSuccess)
-                              {
-                                print(isSuccess),
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const TestListPage(),
-                                  ),
-                                )
-                              }
-                          })
-                      .catchError((error) {
-                    // TODO :: ERROR HANDELING
-                  }).whenComplete(() => OverlayLoader.hide());
+                  OverlayLoader.show(context: context, title: "Loading...");
+                  ref.read(testProvider).fetchAllTestsFromJeeniServer().then((response) {
+                    if (response.statusCode == 200) {
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => const TestListPage(),
+                        ),
+                      );
+                    } else if (response.statusCode == 401) {
+                      ref.read(networkErrorProvider).resolveError();
+                    }
+                  }).catchError((error) {
+                    // TODO: Implement error handling logic
+                    print('Error: $error');
+                  }).whenComplete(() { OverlayLoader.hide(); });
 
                   widget.callback();
                 },
@@ -267,20 +213,23 @@ class _NavBarState extends State<NavBar> {
                     // ref.read(menuProvider).setSelectedMenu(MenuType.results);
                     OverlayLoader.show(context: context, title: "Loading...");
 
-                    ref
-                        .read(resultProvider)
-                        .getAllResultsFromJeeniServer()
-                        .then((value) {
-                          Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ResultsPage(),
-                          ),
-                        );
+                    ref.read(resultProvider).getAllResultsFromJeeniServer().then((response) {
+
+                      if(response.statusCode == 200){
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => const ResultsPage(),
+                        ),
+                      );
+                      } else if(response.statusCode == 401){
+                        ref.read(networkErrorProvider).resolveError();
+                      }
+
+
+                      
                       widget.callback();
                     }).catchError((error) {
                       print('Failed to fetch results: $error');
-                      ref.read(networkErrorProvider).resolveError();
+                      // ref.read(networkErrorProvider).resolveError();
                     }).whenComplete(() {
                       OverlayLoader.hide();
                     });
@@ -307,11 +256,11 @@ class _NavBarState extends State<NavBar> {
                 onTap: () {
                   // ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
                   Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ReportIssuePage(),
-                          ),
-                        );
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ReportIssuePage(),
+                    ),
+                  );
                   widget.callback();
                 },
               ),

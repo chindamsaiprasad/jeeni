@@ -35,40 +35,54 @@ class LogoutOverlay {
         children: [
           Positioned.fill(
             child: Material(
-              color: Colors.transparent.withOpacity(0.5),
+              color: const Color.fromRGBO(0, 0, 0, 0).withOpacity(0.5),
               child: Container(
                 color: Colors.transparent,
                 alignment: Alignment.center,
                 child: Container(
                   padding: const EdgeInsets.all(10),
-                  height: 200,
-                  width: MediaQuery.of(context).size.width * .80,
+                  height: 250,
+                  width: MediaQuery.of(context).size.width * .85,
                   color: Colors.white,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       const Text(
                         "Logout",
-                        style: TextStyle(color: Colors.black, fontSize: 24),
+                        style: TextStyle(color: Colors.black87, fontSize: 22,fontWeight: FontWeight.bold),
                       ),
                       const Text(
-                        "Do you really want to sign out? If yes then all downloaded files will delete permanently.",
-                        style: TextStyle(color: Colors.black, fontSize: 18),
+                        "Are you sure you want to log out?\nAll downloaded files will be deleted permanently.",
+                        style: TextStyle(color: Colors.black87, fontSize: 18),
+                        textAlign: TextAlign.center,
                       ),
                       SizedBox(
                         height: 50,
                         width: double.infinity,
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Spacer(),
-                            TextButton(
+                            ElevatedButton(
                               onPressed: onTapNo,
+                              style: ButtonStyle(
+                                // backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0),),
+                                ),
+                              ),
                               child: const Text("NO"),
                             ),
-                            TextButton(
+                            const SizedBox(width: 30,),
+                            ElevatedButton(
                               onPressed: onTapYes,
-                              child: const Text("YES"),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0),),
+                                ),
+                              ),
+                              child: const Text("YES",style: TextStyle(color: Colors.white),),
                             ),
                           ],
                         ),
@@ -110,49 +124,46 @@ class AlreadyLoggedInOverlay {
                 color: Colors.transparent,
                 alignment: Alignment.center,
                 child: Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.only(top: 10,bottom: 10,right: 15,left: 15),
                   height: 200,
-                  width: MediaQuery.of(context).size.width * .80,
+                  width: MediaQuery.of(context).size.width * .85,
                   color: Colors.white,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       const Text(
-                        "Warning",
+                        "Please Note!",
                         style: TextStyle(
-                          color: Colors.red,
+                          color: Colors.black87,
                           fontWeight: FontWeight.bold,
-                          fontSize: 24,
+                          fontSize: 22,
                         ),
                       ),
-                      const Divider(
-                        color: Colors.black,
-                        height: 1,
-                      ),
                       const Text(
-                        "You have already logged-in somewhere else.",
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                      ),
-                      const Divider(
-                        color: Colors.black,
-                        height: 1,
+                        "It looks like you are logged in from somewhere else. Please login again.",
+                        style: TextStyle(color: Colors.black87, fontSize: 18),
+                        textAlign: TextAlign.center,
                       ),
                       SizedBox(
-                        height: 50,
-                        width: double.infinity,
-                        child: TextButton(
-                          onPressed: onTapYes,
-                          child: TextButton(
+                        height: 35,
+                        width: 150,
+                          child: ElevatedButton(
                             onPressed: onTapYes,
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0),),
+                              ),
+                            ),
                             child: const Text(
                               'Login Again',
                               style: TextStyle(
-                                color: AppColour.darkGreen,
+                                color: Colors.white,
+                                fontSize: 16,
                               ),
                             ),
                           ),
-                        ),
                       )
                     ],
                   ),

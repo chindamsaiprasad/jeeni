@@ -42,7 +42,7 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(top: 12,right: 12,left: 12,bottom: 0),
             child: TextField(
               controller: searchTextController,
               decoration: InputDecoration(
@@ -63,7 +63,7 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
           Expanded(
             child: Padding(
               padding:
-                  const EdgeInsets.only(top: 4, bottom: 10, left: 2, right: 2),
+                  const EdgeInsets.only(top: 4, bottom: 10, left: 6, right: 6),
               child: getResultsList(),
             ),
           ),
@@ -96,23 +96,13 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
   }
 
   Widget resultCard(ResultModelClass data) {
-    RichText attemptDetails() {
-      return RichText(
-        text: TextSpan(
-          children: [
-            const TextSpan(
-              text: "Attempted on : ",
-              style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            ),
-            TextSpan(
-              text: "${data.examDate} ( Duration ${data.durationInMinutes} )",
-              style: TextStyle(fontSize: 12, color: Colors.black),
-            ),
-          ],
-        ),
+    Column attemptDetails() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Attempted on : ${data.strExamDate}",style: const TextStyle(fontSize: 14,color: Colors.black),),
+          Text("Duration : ${data.durationInMinutes} Minutes", style: const TextStyle(fontSize: 14,color: Colors.black),),
+        ],
       );
     }
 
@@ -120,116 +110,80 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            data.name ?? '',
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Expanded(
+            child: Text(
+              data.name ?? '',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            ),
           ),
           Text(
             "${data.score} out of ${data.outOfScore}",
-            style: const TextStyle(fontSize: 12),
+            style: const TextStyle(fontSize: 14),
           )
         ],
       );
     }
 
-    IntrinsicHeight getDownloadIcons() {
-      return IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton(
+    Row getDownloadIcons() {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          SizedBox(
+            height: 35,
+            child: TextButton(
               onPressed: () {
                 //ToDo
                 OverlayLoader.show(context: context, title: "loading");
-                ref
-                    .read(resultProvider)
-                    .getResultDetailsFromJeeniServer(data.id)
-                    .then((value) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
+                ref.read(resultProvider).getResultDetailsFromJeeniServer(data.id).then((value) {
+
+                  // print("data $value");
+                  Navigator.push(context, MaterialPageRoute(
                         builder: (context) => ResultDetailsPage(data: data)),
                   );
                 }).catchError((error) {
                   print('Failed to fetch results: $error');
-                  ref.read(networkErrorProvider).resolveError();
+                  // ref.read(networkErrorProvider).resolveError();
                 }).whenComplete(() {
                   OverlayLoader.hide();
                 });
               },
-              child: const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.remove_red_eye),
-                  SizedBox(height: 4),
-                  Text(
-                    "VIEW",
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ],
+              child: const Text(
+                "View Result",
+                style: TextStyle(fontSize: 16),
               ),
             ),
-            const SizedBox(
-              width: 40,
-            ),
-            VerticalDivider(),
-            const SizedBox(
-              width: 40,
-            ),
-            TextButton(
-              onPressed: () {
-                //Todo
-              },
-              child: const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.refresh),
-                  SizedBox(height: 4),
-                  Text(
-                    "RE-DOWNLOAD",
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       );
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          attemptDetails(),
-          const SizedBox(
-            height: 5,
-          ),
-          Container(
-            height: 105,
-            padding: EdgeInsets.all(5),
-            decoration: const BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 2,
-                ),
-              ],
-              color: Colors.white,
+      padding: const EdgeInsets.only(top: 10, bottom: 5, left: 8, right: 8),
+      child: Container(
+        height: 110,
+        padding: EdgeInsets.all(5),
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              blurRadius: 2,
             ),
-            child: Column(
-              children: [
-                getExamDetails(),
-                const SizedBox(
-                  height: 5,
-                ),
-                getDownloadIcons(),
-              ],
-            ),
-          ),
-        ],
+          ],
+          color: Colors.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            getExamDetails(),
+            // const SizedBox(height: 5,),
+            attemptDetails(),
+            // const SizedBox(height: 5,),
+            getDownloadIcons(),
+          ],
+        ),
       ),
     );
   }
