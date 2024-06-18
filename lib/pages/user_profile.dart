@@ -226,6 +226,20 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
 
   Widget secondContainer() {
 
+    void clearAllSaved() {
+    setState(() {
+      boolName = false;
+      boolEmail = false;
+      boolMobile = false;
+      boolCollege = false;
+      boolPName = false;
+      boolPEmail = false;
+      boolPMobile = false;
+      boolCity = false;
+      boolOrganization = false;
+    });
+  }
+
     void updateUserDetails(payload) async{
 
       final data = await ref.read(userProvider).updateProfile(payload);
@@ -233,6 +247,7 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
       if(data == "Profile details updated sucessfully"){
         EasyLoading.showSuccess(data);
         getuserData();
+        clearAllSaved();
       } else{
         EasyLoading.showError(data);
       }

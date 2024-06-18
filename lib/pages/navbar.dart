@@ -212,9 +212,7 @@ class _NavBarState extends State<NavBar> {
                   } else {
                     // ref.read(menuProvider).setSelectedMenu(MenuType.results);
                     OverlayLoader.show(context: context, title: "Loading...");
-
                     ref.read(resultProvider).getAllResultsFromJeeniServer().then((response) {
-
                       if(response.statusCode == 200){
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) => const ResultsPage(),
@@ -223,9 +221,6 @@ class _NavBarState extends State<NavBar> {
                       } else if(response.statusCode == 401){
                         ref.read(networkErrorProvider).resolveError();
                       }
-
-
-                      
                       widget.callback();
                     }).catchError((error) {
                       print('Failed to fetch results: $error');

@@ -6,6 +6,7 @@ import 'package:jeeni/providers/auth_provider.dart';
 import 'package:jeeni/providers/network_error_provider.dart';
 import 'package:jeeni/providers/result_provider.dart';
 import 'package:jeeni/response_models/result_list_response.dart';
+import 'package:jeeni/utils/constants.dart';
 
 class ResultsPage extends ConsumerStatefulWidget {
   const ResultsPage({super.key});
@@ -100,7 +101,7 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Attempted on : ${data.strExamDate}",style: const TextStyle(fontSize: 14,color: Colors.black),),
+          Text("Attempted on : ${formatDateString(data.strExamDate)}",style: const TextStyle(fontSize: 14,color: Colors.black),),
           Text("Duration : ${data.durationInMinutes} Minutes", style: const TextStyle(fontSize: 14,color: Colors.black),),
         ],
       );

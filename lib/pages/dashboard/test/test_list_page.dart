@@ -165,13 +165,12 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                               //TODO :: HANDLE ERROR
                                             });
                                           },
-                                          child: const Text("Download", style: TextStyle(color: Colors.white),),
+                                          child: const Text("Start Test", style: TextStyle(color: Colors.white),),
                                         ),
                                       ],
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         RichText(
                                           text: TextSpan(

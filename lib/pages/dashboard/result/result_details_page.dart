@@ -14,6 +14,7 @@ import "package:jeeni/providers/result_provider.dart";
 import "package:jeeni/providers/test_provider.dart";
 import "package:jeeni/response_models/result_list_response.dart";
 import "package:jeeni/response_models/submit_test_response.dart";
+import "package:jeeni/utils/constants.dart";
 import "package:jeeni/utils/local_data_manager.dart";
 
 class ResultDetailsPage extends ConsumerStatefulWidget {
@@ -150,7 +151,7 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
                 getResultDetails("Test Name", widget.data.name),
 
                 Divider(),
-                getResultDetails("Test Date", widget.data.strExamDate),
+                getResultDetails("Test Date", formatDateString(widget.data.strExamDate) ?? ''),
 
                 Divider(),
                 getResultDetails(
