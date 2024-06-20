@@ -171,24 +171,19 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
           body: Stack(
             children: [
               SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    firstContainer(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    secondContainer(),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    thirdContainerPassword(),
-                    const SizedBox(
-                      height: 60,
-                    )
-                  ],
+                child: Padding(
+                  padding: EdgeInsets.only(right: 10,left: 10,),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10,),
+                      firstContainer(),
+                      const SizedBox(height: 20,),
+                      secondContainer(),
+                      const SizedBox(height: 5,),
+                      thirdContainerPassword(),
+                      const SizedBox(height: 20,)
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -198,19 +193,27 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
 
   Widget firstContainer() {
     return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        image: const DecorationImage(
+        image: AssetImage("assets/images/profileBg.jpg"),
+        fit: BoxFit.cover,
+        ),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(height: 20,),
           UserDetailsContainer(imageString),
           const SizedBox(height: 10), // Add spacing between image and text
-          Text(
-            studentNameController.text,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Text(studentNameController.text,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          Text(
-            studentEmailController.text,
-            style: TextStyle(fontSize: 16),
+          Text(studentEmailController.text,
+            style: TextStyle(fontSize: 16, color: Colors.white),
           ),
+          SizedBox(height: 20,),
         ],
       ),
     );
@@ -515,7 +518,7 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
 
     return Container(
       // color: Colors.green,
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.only(top: 5,bottom: 5, left: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -608,12 +611,15 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
             height: 28,
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: Color(0xff7654FF),
+              // color: Color(0xff7654FF),
+              color: Colors.white
+              
             ),
             child: const Center(
               child: Icon(
                 Icons.edit_outlined,
-                color: Colors.white,
+                // color: Colors.white,
+                color: Colors.black,
                 size: 18,
               ),
             ),
@@ -659,47 +665,51 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
       return Stack(
         children: [
           _selectedImageFile != null
-              ? ClipOval(
-                  child: Container(
-                    width: 110,
-                    height: 110,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: const Color(0xff7654FF),
-                        width: 3,
-                      ),
-                    ),
-                    child: Image.file(
-                      File(_selectedImageFile!.path),
-                      width: 106,
-                      height: 106,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                )
-              : ClipOval(
-                  child: Container(
-                    width: 110,
-                    height: 110,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Color(0xff7654FF),
-                        width: 3,
-                      ),
-                    ),
-                    child: isimagepresent
-                        ? const Icon(Icons.person)
-                        : Image.memory(
-                            // base64Decode(ProfileImage ?? ''),
-                            dataImage,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(Icons.error),
-                          ),
+              ? Container(
+                width: 110,
+                height: 110,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    // color: const Color(0xff7654FF),
+                    color: Colors.white,
+                    width: 3,
                   ),
                 ),
+                child: ClipOval(
+                  child: Image.file(
+                    File(_selectedImageFile!.path),
+                    width: 106,
+                    height: 106,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              )
+              : Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    // color: Color(0xff7654FF),
+                    color: Colors.white,
+                    width: 3,
+                  ),
+                ),
+                child: isimagepresent
+                    ? const Icon(Icons.person , color: Colors.white,)
+                    : ClipOval(
+                      child: Image.memory(
+                          // base64Decode(ProfileImage ?? ''),
+                          dataImage,
+                          fit: BoxFit.cover,
+                          height: 120,
+                          width: 120,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(Icons.error , color: Colors.white,),
+                        ),
+                    ),
+              ),
           Positioned(
             bottom: 1,
             right: -8,

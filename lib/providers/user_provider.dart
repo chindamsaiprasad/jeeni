@@ -30,55 +30,6 @@ class UserProviderClass with ChangeNotifier {
   late StudentModelClassTwo userData;
 
   Future<http.Response> saveUserDetails() async {
-    // final jauth = ref.read(authenticationProvider)?.jauth;
-
-    // if (jauth == null) {
-    //   throw Exception('Authentication token (jauth) is null');
-    // }
-
-    // Map<String, String> headers = {
-    //   "Accept-Encoding": "gzip, deflate, br, zstd",
-    //   "Content-Type": "application/json",
-    //   "Accept": "application/json",
-    //   "Jauth": jauth,
-    // };
-
-    // try {
-    //   final response = await http.get(
-    //     Uri.parse("$BASE_URL/student/getById"),
-    //     headers: headers,
-    //   );
-
-    //   if (response.statusCode == 200) {
-    //     Map<String, dynamic> data = json.decode(response.body);
-
-    //     localDataManager
-    //         .updateStudent(
-    //             data['name'], data['email'], data['mobileProfileImage'])
-    //         .then((success) {
-    //       if (success) {
-    //         print("Student updated successfully.");
-    //       } else {
-    //         print("Failed to update student.");
-    //       }
-    //     }).catchError((error) {
-    //       print("Error updating student: $error");
-    //     });
-
-    //     return data;
-    //   } else {
-    //     // Request failed
-    //     print('Failed to fetch data, status code: ${response.statusCode}');
-    //     throw Exception(
-    //         'Failed to fetch data, status code: ${response.statusCode}');
-    //   }
-    // } catch (error) {
-    //   // Network or parsing errors
-    //   print('Error fetching data: $error');
-    //   throw Exception('Error fetching data: $error');
-    // }
-
-
 
     final response = await ref.read(networkProvider).networkHandlerMethod(url: "$BASE_URL/student/getById", httpMethodType: RequestType.get);
 
@@ -89,10 +40,13 @@ class UserProviderClass with ChangeNotifier {
 
         print("data ${userData.name}");
 
+        notifyListeners();
+
         localDataManager.updateStudent(userData.name, userData.email, userData.mobileProfileImage)
         .then((success) {
           if (success) {
             print("Student updated successfully. ${ref.read(authenticationProvider)!.name}");
+            notifyListeners();
           } else {
             // print("Failed to update student.");
           }

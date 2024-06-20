@@ -274,6 +274,43 @@ void dispose() {
 
               Divider(),
               ListTile(
+                leading: const Icon(
+                  Icons.settings,
+                  color:  Colors.black38,
+                ),
+                title: const Text(
+                  "User Profile",
+                  style: TextStyle(
+                    color:  Colors.black,
+                  ),
+                ),
+                onTap: () {
+
+                  
+
+                  OverlayLoader.show(context: context, title: "Loading...");
+                              ref.read(userProvider).saveUserDetails().then((response) {
+                                if (response.statusCode == 200) {
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) => UserProfilePage( callback: updateProfileData),
+                                    ),
+                                  );
+                                  
+                                } else if (response.statusCode == 401) {
+                                  ref.read(networkErrorProvider).resolveError();
+                                }
+                                widget.callback();
+                              }).catchError((error) {
+                                print('Failed to fetch results: $error');
+                                
+                              }).whenComplete(() {
+                                OverlayLoader.hide();
+                              });
+                  
+                  widget.callback();
+                },
+              ),
+              ListTile(
                 leading: Icon(
                   Icons.info,
                   color: selectedMenu == MenuType.aboutUs
@@ -328,12 +365,13 @@ void dispose() {
   Widget userProfileBoxDisplay(WidgetRef ref) {
     Padding userProfileColumn() {
       return Padding(
-        padding: const EdgeInsets.only(top: 50, left: 10, right: 10, bottom: 5),
+        padding: const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(height: 60,),
             SizedBox(
-              height: 80,
+              height: 90,
               width: 100,
               // color: Colors.red,
               child: CircleAvatar(
@@ -348,9 +386,7 @@ void dispose() {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 5,
-            ),
+            const SizedBox(height: 30,),
             Text(
               userName,
               style: const TextStyle(color: Colors.white, fontSize: 16),
@@ -362,63 +398,52 @@ void dispose() {
                   userEmail,
                   style: TextStyle(color: Colors.white, fontSize: 14),
                 ),
-                Container(
-                  width: 25,
-                  height: 25,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      const Center(
-                        child: Icon(
-                          Icons.settings,
-                          size: 20,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Positioned.fill(
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(30),
-                            onTap: () {
-
-                              OverlayLoader.show(context: context, title: "Loading...");
-                              ref.read(userProvider).saveUserDetails().then((response) {
-                              if(response.statusCode == 200){
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => UserProfilePage(callback: updateProfileData),),
-                              );
-                              } else if(response.statusCode == 401){
-                                ref.read(networkErrorProvider).resolveError();
-                              }
-                      widget.callback();
-                    }).catchError((error) {
-                      print('Failed to fetch results: $error');
-                      // ref.read(networkErrorProvider).resolveError();
-                    }).whenComplete(() {
-                      OverlayLoader.hide();
-                    });
-
-
-
-
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => UserProfilePage(
-                              //         callback: updateProfileData),
-                              //   ),
-                              // );
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   width: 25,
+                //   height: 25,
+                //   decoration: const BoxDecoration(
+                //     shape: BoxShape.circle,
+                //     color: Colors.white,
+                //   ),
+                //   child: Stack(
+                //     children: <Widget>[
+                //       const Center(
+                //         child: Icon(
+                //           Icons.settings,
+                //           size: 20,
+                //           color: Colors.black,
+                //         ),
+                //       ),
+                //       Positioned.fill(
+                //         child: Material(
+                //           color: Colors.transparent,
+                //           child: InkWell(
+                //             borderRadius: BorderRadius.circular(30),
+                //             onTap: () {
+                //               OverlayLoader.show(context: context, title: "Loading...");
+                //               ref.read(userProvider).saveUserDetails().then((response) {
+                //                 if (response.statusCode == 200) {
+                //                   Navigator.push(context, MaterialPageRoute(
+                //                       builder: (context) => UserProfilePage( callback: updateProfileData),
+                //                     ),
+                //                   );
+                //                 } else if (response.statusCode == 401) {
+                //                   ref.read(networkErrorProvider).resolveError();
+                //                 }
+                //                 widget.callback();
+                //               }).catchError((error) {
+                //                 print('Failed to fetch results: $error');
+                                
+                //               }).whenComplete(() {
+                //                 OverlayLoader.hide();
+                //               });
+                //             },
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ],

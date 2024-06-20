@@ -152,7 +152,7 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
               },
               child: const Text(
                 "View Result",
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 15),
               ),
             ),
           ),
@@ -162,28 +162,45 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
 
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 5, left: 8, right: 8),
-      child: Container(
-        height: 110,
-        padding: EdgeInsets.all(5),
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 2,
-            ),
-          ],
-          color: Colors.white,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getExamDetails(),
-            // const SizedBox(height: 5,),
-            attemptDetails(),
-            // const SizedBox(height: 5,),
-            getDownloadIcons(),
-          ],
+      child: GestureDetector(
+        onTap: () {
+          OverlayLoader.show(context: context, title: "loading");
+                ref.read(resultProvider).getResultDetailsFromJeeniServer(data.id).then((value) {
+
+                  // print("data $value");
+                  Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => ResultDetailsPage(data: data)),
+                  );
+                }).catchError((error) {
+                  print('Failed to fetch results: $error');
+                  // ref.read(networkErrorProvider).resolveError();
+                }).whenComplete(() {
+                  OverlayLoader.hide();
+                });
+        },
+        child: Container(
+          height: 110,
+          padding: EdgeInsets.all(5),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 2,
+              ),
+            ],
+            color: Colors.white,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getExamDetails(),
+              // const SizedBox(height: 5,),
+              attemptDetails(),
+              // const SizedBox(height: 5,),
+              getDownloadIcons(),
+            ],
+          ),
         ),
       ),
     );

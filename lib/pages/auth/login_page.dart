@@ -43,10 +43,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Container _buildLogo() {
     return Container(
       height: 200,
-      width: MediaQuery.of(context).size.width,
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/loginImageBg.jpg"),
+          fit: BoxFit.cover,
+        ),
+      ),
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.start,
-        // crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -55,8 +59,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             width: 200,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child:
-                  Image.asset(height: 100, "assets/images/jeeniloginimage.png"),
+              child: Image.asset("assets/images/jeeniloginimage.png"),
             ),
           ),
         ],
@@ -64,13 +67,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: const Color(0xffebeae8),
-      backgroundColor: const Color(0xff1c5e20),
+      // backgroundColor: const Color(0xff1c5e20),
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
+        // backgroundColor: Colors.transparent,
         // title: const Text(
         //   "Login",
         //   style: TextStyle(color: Colors.white),
@@ -78,13 +83,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       ),
       body: Column(
         children: [
+          // SizedBox(height: 80,),
           _buildLogo(),
           Flexible(
             child: Container(
               margin: const EdgeInsets.only(left: 4, right: 4),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
-                color: Colors.white,
+                // color: Colors.red,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20.0),
                   topRight: Radius.circular(20.0),
