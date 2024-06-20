@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jeeni/apis/network_manager.dart';
+import 'package:jeeni/models/student_two.dart';
 import 'package:jeeni/providers/auth_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:jeeni/utils/local_data_manager.dart';
@@ -25,54 +26,88 @@ class UserProviderClass with ChangeNotifier {
 
   final localDataManager = LocalDataManager();
 
-  Future<Map<String, dynamic>> saveUserDetails() async {
-    final jauth = ref.read(authenticationProvider)?.jauth;
 
-    if (jauth == null) {
-      throw Exception('Authentication token (jauth) is null');
-    }
+  late StudentModelClassTwo userData;
 
-    Map<String, String> headers = {
-      "Accept-Encoding": "gzip, deflate, br, zstd",
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-      "Jauth": jauth,
-    };
+  Future<http.Response> saveUserDetails() async {
+    // final jauth = ref.read(authenticationProvider)?.jauth;
 
-    try {
-      final response = await http.get(
-        Uri.parse("$BASE_URL/student/getById"),
-        headers: headers,
-      );
+    // if (jauth == null) {
+    //   throw Exception('Authentication token (jauth) is null');
+    // }
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> data = json.decode(response.body);
+    // Map<String, String> headers = {
+    //   "Accept-Encoding": "gzip, deflate, br, zstd",
+    //   "Content-Type": "application/json",
+    //   "Accept": "application/json",
+    //   "Jauth": jauth,
+    // };
 
-        localDataManager
-            .updateStudent(
-                data['name'], data['email'], data['mobileProfileImage'])
-            .then((success) {
+    // try {
+    //   final response = await http.get(
+    //     Uri.parse("$BASE_URL/student/getById"),
+    //     headers: headers,
+    //   );
+
+    //   if (response.statusCode == 200) {
+    //     Map<String, dynamic> data = json.decode(response.body);
+
+    //     localDataManager
+    //         .updateStudent(
+    //             data['name'], data['email'], data['mobileProfileImage'])
+    //         .then((success) {
+    //       if (success) {
+    //         print("Student updated successfully.");
+    //       } else {
+    //         print("Failed to update student.");
+    //       }
+    //     }).catchError((error) {
+    //       print("Error updating student: $error");
+    //     });
+
+    //     return data;
+    //   } else {
+    //     // Request failed
+    //     print('Failed to fetch data, status code: ${response.statusCode}');
+    //     throw Exception(
+    //         'Failed to fetch data, status code: ${response.statusCode}');
+    //   }
+    // } catch (error) {
+    //   // Network or parsing errors
+    //   print('Error fetching data: $error');
+    //   throw Exception('Error fetching data: $error');
+    // }
+
+
+
+    final response = await ref.read(networkProvider).networkHandlerMethod(url: "$BASE_URL/student/getById", httpMethodType: RequestType.get);
+
+          if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonData = json.decode(response.body);
+
+        userData = StudentModelClassTwo.fromJson(jsonData);
+
+        print("data ${userData.name}");
+
+        localDataManager.updateStudent(userData.name, userData.email, userData.mobileProfileImage)
+        .then((success) {
           if (success) {
-            print("Student updated successfully.");
+            print("Student updated successfully. ${ref.read(authenticationProvider)!.name}");
           } else {
-            print("Failed to update student.");
+            // print("Failed to update student.");
           }
         }).catchError((error) {
-          print("Error updating student: $error");
+          // print("Error updating student: $error");
         });
+        
 
-        return data;
+        notifyListeners();
       } else {
-        // Request failed
         print('Failed to fetch data, status code: ${response.statusCode}');
-        throw Exception(
-            'Failed to fetch data, status code: ${response.statusCode}');
       }
-    } catch (error) {
-      // Network or parsing errors
-      print('Error fetching data: $error');
-      throw Exception('Error fetching data: $error');
-    }
+
+    return response;
+
   }
 
   Future<String> changePassword(
@@ -120,53 +155,23 @@ class UserProviderClass with ChangeNotifier {
     return message;
   }
 
-  Future<String> updateProfile(bodyData) async {
-    String message = "";
+  /////////////////////////////////////////////////////////////////////////////////
 
-    final jauth = ref.read(authenticationProvider)?.jauth;
-    if (jauth == null) {
-      throw Exception('Authentication token (jauth) is null');
-    }
-
-    final url = Uri.parse('https://exam.jeeni.in/Jeeni/student/profile/update');
+  Future<int> updateProfile(bodyData) async {
 
     Map<String, String> headers = {
       "Accept-Encoding": "gzip, deflate, br, zstd",
       "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
       "Accept": "application/json",
-      "Jauth": jauth,
     };
     final payload = bodyData;
 
-    // Make the POST request
-    try {
-      final response = await http.post(
-        url,
-        headers: headers,
-        body: payload,
-      );
 
-      // Check the status code for the result
-      if (response.statusCode == 302) {
-        // print("body $payload");
-        print('Profile update request was redirected. ${response.body}');
-        message = "Profile details updated sucessfully";
+    final response = await ref.read(networkProvider).networkHandlerMethod(url: "https://exam.jeeni.in/Jeeni/student/profile/update", httpMethodType: RequestType.post,headers: headers, body: payload);
 
-        // Handle redirection or further action if needed
-      } else if (response.statusCode == 200) {
-        print('Profile updated successfully. ${response.body}');
-        message = "ok ";
-      } else {
-        print(
-            'Failed to update profile. Status code: ${response.statusCode} ${response.body},');
-        message = "some issues";
-      }
-    } catch (e) {
-      print('Error occurred while updating profile: $e');
-      message = "some issues";
-    }
-
-    return message;
+    // print("code ${response.statusCode}");
+    
+    return response.statusCode;
   }
 
   Future<String> uploadImage(XFile imageFile) async {

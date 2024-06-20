@@ -99,28 +99,24 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
 
   void getuserData() async {
     try {
-      final user = await ref.read(userProvider).saveUserDetails();
-
-      // print('User data: ${user} ${user['institute']}');
+      final user = await ref.read(userProvider).userData;
 
       setState(() {
         // Update your state variables if needed
-        studentNameController.text = user['name'] ?? '';
-        studentEmailController.text = user['email'] ?? '';
-        studentMobileController.text = user['mobileNumber'] ?? '';
-        collegeNameController.text = user['collegeName'] ?? '';
-        parentNameController.text = user['parentName'] ?? '';
-        parentEmailController.text = user['parentEmail'] ?? '';
-        parentMobileController.text = user['parentMobileNumber'] ?? '';
-        cityNameController.text = user['city'] ?? '';
-        orgNameController.text = user['institute'] ?? '';
-        batchNameController.text = user['batchName'] ?? '';
+        studentNameController.text = user.name;
+        studentEmailController.text = user.email;
+        studentMobileController.text = user.mobileNumber;
+        collegeNameController.text = user.collegeName;
+        parentNameController.text = user.parentName;
+        parentEmailController.text = user.parentEmail;
+        parentMobileController.text = user.parentMobileNumber;
+        cityNameController.text = user.city;
+        orgNameController.text = user.institute;
+        batchNameController.text = user.batchName;
+        existingPassword = user.password;
+        imageString = user.mobileProfileImage;
 
-        existingPassword = user['password'] ?? '';
-
-        imageString = user['mobileProfileImage'] ?? '';
-
-        dataImage = base64Decode(user['mobileProfileImage'] ?? '');
+        dataImage = base64Decode(user.mobileProfileImage);
       });
     } catch (error) {
       // Handle error if necessary
@@ -153,55 +149,51 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color(0xff1c5e20),
-          title: const Text("Profile", style: TextStyle(color: Colors.white)),
-          leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            // if (widget.callback != null) {
-            //   widget.callback();
-            // }
+    return PopScope(
+      onPopInvoked: (didPop) {
+        widget.callback();
+        print(didPop);
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: const Color(0xff1c5e20),
+            title: const Text("Profile", style: TextStyle(color: Colors.white)),
+            leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
 
-            widget.callback();
-            Navigator.pop(context);
-           
-          },
-        ),
-        ),
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  firstContainer(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  secondContainer(),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  thirdContainerPassword(),
-                  const SizedBox(
-                    height: 60,
-                  )
-                ],
-              ),
-            ),
-            if (isLoading)
-              Positioned.fill(
-                child: OverlayLoaderWrapperTwo(
-                  isLoading: isLoading,
-                  title: "Loading...",
+              widget.callback();
+              Navigator.pop(context);
+             
+            },
+          ),
+          ),
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    firstContainer(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    secondContainer(),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    thirdContainerPassword(),
+                    const SizedBox(
+                      height: 60,
+                    )
+                  ],
                 ),
               ),
-          ],
-        ));
+            ],
+          )),
+    );
   }
 
   Widget firstContainer() {
@@ -227,31 +219,30 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
   Widget secondContainer() {
 
     void clearAllSaved() {
-    setState(() {
-      boolName = false;
-      boolEmail = false;
-      boolMobile = false;
-      boolCollege = false;
-      boolPName = false;
-      boolPEmail = false;
-      boolPMobile = false;
-      boolCity = false;
-      boolOrganization = false;
-    });
-  }
+      setState(() {
+        boolName = false;
+        boolEmail = false;
+        boolMobile = false;
+        boolCollege = false;
+        boolPName = false;
+        boolPEmail = false;
+        boolPMobile = false;
+        boolCity = false;
+        boolOrganization = false;
+      });
+    }
 
     void updateUserDetails(payload) async{
 
-      final data = await ref.read(userProvider).updateProfile(payload);
+      final statusCode = await ref.read(userProvider).updateProfile(payload);
 
-      if(data == "Profile details updated sucessfully"){
-        EasyLoading.showSuccess(data);
-        getuserData();
+      if(statusCode == 302){
+        ref.read(userProvider).saveUserDetails();
+        EasyLoading.showSuccess("Profile details updated sucessfully");
         clearAllSaved();
       } else{
-        EasyLoading.showError(data);
+        EasyLoading.showError("Error occurred while updating profile");
       }
-
     }
 
     Row updateUserInfoButton(){
@@ -262,28 +253,64 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
                 padding: const EdgeInsets.only(right: 20),
                 child: ElevatedButton(
                   onPressed: () {
+                    final studentName = studentNameController.text;
+                    final studentEmail = studentEmailController.text;
+                    final studentMobile = studentMobileController.text;
+                    final parentMobile = parentMobileController.text;
+                    final parentEmail = parentEmailController.text;
+                    final collegeName = collegeNameController.text;
+                    final cityName = cityNameController.text;
+                    final orgName = orgNameController.text;
+                    final batchName = batchNameController.text;
+
+                    // Regular expression for email validation
+                    final emailRegExp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                    // Regular expression for mobile number validation (10 digits)
+                    final mobileRegExp = RegExp(r'^\d{10}$');
+
+                    // Email validation
+                    if (!emailRegExp.hasMatch(studentEmail)) {
+                      EasyLoading.showError('Invalid student email');
+                      return;
+                    }
+                    if (!emailRegExp.hasMatch(parentEmail)) {
+                    EasyLoading.showError('Invalid parent email');
+                    return;
+                    }
+
+                    // Mobile number validation
+                    if (!mobileRegExp.hasMatch(studentMobile)) {
+                    EasyLoading.showError(
+                        'Student mobile number must be 10 digits');
+                      return;
+                    }
+                    if (!mobileRegExp.hasMatch(parentMobile)) {
+                      EasyLoading.showError(
+                      'Parent mobile number must be 10 digits');
+                      return;
+                      }
 
                     final payload = {
-                      'name': studentNameController.text,
-                      'email': studentEmailController.text,
-                      'mobileNumber': studentMobileController.text,
-                      'parentMobileNumber': parentMobileController.text,
-                      'parentEmail': parentEmailController.text,
-                      'collegeName': collegeNameController.text,
-                      'city': cityNameController.text,
-                      'institute': orgNameController.text,
-                      'batchName': batchNameController.text,
+                      'name': studentName,
+                      'email': studentEmail,
+                      'mobileNumber': studentMobile,
+                      'parentMobileNumber': parentMobile,
+                      'parentEmail': parentEmail,
+                      'collegeName': collegeName,
+                      'city': cityName,
+                      'institute': orgName,
+                      'batchName': batchName,
                     };
 
-                    // print("data $payload");
+                  // Print payload for debugging purposes (optional)
+                  // print("data $payload");
 
-                    updateUserDetails(payload);
-                    
+                  updateUserDetails(payload);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xff1c5e20),
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
+                    shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(6)),
                     ),
                   ),

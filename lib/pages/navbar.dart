@@ -46,27 +46,39 @@ class _NavBarState extends State<NavBar> {
     updateProfileData();
   }
 
-  void updateProfileData() {
-    // print("method call nav bar");
+  
 
-    LocalDataManager().loadStudentFromLocal().then((value) {
-      setState(() {
-        userName = value.name ?? '';
-        userEmail = value.email ?? '';
-        userImageBase = value.mobileProfileImage ?? '';
+  void updateProfileData() async {
+  try {
+    var value = await LocalDataManager().loadStudentFromLocal();
 
-        dataImage = base64Decode(value.mobileProfileImage ?? '');
-      });
+    setState(() {
+      userName = value.name ?? '';
+      userEmail = value.email ?? '';
+      userImageBase = value.mobileProfileImage ?? '';
 
-      // Optional: Print the loaded data
-      // print("name  : ${value.name}");
-      // print("email : ${value.email}");
-      // print("profile password : ${value.mobileProfileImage}");
-    }).catchError((error) {
-      // Handle any errors that occur during loading
-      print("Error loading data: $error");
+      dataImage = base64Decode(value.mobileProfileImage ?? '');
     });
+
+    // Optional: Print the loaded data
+    print("name  : ${value.name}");
+    // print("email : ${value.email}");
+    // print("profile password : ${value.mobileProfileImage}");
+
+
+  } catch (error) {
+    // Handle any errors that occur during loading
+    print("Error loading data: $error");
   }
+}
+
+
+
+
+  @override
+void dispose() {
+  super.dispose();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +91,7 @@ class _NavBarState extends State<NavBar> {
             padding: EdgeInsets.zero,
             children: [
               
-              userProfileBoxDisplay(),
+              userProfileBoxDisplay(ref),
 
               ListTile(
                 leading: Icon(
@@ -313,7 +325,7 @@ class _NavBarState extends State<NavBar> {
     );
   }
 
-  Widget userProfileBoxDisplay() {
+  Widget userProfileBoxDisplay(WidgetRef ref) {
     Padding userProfileColumn() {
       return Padding(
         padding: const EdgeInsets.only(top: 50, left: 10, right: 10, bottom: 5),
@@ -372,13 +384,34 @@ class _NavBarState extends State<NavBar> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(30),
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => UserProfilePage(
-                                      callback: updateProfileData),
-                                ),
+
+                              OverlayLoader.show(context: context, title: "Loading...");
+                              ref.read(userProvider).saveUserDetails().then((response) {
+                              if(response.statusCode == 200){
+                                Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => UserProfilePage(callback: updateProfileData),),
                               );
+                              } else if(response.statusCode == 401){
+                                ref.read(networkErrorProvider).resolveError();
+                              }
+                      widget.callback();
+                    }).catchError((error) {
+                      print('Failed to fetch results: $error');
+                      // ref.read(networkErrorProvider).resolveError();
+                    }).whenComplete(() {
+                      OverlayLoader.hide();
+                    });
+
+
+
+
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => UserProfilePage(
+                              //         callback: updateProfileData),
+                              //   ),
+                              // );
                             },
                           ),
                         ),
