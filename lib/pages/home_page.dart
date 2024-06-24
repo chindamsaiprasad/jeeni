@@ -82,13 +82,13 @@ class _HomePageState extends ConsumerState<HomePage> {
           });
         }, Icons.note, "Results", "See the results", Icons.arrow_right),
 
-        navigationList(() {
-          // ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
-           Navigator.push(context,MaterialPageRoute(
-                            builder: (context) => const ReportIssuePage(),
-                          ),
-                        );
-        }, Icons.warning_amber, "Issue Reporting", "Report the issue here", Icons.arrow_right),
+        // navigationList(() {
+        //   // ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
+        //    Navigator.push(context,MaterialPageRoute(
+        //                     builder: (context) => const ReportIssuePage(),
+        //                   ),
+        //                 );
+        // }, Icons.warning_amber, "Issue Reporting", "Report the issue here", Icons.arrow_right),
       ],
     );
   }

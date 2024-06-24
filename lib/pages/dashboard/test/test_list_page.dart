@@ -38,9 +38,12 @@ class _TestListPageState extends ConsumerState<TestListPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Mock Test"),
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text("Mock Test",style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+            ),
             const SizedBox(
-              height: 10,
+              height: 0,
             ),
             Expanded(
               child: tests.isEmpty
@@ -172,7 +175,7 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                               //TODO :: HANDLE ERROR
                                             });
                                           },
-                                          child: const Text("Start Test", style: TextStyle(color: Colors.white),),
+                                          child: const Text("Attempt", style: TextStyle(color: Colors.white),),
                                         ),
                                       ],
                                     ),

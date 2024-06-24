@@ -24,10 +24,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   // final TextEditingController _passwordController =
   //     TextEditingController(text: "Nish@nt1");
 
+  // final TextEditingController _userIdController =
+  //     TextEditingController(text: "joshi3052");
+  // final TextEditingController _passwordController =
+  //     TextEditingController(text: "123456");
+
   final TextEditingController _userIdController =
-      TextEditingController(text: "joshi3052");
+      TextEditingController();
   final TextEditingController _passwordController =
-      TextEditingController(text: "123456");
+      TextEditingController();
 
   late bool isLoading = false;
   bool _obscureText = true;

@@ -590,15 +590,12 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
             String optionText, SampleItemTwo optionselected) {
           bool istrue = optionselected == SampleItemTwo.itemOne;
           return SizedBox(
-            width: 140,
+            width: 130,
             height: 30,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Icon(istrue ? Icons.edit_outlined : Icons.delete),
-                const SizedBox(
-                  width: 5,
-                ),
                 Text(optionText)
               ],
             ),
@@ -644,20 +641,20 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
               <PopupMenuEntry<SampleItemTwo>>[
             PopupMenuItem<SampleItemTwo>(
               value: SampleItemTwo.itemOne,
-              child: useroptionsSizedBox("Edit profile", SampleItemTwo.itemOne),
+              child: useroptionsSizedBox("Change Profile", SampleItemTwo.itemOne),
               onTap: () {
                 _onImageButtonPressed(context);
               },
             ),
-            PopupMenuItem<SampleItemTwo>(
-              value: SampleItemTwo.itemTwo,
-              child:
-                  useroptionsSizedBox("Remove profile", SampleItemTwo.itemTwo),
-              onTap: () {
-                _selectedImageFile = null;
-                dataImage = Uint8List(0);
-              },
-            ),
+            // PopupMenuItem<SampleItemTwo>(
+            //   value: SampleItemTwo.itemTwo,
+            //   child:
+            //       useroptionsSizedBox("Remove profile", SampleItemTwo.itemTwo),
+            //   onTap: () {
+            //     _selectedImageFile = null;
+            //     dataImage = Uint8List(0);
+            //   },
+            // ),
           ],
         );
       }
@@ -846,6 +843,12 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
                   setState(() {
                     changePassword = !changePassword;
                   });
+
+                  currentPasswordController.clear();
+                  newPasswordController.clear();
+                  confirmPasswordController.clear();
+
+
                 },
                 child: Text("Change password"),
               ),

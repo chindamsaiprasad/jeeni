@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jeeni/pages/about_page.dart';
 import 'package:jeeni/pages/dashboard/content/content_page.dart';
 import 'package:jeeni/pages/dashboard/result/result_page.dart';
 import 'package:jeeni/pages/dashboard/test/test_list_page.dart';
@@ -245,32 +246,32 @@ void dispose() {
                   // widget.callback();
                 },
               ),
-              ListTile(
-                leading: Icon(
-                  Icons.warning_amber,
-                  color: selectedMenu == MenuType.issueReport
-                      ? Colors.green
-                      : Colors.black38,
-                ),
-                title: Text(
-                  "Issue Reporting",
-                  style: TextStyle(
-                    color: selectedMenu == MenuType.issueReport
-                        ? Colors.green
-                        : Colors.black,
-                  ),
-                ),
-                onTap: () {
-                  // ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ReportIssuePage(),
-                    ),
-                  );
-                  widget.callback();
-                },
-              ),
+              // ListTile(
+              //   leading: Icon(
+              //     Icons.warning_amber,
+              //     color: selectedMenu == MenuType.issueReport
+              //         ? Colors.green
+              //         : Colors.black38,
+              //   ),
+              //   title: Text(
+              //     "Issue Reporting",
+              //     style: TextStyle(
+              //       color: selectedMenu == MenuType.issueReport
+              //           ? Colors.green
+              //           : Colors.black,
+              //     ),
+              //   ),
+              //   onTap: () {
+              //     // ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => const ReportIssuePage(),
+              //       ),
+              //     );
+              //     widget.callback();
+              //   },
+              // ),
 
               Divider(),
               ListTile(
@@ -327,6 +328,10 @@ void dispose() {
                 ),
                 onTap: () {
                   // ref.read(menuProvider).setSelectedMenu(MenuType.selfTest);
+                  Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AboutUsPage()),
+            );
                   widget.callback();
                 },
               ),
