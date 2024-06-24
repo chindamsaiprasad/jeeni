@@ -63,10 +63,17 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                       children: [
                                         Text(test.name ?? ""),
                                         ElevatedButton(
-                                          style: const ButtonStyle(
+                                          style: ButtonStyle(
                                             backgroundColor:
-                                                MaterialStatePropertyAll(
-                                                    Color(0xff1c5e20)),
+                                                MaterialStateProperty.all<
+                                                    Color>(Color(0xff1c5e20)),
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5.0),
+                                              ),
+                                            ),
                                           ),
                                           onPressed: () {
                                             final deviceWidth =

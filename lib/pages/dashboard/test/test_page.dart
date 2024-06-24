@@ -123,38 +123,47 @@ class _TestPageState extends ConsumerState<TestPage> {
           //       .toString(),
           //   style: const TextStyle(color: AppColour.white),
           // ),
-          ElevatedButton(
-            style: const ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(AppColour.green),
-            ),
-            onPressed: () {
-              if (widget.diffrentBool) {
-                print("heellow");
-
-              } else {
-                OverlayLoader.show(context: context, title: "Submiting");
-                print("444444444444444444444444 VALUE");
-                ref
-                    .read(testProgressProvider)
-                    .submitTest()
-                    .then((response) {
-                      print("3333333333333333333333333 VALUE");
-                      if (response != null) {
-                        print("3333333333333333333333333  if VALUE");
-
-                        timerService.stopTimer();
-
-                        print("responsetest page $response");
-                        Navigator.pop(context, response);
-                      }
-                    })
-                    .catchError((onError) {})
-                    .whenComplete(() => OverlayLoader.hide());
-              }
-            },
-            child: const Text(
-              "Submit Test",
-              style: TextStyle(color: AppColour.white),
+          SizedBox(
+            width: 125,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                if (widget.diffrentBool) {
+                  print("heellow");
+            
+                } else {
+                  OverlayLoader.show(context: context, title: "Submiting");
+                  print("444444444444444444444444 VALUE");
+                  ref
+                      .read(testProgressProvider)
+                      .submitTest()
+                      .then((response) {
+                        print("3333333333333333333333333 VALUE");
+                        if (response != null) {
+                          print("3333333333333333333333333  if VALUE");
+            
+                          timerService.stopTimer();
+            
+                          print("responsetest page $response");
+                          Navigator.pop(context, response);
+                        }
+                      })
+                      .catchError((onError) {})
+                      .whenComplete(() => OverlayLoader.hide());
+                }
+              },
+              child: const Text(
+                "Submit Test",
+                style: TextStyle(color: AppColour.white),
+              ),
             ),
           ),
         ],
@@ -319,7 +328,7 @@ class _TestPageState extends ConsumerState<TestPage> {
                     child: Text(
                       'Q${index + 1}',
                       style: const TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontSize: 14,
                       ),
                     ),

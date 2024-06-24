@@ -76,7 +76,7 @@ class _MultipleQuestionState extends ConsumerState<MultipleQuestion> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor:
-                    multipleAnswer[index] ? Colors.green : Colors.grey[600],
+                    multipleAnswer[index] ? Colors.green[600] : Colors.grey[400],
               ),
               onPressed: () {
                 ref.read(testProgressProvider).setMultipleOption(option);

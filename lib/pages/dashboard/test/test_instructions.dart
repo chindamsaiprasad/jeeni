@@ -245,9 +245,14 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  style: const ButtonStyle(
+                  style: ButtonStyle(
                     backgroundColor:
-                        MaterialStatePropertyAll(AppColour.darkGreen),
+                        MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
                   ),
                   onPressed: () {
                     timerService.startTimer();

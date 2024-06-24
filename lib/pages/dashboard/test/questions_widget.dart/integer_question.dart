@@ -63,11 +63,11 @@ class _IntegerQuestionState extends ConsumerState<IntegerQuestion> {
                   height: 40,
                   color: ref.watch(testProgressProvider).userSelectedOption ==
                           null
-                      ? Colors.grey[600]
+                      ? Colors.grey[400]
                       : ref.watch(testProgressProvider).userSelectedOption ==
                               index.toString()
-                          ? Colors.green
-                          : Colors.grey[600],
+                          ? Colors.green[600]
+                          : Colors.grey[400],
                   child: Text(
                     "$index",
                     style: const TextStyle(color: Colors.white),

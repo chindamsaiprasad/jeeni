@@ -73,15 +73,18 @@ class _BasicQuestionState extends ConsumerState<BasicQuestion> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: userSelectedOption == null
-                    ? Colors.grey[600]
+                    ? Colors.grey[400]
                     : userSelectedOption == option
-                        ? Colors.green
-                        : Colors.grey[600],
-              ),
+                        ? Colors.green[600]
+                        : Colors.grey[400],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12), 
+                        ),
+                      ),
               onPressed: () {
                 ref.read(testProgressProvider).setSelectedOption(option);
               },
-              child: Text(option),
+              child: Text(option, style: TextStyle(color: Colors.white),),
             ),
           ),
         );

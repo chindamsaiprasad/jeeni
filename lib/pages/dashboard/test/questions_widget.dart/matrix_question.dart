@@ -65,13 +65,13 @@ class _MatrixQuestionState extends ConsumerState<MatrixQuestion> {
                       backgroundColor:
                           ref.watch(testProgressProvider).userSelectedOption ==
                                   null
-                              ? Colors.grey[600]
+                              ? Colors.grey[400]
                               : ref
                                           .watch(testProgressProvider)
                                           .userSelectedOption ==
                                       option
-                                  ? Colors.green
-                                  : Colors.grey[600],
+                                  ? Colors.green[600]
+                                  : Colors.grey[400],
                     ),
                     onPressed: () {
                       ref.read(testProgressProvider).setSelectedOption(option);
