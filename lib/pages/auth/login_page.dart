@@ -8,6 +8,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/auth/forgot_password_page.dart';
 import 'package:jeeni/providers/auth_provider.dart';
+import 'package:jeeni/utils/constants.dart';
 import 'package:jeeni/utils/device_manager.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -51,7 +52,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       width: double.infinity,
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/images/loginImageBg.jpg"),
+          image: AssetImage(ImageConstants.loginImageBg),
           fit: BoxFit.cover,
         ),
       ),
@@ -64,7 +65,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             width: 200,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Image.asset("assets/images/jeeniloginimage.png"),
+              child: Image.asset(ImageConstants.jeeniLoginLogoImage),
             ),
           ),
         ],

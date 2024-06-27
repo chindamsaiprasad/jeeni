@@ -21,3 +21,17 @@ String? formatDateString(String? dateStr) {
     return null;
   }
 }
+
+
+
+class ImageConstants {
+
+  static const String appIconImage = "assets/images/appicon.png";
+  static const String splashScreenImage = "assets/images/splash.png";
+  static const String jeeniLoginLogoImage = "assets/images/jeeniloginimage.png";
+
+
+  static const String loginImageBg = "assets/images/loginImageBg.jpg";
+  static const String profileImageBg = "assets/images/profileBg.jpg";
+  
+}

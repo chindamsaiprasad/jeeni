@@ -9,6 +9,7 @@ import 'package:jeeni/pages/widgets/loading_widget.dart';
 import 'package:jeeni/pages/widgets/overlay_loader.dart';
 import 'package:jeeni/providers/result_provider.dart';
 import 'package:jeeni/providers/user_provider.dart';
+import 'package:jeeni/utils/constants.dart';
 import 'package:jeeni/utils/local_data_manager.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -197,7 +198,7 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         image: const DecorationImage(
-        image: AssetImage("assets/images/profileBg.jpg"),
+        image: AssetImage(ImageConstants.profileImageBg),
         fit: BoxFit.cover,
         ),
       ),
