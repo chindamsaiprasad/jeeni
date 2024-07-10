@@ -118,123 +118,111 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
                 thirdText: "",
                 color: Colors.red,
               ),
-              Material(
-                elevation: 2,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 50,
-                      width: double.infinity,
-                      child: Row(
+              SizedBox(height: 10,),
+              Padding(
+                padding: const EdgeInsets.only(left: 5,right: 5),
+                child: Table(
+                        border: TableBorder.all(color: Colors.grey),
+                        columnWidths: const <int, TableColumnWidth>{
+                          0: FlexColumnWidth(),
+                          1: FlexColumnWidth(),
+                        },
                         children: [
-                          Expanded(
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              height: double.infinity,
-                              color: Colors.grey[400],
-                              child: const Text(
-                                "  Subject",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              height: double.infinity,
-                              color: Colors.grey[400],
-                              child: const Text(
-                                "  Total Questions",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
+                          TableRow(
+                            decoration: BoxDecoration(color: Colors.grey[400]),
+                            children: [
+                TableCell(
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    height: 50,
+                    child: const Text(
+                      "  Subject",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: Colors.black,
                       ),
                     ),
-                    SizedBox(
-                      height: 50,
-                      width: double.infinity,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              height: double.infinity,
-                              child: Text(
-                                "  Physics",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                  color: Colors.grey[400],
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              height: double.infinity,
-                              child: Text(
-                                "  ${widget.test.numberOfQuestions ?? 0}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                  color: Colors.grey[400],
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
+                TableCell(
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    height: 50,
+                    child: const Text(
+                      "  Total Questions",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+                            ],
+                          ),
+                          TableRow(
+                            children: [
+                TableCell(
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    height: 50,
+                    child: Text(
+                      "  Physics",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+                TableCell(
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    height: 50,
+                    child: Text(
+                      " ${widget.test.numberOfQuestions ?? 0}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+                            ],
+                          ),
+                        ],
+                      ),
               ),
               const Spacer(),
               SizedBox(
                 height: 60,
-                child: Material(
-                  elevation: 4,
-                  child: SizedBox(
-                    height: 50,
-                    width: double.infinity,
-                    child: Column(
-                      children: [
-                        const Text(
-                          "You can start your test now!",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: AppColour.darkGreen,
-                          ),
+                child: SizedBox(
+                  height: 50,
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      const Text(
+                        "You can start your test now!",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: AppColour.darkGreen,
                         ),
-                        // StopWatch(
-                        //   duration: (_duration?.inSeconds ?? 0) > 0
-                        //       ? _duration ?? const Duration(seconds: 00)
-                        //       : const Duration(seconds: 00),
-                        //   callback: () {
-                        //     setState(() {
-                        //       isStartEnable = true;
-                        //     });
-                        //   },
-                        // )
-                        Text('${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                        style: const TextStyle(fontSize: 26),),
-                      ],
-                    ),
+                      ),
+                      // StopWatch(
+                      //   duration: (_duration?.inSeconds ?? 0) > 0
+                      //       ? _duration ?? const Duration(seconds: 00)
+                      //       : const Duration(seconds: 00),
+                      //   callback: () {
+                      //     setState(() {
+                      //       isStartEnable = true;
+                      //     });
+                      //   },
+                      // )
+                      Text('${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                      style: const TextStyle(fontSize: 26),),
+                    ],
                   ),
                 ),
               ),
