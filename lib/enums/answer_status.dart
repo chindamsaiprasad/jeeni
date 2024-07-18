@@ -26,11 +26,25 @@ enum AnswerStatus {
     return AnswerStatus.NOT_ANSWERED;
   }
 
+  // Color? get backgroundColur {
+  //   switch (this) {
+  //     case AnswerStatus.NOT_VISITED:
+  //     case AnswerStatus.NOT_ANSWERED:
+  //       return Colors.red;
+  //     case AnswerStatus.ANSWERED:
+  //       return TestPageColour.answeredColor;
+  //     case AnswerStatus.MARK_FOR_REVIEW:
+  //       return TestPageColour.markForReviewColor;
+  //     case AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW:
+  //       return TestPageColour.markForReviewColor;
+  //   }
+  // }
+
   Color? get backgroundColur {
     switch (this) {
       case AnswerStatus.NOT_VISITED:
       case AnswerStatus.NOT_ANSWERED:
-        return Colors.red;
+        return Colors.grey[300];
       case AnswerStatus.ANSWERED:
         return TestPageColour.answeredColor;
       case AnswerStatus.MARK_FOR_REVIEW:

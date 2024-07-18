@@ -708,11 +708,11 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
                         ),
                     ),
               ),
-          Positioned(
-            bottom: 1,
-            right: -8,
-            child: showPopupMenu(),
-          ),
+          // Positioned(
+          //   bottom: 1,
+          //   right: -8,
+          //   child: showPopupMenu(),
+          // ),
         ],
       );
     }
