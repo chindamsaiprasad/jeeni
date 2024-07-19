@@ -85,20 +85,20 @@ class _TestPageState extends ConsumerState<TestPage> {
   }
 
   Container _buildAppBar() {
-    final timerService = ref.watch(timerProvider);
-    int hours = timerService.duration.inHours;
-    int minutes = timerService.duration.inMinutes.remainder(60);
-    int seconds = timerService.duration.inSeconds.remainder(60);
+    // final timerService = ref.watch(timerProvider);
+    // int hours = timerService.duration.inHours;
+    // int minutes = timerService.duration.inMinutes.remainder(60);
+    // int seconds = timerService.duration.inSeconds.remainder(60);
 
-    if (timerService.duration == Duration.zero) {
-      print("ok time over");
-      // Trigger test submission check every time the duration changes
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        checkAndSubmitTest();
-      });
-    } else {
-      // print("Time is not over");
-    }
+    // if (timerService.duration == Duration.zero) {
+    //   print("ok time over");
+    //   // Trigger test submission check every time the duration changes
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     checkAndSubmitTest();
+    //   });
+    // } else {
+    //   // print("Time is not over");
+    // }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -112,17 +112,17 @@ class _TestPageState extends ConsumerState<TestPage> {
             "Mock Test",
             style: TextStyle(color: AppColour.white),
           ),
-          Text(
-            '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-            style: const TextStyle(fontSize: 18, color: Colors.white),
-          ),
           // Text(
-          //   ref
-          //       .watch(testProgressProvider)
-          //       .getremaingDurationInSeconds
-          //       .toString(),
-          //   style: const TextStyle(color: AppColour.white),
+          //   '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+          //   style: const TextStyle(fontSize: 18, color: Colors.white),
           // ),
+          Text(
+            ref
+                .watch(testProgressProvider)
+                .getremaingDurationInSeconds
+                .toString(),
+            style: const TextStyle(color: AppColour.white),
+          ),
           SizedBox(
             width: 125,
             child: ElevatedButton(
@@ -136,10 +136,7 @@ class _TestPageState extends ConsumerState<TestPage> {
                 ),
               ),
               onPressed: () {
-                if (widget.diffrentBool) {
-                  print("heellow");
-            
-                } else {
+
                   OverlayLoader.show(context: context, title: "Submiting");
                   print("444444444444444444444444 VALUE");
                   ref
@@ -150,7 +147,7 @@ class _TestPageState extends ConsumerState<TestPage> {
                         if (response != null) {
                           print("3333333333333333333333333  if VALUE");
             
-                          timerService.stopTimer();
+                          // timerService.stopTimer();
             
                           print("responsetest page $response");
                           Navigator.pop(context, response);
@@ -158,7 +155,7 @@ class _TestPageState extends ConsumerState<TestPage> {
                       })
                       .catchError((onError) {})
                       .whenComplete(() => OverlayLoader.hide());
-                }
+                
               },
               child: const Text(
                 "Submit Test",
@@ -346,7 +343,7 @@ class _TestPageState extends ConsumerState<TestPage> {
                             decoration: const BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(25)),
-                              color: TestPageColour.answeredColor,
+                              color: Color.fromARGB(255, 9, 233, 16),
                             ),
                           ),
                         )

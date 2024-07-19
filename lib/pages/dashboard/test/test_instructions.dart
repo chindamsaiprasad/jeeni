@@ -210,18 +210,18 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
                           color: AppColour.darkGreen,
                         ),
                       ),
-                      // StopWatch(
-                      //   duration: (_duration?.inSeconds ?? 0) > 0
-                      //       ? _duration ?? const Duration(seconds: 00)
-                      //       : const Duration(seconds: 00),
-                      //   callback: () {
-                      //     setState(() {
-                      //       isStartEnable = true;
-                      //     });
-                      //   },
-                      // )
-                      Text('${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                      style: const TextStyle(fontSize: 26),),
+                      StopWatch(
+                        duration: (_duration?.inSeconds ?? 0) > 0
+                            ? _duration ?? const Duration(seconds: 00)
+                            : const Duration(seconds: 00),
+                        callback: () {
+                          setState(() {
+                            isStartEnable = true;
+                          });
+                        },
+                      )
+                      // Text('${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                      // style: const TextStyle(fontSize: 26),),
                     ],
                   ),
                 ),
@@ -242,15 +242,15 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    timerService.startTimer();
-                    Navigator.pop(context, true);
-                  },
-                  // onPressed: isStartEnable
-                  //     ? () {
-                  //         Navigator.pop(context, true);
-                  //       }
-                  //     : null,
+                  // onPressed: () {
+                  //   timerService.startTimer();
+                  //   Navigator.pop(context, true);
+                  // },
+                  onPressed: isStartEnable
+                      ? () {
+                          Navigator.pop(context, true);
+                        }
+                      : null,
                   // onPressed: () {
                   //   timerService.startTimer();
                   //   // timerService.stopTimer();
