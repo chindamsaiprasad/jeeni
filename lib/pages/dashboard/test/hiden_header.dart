@@ -110,7 +110,7 @@ class _HidenHeaderState extends ConsumerState<HidenHeader> {
               : Container(),
         ),
         SizedBox(
-          height: 30,
+          height: 35,
           width: double.infinity,
           child: TextButton.icon(
             style: ButtonStyle(

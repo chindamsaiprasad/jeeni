@@ -2,13 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/solution/view_questions_solution.dart';
 import 'package:jeeni/response_models/submit_test_response.dart';
+import 'package:jeeni/response_models/test_response.dart';
+import 'package:jeeni/utils/constants.dart';
+import 'package:jeeni/utils/date_formator.dart';
 
 class ResultPage extends ConsumerWidget {
   final SubmitTestResponse submitTestResponse;
-  const ResultPage({
+  final Test? test;
+
+// Default constructor
+  const ResultPage({super.key, 
     required this.submitTestResponse,
-    super.key,
+    this.test,
   });
+
+  // // Named constructor that initializes with only SubmitTestResponse
+  // ResultPage.withSubmitTestResponse({super.key, 
+  //   required this.submitTestResponse,
+  // }) : test = Test.defaultTest();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,21 +46,21 @@ class ResultPage extends ConsumerWidget {
                     // color: Colors.amber,
                     child: Column(
                       children: [
-                        // _buildResultCell("Test Name", "Practice Test", context),
-                        // const Divider(
-                        //   color: Colors.black,
-                        //   height: 1,
-                        // ),
-                        // _buildResultCell("Test Date", submitTestResponse.createdOn?.toString() ?? "", context),
-                        // const Divider(
-                        //   color: Colors.black,
-                        //   height: 1,
-                        // ),
-                        // _buildResultCell("Duration", "", context),
-                        // const Divider(
-                        //   color: Colors.black,
-                        //   height: 1,
-                        // ),
+                        _buildResultCell("Test Name", "${test?.name}", context),
+                        const Divider(
+                          color: Colors.black,
+                          height: 1,
+                        ),
+                        _buildResultCell("Test Date", "${DateFormator.getFormatedDate(test?.startTime ?? 0)}", context),
+                        const Divider(
+                          color: Colors.black,
+                          height: 1,
+                        ),
+                        _buildResultCell("Duration", "${test?.durationInMinutes}", context),
+                        const Divider(
+                          color: Colors.black,
+                          height: 1,
+                        ),
                         _buildResultCell(
                             "Total Questions",
                             submitTestResponse.totalQuestions?.toString() ?? "",

@@ -23,6 +23,22 @@ String? formatDateString(String? dateStr) {
 }
 
 
+String formatEpochTime(int epochTime) {
+
+
+  // Convert epoch time to DateTime object
+  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(epochTime * 1000);
+
+  // Define the date format
+  DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+
+  // Format the DateTime object to a string
+  String formattedDate = dateFormat.format(dateTime);
+
+  return formattedDate;
+}
+
+
 
 class ImageConstants {
 

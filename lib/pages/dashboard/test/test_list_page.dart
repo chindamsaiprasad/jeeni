@@ -139,7 +139,7 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                           builder: (context) =>
                                                               ResultPage(
                                                                   submitTestResponse:
-                                                                      value),
+                                                                      value,test: test,),
                                                         ),
                                                       ).then(
                                                           (submitTestResponse) {
@@ -173,6 +173,7 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                               OverlayLoader.hide();
                                             }).catchError((error) {
                                               //TODO :: HANDLE ERROR
+                                              OverlayLoader.hide();
                                             });
                                           },
                                           child: const Text("Attempt", style: TextStyle(color: Colors.white),),

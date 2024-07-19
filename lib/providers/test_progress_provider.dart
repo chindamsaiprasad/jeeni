@@ -11,6 +11,7 @@ import 'package:jeeni/enums/answer_status.dart';
 import 'package:jeeni/models/test_download_response.dart';
 import 'package:jeeni/providers/practice_test_provider.dart';
 import 'package:jeeni/providers/test_provider.dart';
+import 'package:jeeni/providers/test_time._provider.dart';
 import 'package:jeeni/response_models/practice_test_response.dart';
 import 'package:jeeni/response_models/submit_test_response.dart';
 
@@ -94,6 +95,7 @@ class TestProgressProvider with ChangeNotifier {
     if (testResponse is TestDownloadResponse) {
       questions = testResponse.questionMobileVos ?? [];
       testId = testResponse.id ?? -1;
+      _remaingDurationInSeconds = testResponse.durationInMinutes ?? 0;
     } else if (testResponse is PracticeTestResponse) {
       questions = testResponse.questionMobileVos ?? [];
       testId = testResponse.id ?? -1;
@@ -103,19 +105,25 @@ class TestProgressProvider with ChangeNotifier {
       _currentQuestion = questions.first.copyWith();
     }
     isLoading = false;
-    //initTimer();
+    initTimer();
     _reset();
     notifyListeners();
   }
 
   void initTimer() {
+
+    final timerService = ref.read(timerProvider);
+    timerService.updateDuration(_remaingDurationInSeconds);
+    timerService.startTimer();
+
+
     // _remaingDurationInSeconds =
     //     (testDownloadResponse.durationInMinutes ?? 0) * 60;
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      _remaingDurationInSeconds++;
-      if (_remaingDurationInSeconds == 0) {}
-      notifyListeners();
-    });
+    // _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    //   _remaingDurationInSeconds = _remaingDurationInSeconds - 1;
+    //   if (_remaingDurationInSeconds == 0) {}
+    //   notifyListeners();
+    // });
   }
 
   void next() {

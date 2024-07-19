@@ -72,6 +72,9 @@ class _MatrixQuestionState extends ConsumerState<MatrixQuestion> {
                                       option
                                   ? Colors.green[600]
                                   : Colors.grey[400],
+                                  shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12), 
+                        ),
                     ),
                     onPressed: () {
                       ref.read(testProgressProvider).setSelectedOption(option);
