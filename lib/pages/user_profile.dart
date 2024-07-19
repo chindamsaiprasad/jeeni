@@ -195,13 +195,13 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
   Widget firstContainer() {
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        image: const DecorationImage(
-        image: AssetImage(ImageConstants.profileImageBg),
-        fit: BoxFit.cover,
-        ),
-      ),
+      // decoration: BoxDecoration(
+      //   borderRadius: BorderRadius.circular(20),
+      //   image: const DecorationImage(
+      //   image: AssetImage(ImageConstants.profileImageBg),
+      //   fit: BoxFit.cover,
+      //   ),
+      // ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -209,10 +209,10 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
           UserDetailsContainer(imageString),
           const SizedBox(height: 10), // Add spacing between image and text
           Text(studentNameController.text,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
           ),
           Text(studentEmailController.text,
-            style: TextStyle(fontSize: 16, color: Colors.white),
+            style: TextStyle(fontSize: 16, color: Colors.black),
           ),
           SizedBox(height: 20,),
         ],
@@ -610,7 +610,7 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               // color: Color(0xff7654FF),
-              color: Colors.white
+              color: Colors.black
               
             ),
             child: const Center(
@@ -670,18 +670,22 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
                   shape: BoxShape.circle,
                   border: Border.all(
                     // color: const Color(0xff7654FF),
-                    color: Colors.white,
+                    color: Colors.black,
                     width: 3,
                   ),
+                  image: DecorationImage(
+          image: NetworkImage('https://kuc-test.s3.ap-south-1.amazonaws.com/b187548d-2735-4519-84ec-815b8edeee84content'),
+          fit: BoxFit.cover,
+        ),
                 ),
-                child: ClipOval(
-                  child: Image.file(
-                    File(_selectedImageFile!.path),
-                    width: 106,
-                    height: 106,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                // child: ClipOval(
+                //   child: Image.file(
+                //     File(_selectedImageFile!.path),
+                //     width: 106,
+                //     height: 106,
+                //     fit: BoxFit.cover,
+                //   ),
+                // ),
               )
               : Container(
                 width: 120,
@@ -690,23 +694,26 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
                   shape: BoxShape.circle,
                   border: Border.all(
                     // color: Color(0xff7654FF),
-                    color: Colors.white,
+                    color: Colors.black,
                     width: 3,
                   ),
+                  image: DecorationImage(
+          image: NetworkImage('https://kuc-test.s3.ap-south-1.amazonaws.com/b187548d-2735-4519-84ec-815b8edeee84content'),
+          fit: BoxFit.cover,
+        ),
                 ),
-                child: isimagepresent
-                    ? const Icon(Icons.person , color: Colors.white,)
-                    : ClipOval(
-                      child: Image.memory(
-                          // base64Decode(ProfileImage ?? ''),
-                          dataImage,
-                          fit: BoxFit.cover,
-                          height: 120,
-                          width: 120,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.error , color: Colors.white,),
-                        ),
-                    ),
+                // child: isimagepresent
+                //     ? const Icon(Icons.person , color: Colors.white,)
+                //     : ClipOval(
+                //       child: Image.network(
+                //           // base64Decode(ProfileImage ?? ''),
+                //           "https://kuc-test.s3.ap-south-1.amazonaws.com/b187548d-2735-4519-84ec-815b8edeee84content",
+                          
+                //           height: 140,
+                //           width: 140,
+                          
+                //         ),
+                //     ),
               ),
           // Positioned(
           //   bottom: 1,

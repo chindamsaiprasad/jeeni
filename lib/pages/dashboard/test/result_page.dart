@@ -35,21 +35,21 @@ class ResultPage extends ConsumerWidget {
                     // color: Colors.amber,
                     child: Column(
                       children: [
-                        _buildResultCell("Test Name", "Practice Test", context),
-                        const Divider(
-                          color: Colors.black,
-                          height: 1,
-                        ),
-                        _buildResultCell("Test Date", "", context),
-                        const Divider(
-                          color: Colors.black,
-                          height: 1,
-                        ),
-                        _buildResultCell("Duration", "", context),
-                        const Divider(
-                          color: Colors.black,
-                          height: 1,
-                        ),
+                        // _buildResultCell("Test Name", "Practice Test", context),
+                        // const Divider(
+                        //   color: Colors.black,
+                        //   height: 1,
+                        // ),
+                        // _buildResultCell("Test Date", submitTestResponse.createdOn?.toString() ?? "", context),
+                        // const Divider(
+                        //   color: Colors.black,
+                        //   height: 1,
+                        // ),
+                        // _buildResultCell("Duration", "", context),
+                        // const Divider(
+                        //   color: Colors.black,
+                        //   height: 1,
+                        // ),
                         _buildResultCell(
                             "Total Questions",
                             submitTestResponse.totalQuestions?.toString() ?? "",
