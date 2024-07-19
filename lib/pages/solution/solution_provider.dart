@@ -39,7 +39,7 @@ enum Status {
       case Status.CORRECT_ANSWER:
         return Colors.green;
       case Status.INCORRECT_ANSWER:
-        return Colors.red.shade400;
+        return const Color.fromARGB(255, 228, 53, 40);
 
       case Status.UNATTEMPTED:
         return Colors.grey.shade400;

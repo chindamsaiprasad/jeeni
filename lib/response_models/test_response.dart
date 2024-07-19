@@ -261,6 +261,10 @@ class Test {
     data['editable'] = editable;
     return data;
   }
+
+  static defaultTest() {
+    return Test();
+  }
 }
 
 class MarkingTemplate {

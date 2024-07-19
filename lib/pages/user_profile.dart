@@ -244,6 +244,10 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
         ref.read(userProvider).saveUserDetails();
         EasyLoading.showSuccess("Profile details updated sucessfully");
         clearAllSaved();
+      } else if(statusCode == 302){
+        ref.read(userProvider).saveUserDetails();
+        EasyLoading.showSuccess("Profile details updated sucessfully");
+        clearAllSaved();
       } else{
         EasyLoading.showError("Error occurred while updating profile");
       }
@@ -271,6 +275,20 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
                     final emailRegExp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
                     // Regular expression for mobile number validation (10 digits)
                     final mobileRegExp = RegExp(r'^\d{10}$');
+
+                    // Name and college/city validation
+if (studentName.isEmpty) {
+  EasyLoading.showError('Student name should not be empty');
+  return;
+}
+if (collegeName.isEmpty) {
+  EasyLoading.showError('College name should not be empty');
+  return;
+}
+if (cityName.isEmpty) {
+  EasyLoading.showError('City name should not be empty');
+  return;
+}
 
                     // Email validation
                     if (!emailRegExp.hasMatch(studentEmail)) {

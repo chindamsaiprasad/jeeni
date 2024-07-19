@@ -11,6 +11,7 @@ import 'package:jeeni/pages/dashboard/test/questions_widget.dart/matrix_question
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/multiple_question.dart';
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/numeric_question.dart';
 import 'package:jeeni/pages/widgets/overlay_loader.dart';
+import 'package:jeeni/pages/widgets/show_submit_overlay.dart';
 import 'package:jeeni/providers/test_progress_provider.dart';
 import 'package:jeeni/providers/test_provider.dart';
 import 'package:jeeni/providers/test_time._provider.dart';
@@ -62,7 +63,11 @@ class _TestPageState extends ConsumerState<TestPage> {
         }
       }).catchError((onError) {
         // Handle error
-      }).whenComplete(() => OverlayLoader.hide());
+        print("111111111111111111111111111111111 ERROR");
+      }).whenComplete(() {
+                print("111111111111111111111111111111111 whenComplete");
+
+         OverlayLoader.hide();});
     }
   }
 
@@ -85,20 +90,18 @@ class _TestPageState extends ConsumerState<TestPage> {
   }
 
   Container _buildAppBar() {
-    // final timerService = ref.watch(timerProvider);
-    // int hours = timerService.duration.inHours;
-    // int minutes = timerService.duration.inMinutes.remainder(60);
-    // int seconds = timerService.duration.inSeconds.remainder(60);
+    final timerService = ref.watch(timerProvider);
+    int hours = timerService.duration.inHours;
+    int minutes = timerService.duration.inMinutes.remainder(60);
+    int seconds = timerService.duration.inSeconds.remainder(60);
 
-    // if (timerService.duration == Duration.zero) {
-    //   print("ok time over");
-    //   // Trigger test submission check every time the duration changes
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     checkAndSubmitTest();
-    //   });
-    // } else {
-    //   // print("Time is not over");
-    // }
+    if (timerService.duration == Duration.zero) {
+      print("ok time over");
+      // Trigger test submission check every time the duration changes
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        checkAndSubmitTest();
+      });
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -112,17 +115,17 @@ class _TestPageState extends ConsumerState<TestPage> {
             "Mock Test",
             style: TextStyle(color: AppColour.white),
           ),
-          // Text(
-          //   '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-          //   style: const TextStyle(fontSize: 18, color: Colors.white),
-          // ),
           Text(
-            ref
-                .watch(testProgressProvider)
-                .getremaingDurationInSeconds
-                .toString(),
-            style: const TextStyle(color: AppColour.white),
+            '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+            style: const TextStyle(fontSize: 18, color: Colors.white),
           ),
+          // Text(
+          //   ref
+          //       .watch(testProgressProvider)
+          //       .getremaingDurationInSeconds
+          //       .toString(),
+          //   style: const TextStyle(color: AppColour.white),
+          // ),
           SizedBox(
             width: 125,
             child: ElevatedButton(
@@ -137,6 +140,9 @@ class _TestPageState extends ConsumerState<TestPage> {
               ),
               onPressed: () {
 
+
+                ShowSubmitOverlay.show(context: context, onTapYes: () {
+                  ShowSubmitOverlay.hide();
                   OverlayLoader.show(context: context, title: "Submiting");
                   print("444444444444444444444444 VALUE");
                   ref
@@ -147,14 +153,19 @@ class _TestPageState extends ConsumerState<TestPage> {
                         if (response != null) {
                           print("3333333333333333333333333  if VALUE");
             
-                          // timerService.stopTimer();
+                          timerService.stopTimer();
             
                           print("responsetest page $response");
                           Navigator.pop(context, response);
                         }
                       })
                       .catchError((onError) {})
-                      .whenComplete(() => OverlayLoader.hide());
+                      .whenComplete(() => OverlayLoader.hide()); 
+                }, onTapNo: () {
+                    ShowSubmitOverlay.hide();
+                },);
+
+                 
                 
               },
               child: const Text(
@@ -271,88 +282,89 @@ class _TestPageState extends ConsumerState<TestPage> {
     );
   }
 
-  Material _buildQuestionNumberList() {
+  Container _buildQuestionNumberList() {
     final questions = ref.watch(testProgressProvider).getQuestion;
 
-    return Material(
-      elevation: 5,
-      child: Container(
-        alignment: Alignment.center,
-        color: Colors.white,
-        height: 60,
-        width: double.infinity,
-        child: ScrollablePositionedList.builder(
-          itemScrollController: questionNumberScrollController,
-          itemCount: questions.length,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            final question = questions[index];
-            if (question.questionType == "Integer") {
-              // print("_buildQuestionNumberList ${question.customAnswerStatus}");
-            }
-
-            return InkWell(
-              onTap: () {
-                // print("question id ${index} ${question.id}");
-                ref
-                    .read(testProgressProvider)
-                    .updateCurrentQuestion(question.id ?? 0);
-              },
-              child: Stack(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(5),
-                    alignment: Alignment.center,
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      border: ref
-                                  .read(testProgressProvider)
-                                  .getCurrentQuestion
-                                  ?.id ==
-                              question.id
-                          ? Border.all(
-                              width: 3,
-                              color: const Color.fromARGB(255, 4, 109, 122),
-                            )
-                          : Border.all(
-                              width: 1,
-                              color: Colors.black,
-                            ),
-                      borderRadius: const BorderRadius.all(Radius.circular(25)),
-                      color: question.customAnswerStatus.backgroundColur,
-                    ),
-                    child: Text(
-                      'Q${index + 1}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
+    return Container(
+      alignment: Alignment.center,
+      color: Colors.white,
+      height: 60,
+      width: 500,
+      child: ScrollablePositionedList.builder(
+        itemScrollController: questionNumberScrollController,
+        itemCount: questions.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          final question = questions[index];
+          if (question.questionType == "Integer") {
+            // print("_buildQuestionNumberList ${question.customAnswerStatus}");
+          }
+    
+          return InkWell(
+            onTap: () {
+              // print("question id ${index} ${question.id}");
+              ref
+                  .read(testProgressProvider)
+                  .updateCurrentQuestion(question.id ?? 0);
+            },
+            child: Stack(
+    
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(5),
+                  alignment: Alignment.center,
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    
+                    border: ref
+                                .read(testProgressProvider)
+                                .getCurrentQuestion
+                                ?.id ==
+                            question.id
+                        ? Border.all(
+                            width: 3,
+                            color: const Color.fromARGB(255, 4, 109, 122),
+                          )
+                        : Border.all(
+                            width: 1,
+                            color: Colors.black,
+                          ),
+                    borderRadius: const BorderRadius.all(Radius.circular(25)),
+                    color: question.customAnswerStatus.backgroundColur,
+                                        // color: Colors.red,
+    
+                  ),
+                  child: Text(
+                    'Q${index + 1}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
                     ),
                   ),
-                  question.customAnswerStatus ==
-                          AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW
-                      ? Positioned(
-                          top: 8,
-                          right: 10,
-                          child: Container(
-                            margin: const EdgeInsets.all(5),
-                            alignment: Alignment.center,
-                            height: 9,
-                            width: 9,
-                            decoration: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(25)),
-                              color: Color.fromARGB(255, 9, 233, 16),
-                            ),
+                ),
+                question.customAnswerStatus ==
+                        AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW
+                    ? Positioned(
+                        top: 8,
+                        right: 10,
+                        child: Container(
+                          margin: const EdgeInsets.all(5),
+                          alignment: Alignment.center,
+                          height: 9,
+                          width: 9,
+                          decoration: const BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(25)),
+                            color: Color.fromARGB(255, 9, 233, 16),
                           ),
-                        )
-                      : Container(),
-                ],
-              ),
-            );
-          },
-        ),
+                        ),
+                      )
+                    : Container(),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

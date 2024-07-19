@@ -76,20 +76,37 @@ class BasicSolution extends ConsumerWidget {
                     child: Text(option),
                   ),
                 ),
-                result.answerValidity[index] == true
-                    ? const Positioned(
-                        left: 0,
-                        child: Icon(
-                          size: 40,
-                          color: Colors.green,
-                          IconData(
-                            0xf3fd,
-                            fontFamily: CupertinoIcons.iconFont,
-                            fontPackage: CupertinoIcons.iconFontPackage,
-                          ),
-                        ),
-                      )
-                    : Container()
+                // result.answerValidity[index] == true
+                //     ? const Positioned(
+                //         left: 0,
+                //         child: Icon(
+                //           size: 40,
+                //           color: Colors.green,
+                //           IconData(
+                //             0xf3fd,
+                //             fontFamily: CupertinoIcons.iconFont,
+                //             fontPackage: CupertinoIcons.iconFontPackage,
+                //           ),
+                //         ),
+                //       )
+                //     : Container()
+                if (index >= 0 && index < result.answerValidity.length)
+            result.answerValidity[index] == true
+                ? const Positioned(
+                    left: 0,
+                    child: Icon(
+                      size: 40,
+                      color: Colors.green,
+                      IconData(
+                        0xf3fd,
+                        fontFamily: CupertinoIcons.iconFont,
+                        fontPackage: CupertinoIcons.iconFontPackage,
+                      ),
+                    ),
+                  )
+                : Container()
+          else
+            Container()
               ],
             ),
           ),

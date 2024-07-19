@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -375,21 +376,33 @@ void dispose() {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 60,),
-            SizedBox(
+            Container(
               height: 90,
               width: 100,
-              // color: Colors.red,
-              child: CircleAvatar(
-                child: ClipOval(
-                  child: Image.memory(
-                    // base64Decode(userImageBase ?? ''),
-                    dataImage,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.error),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    // color: const Color(0xff7654FF),
+                    color: Colors.white,
+                    width: 3,
                   ),
+                  image: DecorationImage(
+          image: NetworkImage('https://kuc-test.s3.ap-south-1.amazonaws.com/b187548d-2735-4519-84ec-815b8edeee84content'),
+          fit: BoxFit.cover,
+        ),
                 ),
-              ),
+              // color: Colors.red,
+              // child: CircleAvatar(
+              //   child: ClipOval(
+              //     child: Image.memory(
+              //       // base64Decode(userImageBase ?? ''),
+              //       dataImage,
+              //       fit: BoxFit.cover,
+              //       errorBuilder: (context, error, stackTrace) =>
+              //           const Icon(Icons.error),
+              //     ),
+              //   ),
+              // ),
             ),
             const SizedBox(height: 30,),
             Text(
