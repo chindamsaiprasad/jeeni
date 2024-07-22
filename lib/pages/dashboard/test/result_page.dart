@@ -56,7 +56,7 @@ class ResultPage extends ConsumerWidget {
                           color: Colors.black,
                           height: 1,
                         ),
-                        _buildResultCell("Duration", "${test?.durationInMinutes}", context),
+                        _buildResultCell("Duration", "${test?.durationInMinutes} Minutes", context),
                         const Divider(
                           color: Colors.black,
                           height: 1,

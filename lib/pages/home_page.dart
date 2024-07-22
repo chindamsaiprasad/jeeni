@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/dashboard/content/content_page.dart';
 import 'package:jeeni/pages/dashboard/practice_test/practice_test.dart';
@@ -38,7 +39,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ref.read(networkErrorProvider).resolveError();
             }
           }).catchError((error) {}).whenComplete(() => OverlayLoader.hide());
-          }, Icons.menu_book, "Content", "Study material for student", Icons.arrow_right),
+          }, FontAwesomeIcons.bookOpenReader, "Content", "Study material for student", Icons.arrow_right),
 
         // navigationList(() {
         //   ref.read(menuProvider).setSelectedMenu(MenuType.practiceTest);
@@ -60,7 +61,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     // TODO: Implement error handling logic
                     print('Error: $error');
                   }).whenComplete(() { OverlayLoader.hide(); });
-        }, Icons.quiz, "Test", "Tests for student", Icons.arrow_right),
+        }, FontAwesomeIcons.book, "Test", "Tests for student", Icons.arrow_right),
 
         navigationList(() {
           OverlayLoader.show(context: context, title: "loading...");
@@ -80,7 +81,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           }).whenComplete(() {
             OverlayLoader.hide();
           });
-        }, Icons.note, "Results", "See the results", Icons.arrow_right),
+        }, FontAwesomeIcons.squarePollVertical, "Results", "See the results", Icons.arrow_right),
 
         // navigationList(() {
         //   // ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);

@@ -47,7 +47,7 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
             child: TextField(
               controller: searchTextController,
               decoration: InputDecoration(
-                hintText: 'Enter test name...',
+                hintText: 'Search test...',
                 suffixIcon: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {
@@ -84,16 +84,24 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
 
     // print("ok widget check ${resultData.length}  , and filterr ${filteredResultData.length}");
 
-    return SizedBox(
-      // color: Colors.green,
-      child: ListView.builder(
-        itemCount: filteredResultData.length,
-        itemBuilder: (context, index) {
-          ResultModelClass data = filteredResultData[index];
-          return resultCard(data);
-        },
-      ),
-    );
+    return filteredResultData.isEmpty
+    ? Center(
+        child: Text(
+          'No results found',
+          style: TextStyle(fontSize: 18),
+        ),
+      )
+    : SizedBox(
+        // color: Colors.green,
+        child: ListView.builder(
+          itemCount: filteredResultData.length,
+          itemBuilder: (context, index) {
+            ResultModelClass data = filteredResultData[index];
+            return resultCard(data);
+          },
+        ),
+      );
+
   }
 
   Widget resultCard(ResultModelClass data) {

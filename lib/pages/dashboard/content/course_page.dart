@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jeeni/pages/dashboard/content/subject_page.dart';
 import 'package:jeeni/response_models/content_response.dart';
 import 'package:jeeni/utils/app_colour.dart';
 
@@ -79,12 +80,23 @@ class _CoursePageState extends ConsumerState<CoursePage> {
                     .map(
                       (chapter) => Card(
                         elevation: 5,
-                        child: Container(
-                          height: 50,
-                          alignment: Alignment.center,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 18),
-                            child: Text(chapter.chapterName ?? ""),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    SubjectPage(chapter: chapter)
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 50,
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 18),
+                              child: Text(chapter.chapterName ?? ""),
+                            ),
                           ),
                         ),
                       ),

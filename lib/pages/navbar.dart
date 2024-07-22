@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/about_page.dart';
 import 'package:jeeni/pages/dashboard/content/content_page.dart';
@@ -21,6 +22,7 @@ import 'package:jeeni/providers/result_provider.dart';
 import 'package:jeeni/providers/test_provider.dart';
 import 'package:jeeni/providers/user_provider.dart';
 import 'package:jeeni/utils/local_data_manager.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NavBar extends StatefulWidget {
   final VoidCallback callback;
@@ -72,6 +74,15 @@ class _NavBarState extends State<NavBar> {
     // Handle any errors that occur during loading
     print("Error loading data: $error");
   }
+} 
+
+
+final Uri _url = Uri.parse('https://www.jeeni.in/privacy-policy');
+
+  Future<void> _launchUrl() async {
+  if (!await launchUrl(_url)) {
+    throw Exception('Could not launch $_url');
+  }
 }
 
 
@@ -97,7 +108,8 @@ void dispose() {
 
               ListTile(
                 leading: Icon(
-                  Icons.home,
+                  FontAwesomeIcons.house,
+                  size: 20,
                   color: selectedMenu == MenuType.home
                       ? Colors.green
                       : Colors.black38,
@@ -117,7 +129,8 @@ void dispose() {
               ),
               ListTile(
                 leading: Icon(
-                  Icons.menu_book,
+                  FontAwesomeIcons.bookOpenReader,
+                  size: 20,
                   color: selectedMenu == MenuType.content
                       ? Colors.green
                       : Colors.black38,
@@ -172,7 +185,8 @@ void dispose() {
               // ),
               ListTile(
                 leading: Icon(
-                  Icons.quiz,
+                  FontAwesomeIcons.book,
+                  size: 20,
                   color: selectedMenu == MenuType.test
                       ? Colors.green
                       : Colors.black38,
@@ -208,7 +222,8 @@ void dispose() {
               ),
               ListTile(
                 leading: Icon(
-                  Icons.note,
+                  FontAwesomeIcons.squarePollVertical,
+                  size: 20,
                   color: selectedMenu == MenuType.results
                       ? Colors.green
                       : Colors.black38,
@@ -277,8 +292,9 @@ void dispose() {
               Divider(),
               ListTile(
                 leading: const Icon(
-                  Icons.settings,
+                  FontAwesomeIcons.user,
                   color:  Colors.black38,
+                  size: 20,
                 ),
                 title: const Text(
                   "User Profile",
@@ -314,7 +330,8 @@ void dispose() {
               ),
               ListTile(
                 leading: Icon(
-                  Icons.info,
+                  FontAwesomeIcons.circleExclamation,
+                  size: 20,
                   color: selectedMenu == MenuType.aboutUs
                       ? Colors.green
                       : Colors.black38,
@@ -327,18 +344,20 @@ void dispose() {
                         : Colors.black,
                   ),
                 ),
-                onTap: () {
-                  // ref.read(menuProvider).setSelectedMenu(MenuType.selfTest);
-                  Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AboutUsPage()),
-            );
-                  widget.callback();
-                },
+               onTap: _launchUrl,
+            //     onTap: () {
+            //       // ref.read(menuProvider).setSelectedMenu(MenuType.selfTest);
+            //       Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => AboutUsPage()),
+            // );
+            //       widget.callback();
+            //     },
               ),
               ListTile(
                 leading: Icon(
-                  Icons.logout,
+                  FontAwesomeIcons.powerOff, 
+                  size: 20,
                   color: selectedMenu == MenuType.logout
                       ? Colors.green
                       : Colors.black38,

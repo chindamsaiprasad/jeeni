@@ -155,7 +155,7 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
 
                 Divider(),
                 getResultDetails(
-                    "Duration", widget.data.durationInMinutes.toString()),
+                    "Duration", "${widget.data.durationInMinutes.toString()} Minutes"),
 
                 Divider(),
                 getResultDetails("Total Questions",
