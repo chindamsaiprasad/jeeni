@@ -10,6 +10,7 @@ import 'package:jeeni/pages/dashboard/test/questions_widget.dart/integer_questio
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/matrix_question.dart';
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/multiple_question.dart';
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/numeric_question.dart';
+import 'package:jeeni/pages/dashboard/test/questions_widget.dart/timer_widget.dart';
 import 'package:jeeni/pages/widgets/overlay_loader.dart';
 import 'package:jeeni/pages/widgets/show_submit_overlay.dart';
 import 'package:jeeni/providers/test_progress_provider.dart';
@@ -94,6 +95,7 @@ class _TestPageState extends ConsumerState<TestPage> {
           //       .toString(),
           //   style: const TextStyle(color: AppColour.white),
           // ),
+          const TimerWidget(),
           SizedBox(
             width: 125,
             child: ElevatedButton(
