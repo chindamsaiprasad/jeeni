@@ -5,10 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/solution/solution_provider.dart';
 import 'package:jeeni/utils/constants.dart';
 
-class BasicSolution extends ConsumerWidget {
+class NumericSolution extends ConsumerWidget {
   final Result result;
   final ChangeNotifierProvider<SolutionProvider> solutionProvider;
-  const BasicSolution({
+  const NumericSolution({
     required this.result,
     required this.solutionProvider,
     super.key,
@@ -40,9 +40,44 @@ class BasicSolution extends ConsumerWidget {
             ],
           ),
         ),
-        SizedBox(
+        Container(
+          color: Colors.grey[800],
           height: 50,
-          child: _buildOptionButtons(ref),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Correct Answer : ${result.actualAnswer}",
+                  style: const TextStyle(
+                    color: Colors.green,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15.0),
+                    child: Container(
+                      color: result.actualAnswer == result.userSelectedOption
+                          ? Colors.green
+                          : Colors.redAccent,
+                      child: Text(
+                        "${result.userSelectedOption}",
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -96,7 +131,7 @@ class BasicSolution extends ConsumerWidget {
                           left: 0,
                           child: Icon(
                             size: 40,
-                            color: Color(0xff1c5e20),
+                            color: Colors.green,
                             IconData(
                               0xf3fd,
                               fontFamily: CupertinoIcons.iconFont,

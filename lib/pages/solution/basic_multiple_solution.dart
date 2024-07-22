@@ -5,10 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/solution/solution_provider.dart';
 import 'package:jeeni/utils/constants.dart';
 
-class BasicSolution extends ConsumerWidget {
+class BasicMultipleSolution extends ConsumerWidget {
   final Result result;
   final ChangeNotifierProvider<SolutionProvider> solutionProvider;
-  const BasicSolution({
+  const BasicMultipleSolution({
     required this.result,
     required this.solutionProvider,
     super.key,
@@ -96,7 +96,7 @@ class BasicSolution extends ConsumerWidget {
                           left: 0,
                           child: Icon(
                             size: 40,
-                            color: Color(0xff1c5e20),
+                            color: Colors.green,
                             IconData(
                               0xf3fd,
                               fontFamily: CupertinoIcons.iconFont,

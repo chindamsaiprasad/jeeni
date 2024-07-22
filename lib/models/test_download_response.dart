@@ -400,6 +400,11 @@ class QuestionMobileVos {
       multipleAnswer: multipleAnswer ?? this.multipleAnswer,
     );
   }
+
+  @override
+  String toString() {
+    return 'QuestionMobileVos(id: $id, answerValidity: $answerValidity, type: $type, solutionAvailable: $solutionAvailable, durationInMinutes: $durationInMinutes, status: $status, questionTypeId: $questionTypeId, section: $section, questionType: $questionType, isMultipleAnswer: $isMultipleAnswer, positiveMark: $positiveMark, negativeMark: $negativeMark, groupId: $groupId, answerStatus: $answerStatus, numericAnswerDifference: $numericAnswerDifference, partialRule: $partialRule, columnMatchAnswer: $columnMatchAnswer, questionUrl: $questionUrl, solutionUrl: $solutionUrl, numericAnswer: $numericAnswer, customAnswerStatus: $customAnswerStatus, userSelectedOption: $userSelectedOption, multipleAnswer: $multipleAnswer)';
+  }
 }
 
 class OrganisationVo {

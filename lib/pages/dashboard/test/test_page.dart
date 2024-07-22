@@ -5,6 +5,7 @@ import 'package:jeeni/enums/question_type.dart';
 import 'package:jeeni/models/test_download_response.dart';
 import 'package:jeeni/pages/dashboard/test/hiden_header.dart';
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/basic_question.dart';
+import 'package:jeeni/pages/dashboard/test/questions_widget.dart/coloum_matching_question.dart';
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/comprehension_question.dart';
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/integer_question.dart';
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/matrix_question.dart';
@@ -347,12 +348,13 @@ class _TestPageState extends ConsumerState<TestPage> {
     switch (question.questionType) {
       case QuestionType.BASIC ||
             QuestionType.COMPREHENSION ||
-            QuestionType.ASSERTION_AND_REASON ||
-            QuestionType.COLUMN_MATCHING:
+            QuestionType.ASSERTION_AND_REASON:
         if (question.isMultipleAnswer ?? false) {
           return MultipleQuestion(question: question);
         }
         return BasicQuestion(question: question);
+      case QuestionType.COLUMN_MATCHING:
+        return ColoumMatchingQuestion(question: question);
       case QuestionType.INTEGER:
         return IntegerQuestion(question: question);
       case QuestionType.MATRIX:

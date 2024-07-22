@@ -3,12 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/solution/solution_provider.dart';
+import 'package:jeeni/providers/test_progress_provider.dart';
 import 'package:jeeni/utils/constants.dart';
 
-class BasicSolution extends ConsumerWidget {
+class IntegerSolution extends ConsumerWidget {
   final Result result;
   final ChangeNotifierProvider<SolutionProvider> solutionProvider;
-  const BasicSolution({
+  const IntegerSolution({
     required this.result,
     required this.solutionProvider,
     super.key,
@@ -16,6 +17,8 @@ class BasicSolution extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print("============");
+    print(result.toString());
     return Column(
       children: [
         Expanded(
@@ -26,9 +29,7 @@ class BasicSolution extends ConsumerWidget {
                 child: Column(
                   children: [
                     CachedNetworkImage(
-                      imageUrl: ref.read(solutionProvider).showSolutionImage
-                          ? result.questionUrl
-                          : result.solutionUrl,
+                      imageUrl: result.questionUrl,
                       placeholder: (context, url) =>
                           const CircularProgressIndicator(),
                       errorWidget: (context, url, error) =>
@@ -40,12 +41,91 @@ class BasicSolution extends ConsumerWidget {
             ],
           ),
         ),
-        SizedBox(
-          height: 50,
-          child: _buildOptionButtons(ref),
-        ),
+        Wrap(
+          children: List.generate(
+            10,
+            (index) => Padding(
+              padding: const EdgeInsets.all(1),
+              child: Container(
+                alignment: Alignment.center,
+                width: (MediaQuery.of(context).size.width / 5) - 3,
+                height: 40,
+                child: Stack(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      width: (MediaQuery.of(context).size.width / 5) - 3,
+                      height: 40,
+                      color:
+                          ref.watch(testProgressProvider).userSelectedOption ==
+                                  null
+                              ? Colors.grey[400]
+                              : ref
+                                          .watch(testProgressProvider)
+                                          .userSelectedOption ==
+                                      index.toString()
+                                  ? Colors.green[600]
+                                  : Colors.grey[400],
+                      child: Text(
+                        "$index",
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    if (index >= 0 && index < result.answerValidity.length)
+                      result.answerValidity[index] == true
+                          ? const Positioned(
+                              left: 0,
+                              child: Icon(
+                                size: 40,
+                                color: Colors.green,
+                                IconData(
+                                  0xf3fd,
+                                  fontFamily: CupertinoIcons.iconFont,
+                                  fontPackage: CupertinoIcons.iconFontPackage,
+                                ),
+                              ),
+                            )
+                          : Container()
+                    else
+                      Container()
+                  ],
+                ),
+              ),
+            ),
+          ),
+        )
       ],
     );
+    // return Column(
+    //   children: [
+    //     Expanded(
+    //       child: Stack(
+    //         fit: StackFit.expand,
+    //         children: [
+    //           SingleChildScrollView(
+    //             child: Column(
+    //               children: [
+    //                 CachedNetworkImage(
+    //                   imageUrl: ref.read(solutionProvider).showSolutionImage
+    //                       ? result.questionUrl
+    //                       : result.solutionUrl,
+    //                   placeholder: (context, url) =>
+    //                       const CircularProgressIndicator(),
+    //                   errorWidget: (context, url, error) =>
+    //                       const Icon(Icons.error),
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //     SizedBox(
+    //       height: 50,
+    //       child: _buildOptionButtons(ref),
+    //     ),
+    //   ],
+    // );
   }
 
   ListView _buildOptionButtons(WidgetRef ref) {
@@ -90,13 +170,14 @@ class BasicSolution extends ConsumerWidget {
                 //         ),
                 //       )
                 //     : Container()
+                Text("data"),
                 if (index >= 0 && index < result.answerValidity.length)
                   result.answerValidity[index] == true
                       ? const Positioned(
                           left: 0,
                           child: Icon(
                             size: 40,
-                            color: Color(0xff1c5e20),
+                            color: Colors.green,
                             IconData(
                               0xf3fd,
                               fontFamily: CupertinoIcons.iconFont,

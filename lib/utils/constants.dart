@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 final options = ["A", "B", "C", "D"];
-
+final PQRSOptions = ["P", "Q", "R", "S"];
 
 String? formatDateString(String? dateStr) {
   if (dateStr == null || dateStr.isEmpty) {
@@ -22,10 +22,7 @@ String? formatDateString(String? dateStr) {
   }
 }
 
-
 String formatEpochTime(int epochTime) {
-
-
   // Convert epoch time to DateTime object
   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(epochTime * 1000);
 
@@ -38,16 +35,11 @@ String formatEpochTime(int epochTime) {
   return formattedDate;
 }
 
-
-
 class ImageConstants {
-
   static const String appIconImage = "assets/images/appicon.png";
   static const String splashScreenImage = "assets/images/splash.png";
   static const String jeeniLoginLogoImage = "assets/images/jeeniloginimage.png";
 
-
   static const String loginImageBg = "assets/images/loginImageBg.jpg";
   static const String profileImageBg = "assets/images/profileBg.jpg";
-  
 }

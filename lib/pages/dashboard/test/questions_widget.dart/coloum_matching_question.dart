@@ -6,9 +6,9 @@ import 'package:jeeni/models/test_download_response.dart';
 import 'package:jeeni/providers/test_progress_provider.dart';
 import 'package:jeeni/utils/constants.dart';
 
-class BasicQuestion extends ConsumerStatefulWidget {
+class ColoumMatchingQuestion extends ConsumerStatefulWidget {
   final QuestionMobileVos question;
-  const BasicQuestion({
+  const ColoumMatchingQuestion({
     required this.question,
     super.key,
   });
@@ -17,9 +17,10 @@ class BasicQuestion extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _BasicQuestionState();
 }
 
-class _BasicQuestionState extends ConsumerState<BasicQuestion> {
+class _BasicQuestionState extends ConsumerState<ColoumMatchingQuestion> {
   @override
   Widget build(BuildContext context) {
+    print(widget.question);
     return Column(
       children: [
         Expanded(
@@ -49,7 +50,7 @@ class _BasicQuestionState extends ConsumerState<BasicQuestion> {
           ),
         ),
         SizedBox(
-          height: 50,
+          height: 200,
           child: _buildOptionButtons(ref),
         ),
       ],
@@ -59,36 +60,30 @@ class _BasicQuestionState extends ConsumerState<BasicQuestion> {
   ListView _buildOptionButtons(WidgetRef ref) {
     final userSelectedOption =
         ref.watch(testProgressProvider).userSelectedOption;
-    // print("_buildOptionButtons  $userSelectedOption");
     return ListView.builder(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: Axis.vertical,
       itemCount: options.length,
       itemBuilder: (context, index) {
         final option = options[index];
         return Padding(
           padding: const EdgeInsets.all(1),
-          child: SizedBox(
+          child: Container(
+            color: Colors.amber,
             height: 40,
-            width: (MediaQuery.of(context).size.width / 4) - 3,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: userSelectedOption == null
-                    ? Colors.grey[400]
-                    : userSelectedOption == option
-                        ? Colors.green[600]
-                        : Colors.grey[400],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                ref.read(testProgressProvider).setSelectedOption(option);
-              },
-              child: Text(
-                option,
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+            width: MediaQuery.of(context).size.width,
+            child: Text("data"),
+            // child: Row(
+            //   children: PQRSOptions.map(
+            //     (option) => ListTile(
+            //       title: Text(option),
+            //       leading: Radio<String>(
+            //         value: option,
+            //         groupValue: userSelectedOption,
+            //         onChanged: (String? value) {},
+            //       ),
+            //     ),
+            //   ).toList(),
+            // ),
           ),
         );
       },
@@ -142,3 +137,34 @@ class ClearButton extends ConsumerWidget {
 //     );
 //   }
 // }
+
+class RadioButtonExample extends StatefulWidget {
+  @override
+  _RadioButtonExampleState createState() => _RadioButtonExampleState();
+}
+
+class _RadioButtonExampleState extends State<RadioButtonExample> {
+  String _selectedValue = "p"; // Initial selected value
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Row(
+        children: PQRSOptions.map(
+          (option) => ListTile(
+            title: Text(option),
+            leading: Radio<String>(
+              value: option,
+              groupValue: _selectedValue,
+              onChanged: (String? value) {
+                setState(() {
+                  _selectedValue = value!;
+                });
+              },
+            ),
+          ),
+        ).toList(),
+      ),
+    );
+  }
+}

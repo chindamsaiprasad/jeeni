@@ -47,8 +47,12 @@ class _NumericQuestionState extends ConsumerState<NumericQuestion> {
 
     if (widget.question != oldWidget.question) {
       // Update the text controller with the new question's userSelectedOption
-      ref.read(testProgressProvider).textEditingController.text =
-          widget.question.userSelectedOption ?? "";
+      // ref.read(testProgressProvider).isInitilization = true;
+      // ref.read(testProgressProvider).textEditingController.text =
+      //     widget.question.userSelectedOption ?? "";
+      ref
+          .read(testProgressProvider)
+          .setInitilaNumericAnswer(widget.question.userSelectedOption);
       print(
           "TEXT1 :: ${ref.read(testProgressProvider).textEditingController.text}");
       print("TEXT2 :: ${widget.question.userSelectedOption}");

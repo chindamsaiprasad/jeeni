@@ -25,17 +25,16 @@ class TestProvider with ChangeNotifier {
   });
 
   Future<http.Response> fetchAllTestsFromJeeniServer() async {
-    
-    final response = await ref.read(networkProvider).networkHandlerMethod(url: "$BASE_URL/mtest/getByStudentId", httpMethodType: RequestType.get);
+    final response = await ref.read(networkProvider).networkHandlerMethod(
+        url: "$BASE_URL/mtest/getByStudentId", httpMethodType: RequestType.get);
 
     print("RESPONSE STATUS CODE:: ${response.statusCode}");
-      if (response.statusCode == 200) {
-          var responseData = json.decode(response.body) as List;
-          tests = responseData.map((test) => Test.fromJson(test));
-          print("LENGTH ${this.tests.length}");
-      }
+    if (response.statusCode == 200) {
+      var responseData = json.decode(response.body) as List;
+      tests = responseData.map((test) => Test.fromJson(test));
+      print("LENGTH ${this.tests.length}");
+    }
     return response;
-
   }
 
   saveAndroidActivity() {
@@ -115,6 +114,8 @@ class TestProvider with ChangeNotifier {
       print("RESPONSE :: ${response.statusCode}");
       print("RESPONSE 11 :: ${response.body}");
 
+      print("jsonString 11 :: ${jsonString}");
+
       if (response.statusCode != 200) {
         throw Exception("${response.statusCode}  ${response.body}");
       }
@@ -172,10 +173,10 @@ class TestProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
   /////////////////////////////////////////////////////////////////////////
-  
-  Future<TestDownloadResponse> viewSolutions({    ///TestSoltuionsModelClass
+
+  Future<TestDownloadResponse> viewSolutions({
+    ///TestSoltuionsModelClass
     required int testId,
   }) async {
     final jauth = ref.read(authenticationProvider)?.jauth;
@@ -184,39 +185,35 @@ class TestProvider with ChangeNotifier {
     headers.addAll({"Content-Type": "application/json", "Jauth": jauth!});
 
     return await http
-        .get(Uri.parse("$BASE_URL/mtest/getMockTestQuestionsForWeb/$testId/1080/2028/1?isMobile=true"),
+        .get(
+            Uri.parse(
+                "$BASE_URL/mtest/getMockTestQuestionsForWeb/$testId/1080/2028/1?isMobile=true"),
             headers: headers)
         .then((response) async {
-          // print("test solutions ${response.body}");
-  Map<String, dynamic> data = json.decode(response.body);
+      // print("test solutions ${response.body}");
+      Map<String, dynamic> data = json.decode(response.body);
 
-  // // Accessing the 'questionMobileVos' list from the decoded JSON
-  // List<dynamic> jsonQuestions = data['questionMobileVos'];
+      // // Accessing the 'questionMobileVos' list from the decoded JSON
+      // List<dynamic> jsonQuestions = data['questionMobileVos'];
 
-  // // Mapping JSON list to List<QuestionMobileVosTwo>
-  // List<QuestionMobileVosTwo> questions = jsonQuestions.map((questionJson) {
-  //   return QuestionMobileVosTwo.fromJson(questionJson);
-  // }).toList();
+      // // Mapping JSON list to List<QuestionMobileVosTwo>
+      // List<QuestionMobileVosTwo> questions = jsonQuestions.map((questionJson) {
+      //   return QuestionMobileVosTwo.fromJson(questionJson);
+      // }).toList();
 
-  //   // print("object ${questions.length}");
+      //   // print("object ${questions.length}");
 
-  //   return questions;
+      //   return questions;
 
-    // final SubmitTestResponse submitTestResponse  = SubmitTestResponse.fromJson(data);
-    // print("data subm ${submitTestResponse.batchId}");
+      // final SubmitTestResponse submitTestResponse  = SubmitTestResponse.fromJson(data);
+      // print("data subm ${submitTestResponse.batchId}");
 
       return TestDownloadResponse.fromJson(data);
-
     }).catchError((error) {
       // TODO :: ERROR HANDELING
       throw Exception(error);
     });
   }
-
-
-
-
-
 }
 
 class AlreadyLoggedInOnOtherDeviceException implements Exception {}

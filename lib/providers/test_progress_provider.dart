@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -21,6 +22,7 @@ final testProgressProvider =
 class TestProgressProvider with ChangeNotifier {
   late TestResponse testResponse;
   TextEditingController textEditingController = TextEditingController();
+  bool isInitilization = false;
   FocusNode focusNode = FocusNode();
   late int testId = -1;
   List<QuestionMobileVos> questions = [];
@@ -503,6 +505,21 @@ class TestProgressProvider with ChangeNotifier {
       return "D";
     }
     return null;
+  }
+
+  void setInitilaNumericAnswer(String? userSelectedOption) {
+    if (_currentQuestion == null) return;
+    final previousState = _currentQuestion?.customAnswerStatus;
+    print("PREVIOUS1111111111 ${previousState}");
+    textEditingController.text = userSelectedOption ?? "";
+    print("PREVIOUS2222222222 ${previousState}");
+
+    _currentQuestion =
+        _currentQuestion?.copyWith(customAnswerStatus: previousState);
+    print("PREVIOUS33333333333333 ${previousState}");
+    final index = currentQuestionIndex();
+    questions.removeAt(index);
+    questions.insert(index, _currentQuestion!);
   }
 }
 

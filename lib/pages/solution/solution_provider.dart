@@ -125,6 +125,11 @@ class Result {
       questionType: questionType ?? this.questionType,
     );
   }
+
+  @override
+  String toString() {
+    return 'Result(testId: $testId, section: $section, questionId: $questionId, status: $status, questionUrl: $questionUrl, solutionUrl: $solutionUrl, timeTaken: $timeTaken, positiveMark: $positiveMark, negativeMark: $negativeMark, isMultipleAnswer: $isMultipleAnswer, userSelectedOption: $userSelectedOption, actualAnswer: $actualAnswer, numericAnswer: $numericAnswer, userGivenAnswers: $userGivenAnswers, answerValidity: $answerValidity, questionType: $questionType)';
+  }
 }
 
 class SolutionProvider with ChangeNotifier {
@@ -290,8 +295,8 @@ class SolutionProvider with ChangeNotifier {
     var index =
         tempList.indexWhere((question) => question.questionId == questionId);
 
-        // print("ok provider checking $index ${tempList.elementAt(index).copyWith().id}");
-        _currentQuestion = tempList.elementAt(index).copyWith();
+    // print("ok provider checking $index ${tempList.elementAt(index).copyWith().id}");
+    _currentQuestion = tempList.elementAt(index).copyWith();
     // _reset();
     notifyListeners();
   }

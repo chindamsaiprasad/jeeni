@@ -3,7 +3,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/enums/answer_status.dart';
 import 'package:jeeni/enums/question_type.dart';
 import 'package:jeeni/models/test_download_response.dart';
+import 'package:jeeni/pages/solution/integer_solution.dart';
 import 'package:jeeni/pages/solution/basic_solution.dart';
+import 'package:jeeni/pages/solution/numeric_solution.dart';
 import 'package:jeeni/pages/solution/solution_provider.dart';
 import 'package:jeeni/utils/app_colour.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -35,17 +37,17 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
             style: TextStyle(color: Colors.white),
           ),
           iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.print),
-        //     onPressed: () {
-        //       final questions = ref.watch(widget.solutionProvider).getQuestion;
-        //       print("questions ${questions.length}");
-        //     },
-        //   ),
-        // ],
+            color: Colors.white,
+          ),
+          // actions: [
+          //   IconButton(
+          //     icon: Icon(Icons.print),
+          //     onPressed: () {
+          //       final questions = ref.watch(widget.solutionProvider).getQuestion;
+          //       print("questions ${questions.length}");
+          //     },
+          //   ),
+          // ],
         ),
         body: Column(
           children: [
@@ -157,7 +159,9 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
             return InkWell(
               onTap: () {
                 // print("sotions ${question.questionId}");
-                ref.read(widget.solutionProvider).updateCurrentQuestion(question.questionId);
+                ref
+                    .read(widget.solutionProvider)
+                    .updateCurrentQuestion(question.questionId);
                 ref.read(widget.solutionProvider).showSolutionImage = true;
                 // ref.read(widget.solutionProvider).solutionImage();
               },
@@ -236,13 +240,13 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
               result: currentQuestion, solutionProvider: solutionProvider));
     } else if (currentQuestion.questionType == QuestionType.INTEGER) {
       return Expanded(
-          child: BasicSolution(
+          child: IntegerSolution(
         result: currentQuestion,
         solutionProvider: solutionProvider,
       ));
     } else if (currentQuestion.questionType == QuestionType.NUMERIC) {
       return Expanded(
-          child: BasicSolution(
+          child: NumericSolution(
         result: currentQuestion,
         solutionProvider: solutionProvider,
       ));
