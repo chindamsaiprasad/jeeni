@@ -54,60 +54,60 @@ class _HidenHeaderState extends ConsumerState<HidenHeader> {
         //     }),
         AnimatedContainer(
           height: !ref.read(testProgressProvider).getHasHiden ? 0 : 90,
-          duration: const Duration(milliseconds: 400),
-          curve: Curves.easeInOut,
-          child: ref.read(testProgressProvider).getHasHiden
-              ? Container(
-                  height: 90,
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  // color: Colors.red,
-                  child: Column(
+          duration: const Duration(milliseconds: 900),
+          curve: Curves.easeIn,
+          // child: ref.read(testProgressProvider).getHasHiden
+          child: Container(
+            height: 90,
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            // color: Colors.red,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(currentQuestion?.section ?? ""),
-                            Text(currentQuestion?.questionType ?? ""),
-                            currentQuestion?.isMultipleAnswer ?? false
-                                ? const Text("Multiple Answer")
-                                : const Text("Single Answer"),
-                          ],
-                        ),
+                      Text(currentQuestion?.section ?? ""),
+                      Text(currentQuestion?.questionType ?? ""),
+                      currentQuestion?.isMultipleAnswer ?? false
+                          ? const Text("Multiple Answer")
+                          : const Text("Single Answer"),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          _buildCorrectIncorrect(
+                            "Correct",
+                            "+${currentQuestion?.positiveMark?.toInt()}",
+                            Colors.green,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          _buildCorrectIncorrect(
+                            "Incorrect",
+                            "-${currentQuestion?.negativeMark?.toInt()}",
+                            Colors.red,
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                _buildCorrectIncorrect(
-                                  "Correct",
-                                  "+${currentQuestion?.positiveMark?.toInt()}",
-                                  Colors.green,
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                _buildCorrectIncorrect(
-                                  "Incorrect",
-                                  "-${currentQuestion?.negativeMark?.toInt()}",
-                                  Colors.red,
-                                ),
-                              ],
-                            ),
-                            Text(
-                              "${ref.read(testProgressProvider).currentQuestionIndex() + 1} of ${ref.read(testProgressProvider).getQuestionCount}",
-                              style: const TextStyle(color: Colors.amber),
-                            )
-                          ],
-                        ),
+                      Text(
+                        "${ref.read(testProgressProvider).currentQuestionIndex() + 1} of ${ref.read(testProgressProvider).getQuestionCount}",
+                        style: const TextStyle(color: Colors.amber),
                       )
                     ],
                   ),
                 )
-              : Container(),
+              ],
+            ),
+          ),
+          // : Container(),
         ),
         SizedBox(
           height: 35,
@@ -140,7 +140,6 @@ class _HidenHeaderState extends ConsumerState<HidenHeader> {
                   ),
           ),
         ),
-     
       ],
     );
   }

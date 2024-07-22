@@ -25,7 +25,38 @@ class _NumericQuestionState extends ConsumerState<NumericQuestion> {
   @override
   void initState() {
     super.initState();
+
+    // if (widget.question.userSelectedOption != null) {
+    //   ref.read(testProgressProvider).textEditingController.text =
+    //       widget.question.userSelectedOption ?? "";
+    //   print(
+    //       "TEXT1 :: ${ref.read(testProgressProvider).textEditingController.text}");
+    //   print("TEXT2 :: ${widget.question.userSelectedOption}");
+    // } else {
+    //   print(
+    //       "TEXT1 ELSE:: ${ref.read(testProgressProvider).textEditingController.text}");
+    //   print("TEXT2 :: ${widget.question.userSelectedOption}");
+    // }
+
     // _textEditingController = TextEditingController();
+  }
+
+  @override
+  void didUpdateWidget(covariant NumericQuestion oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.question != oldWidget.question) {
+      // Update the text controller with the new question's userSelectedOption
+      ref.read(testProgressProvider).textEditingController.text =
+          widget.question.userSelectedOption ?? "";
+      print(
+          "TEXT1 :: ${ref.read(testProgressProvider).textEditingController.text}");
+      print("TEXT2 :: ${widget.question.userSelectedOption}");
+    } else {
+      print(
+          "TEXT1 ELSE:: ${ref.read(testProgressProvider).textEditingController.text}");
+      print("TEXT2 :: ${widget.question.userSelectedOption}");
+    }
   }
 
   @override
@@ -36,6 +67,7 @@ class _NumericQuestionState extends ConsumerState<NumericQuestion> {
 
   @override
   Widget build(BuildContext context) {
+    print("NUMERIC :: ${widget.question}");
     return Column(
       children: [
         Expanded(
@@ -71,7 +103,7 @@ class _NumericQuestionState extends ConsumerState<NumericQuestion> {
             padding: const EdgeInsets.symmetric(horizontal: 100),
             child: TextField(
               focusNode: ref.read(testProgressProvider).focusNode,
-              controller: ref.read(testProgressProvider).textEditingController,
+              controller: ref.watch(testProgressProvider).textEditingController,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
               // onChanged: (value) {

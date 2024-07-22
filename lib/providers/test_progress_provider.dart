@@ -60,11 +60,10 @@ class TestProgressProvider with ChangeNotifier {
     if (questionId == 0) return;
 
     final tempList = [...questions];
-    var index =
-        tempList.indexWhere((question) => question.id == questionId);
+    var index = tempList.indexWhere((question) => question.id == questionId);
 
-        // print("ok provider checking $index ${tempList.elementAt(index).copyWith().id}");
-        _currentQuestion = tempList.elementAt(index).copyWith();
+    // print("ok provider checking $index ${tempList.elementAt(index).copyWith().id}");
+    _currentQuestion = tempList.elementAt(index).copyWith();
     _reset();
     notifyListeners();
   }
@@ -107,15 +106,25 @@ class TestProgressProvider with ChangeNotifier {
     isLoading = false;
     initTimer();
     _reset();
+    textEditingController.addListener(_textFieldLisner);
     notifyListeners();
   }
 
-  void initTimer() {
+  void _textFieldLisner() {
+    final currentQuestion = getCurrentQuestion;
+    if (currentQuestion == null) return;
 
+    if (currentQuestion.questionType == "Numeric") {
+      setNumericAnswer(textEditingController.text);
+      // textEditingController.clear();
+      // focusNode.unfocus();
+    }
+  }
+
+  void initTimer() {
     final timerService = ref.read(timerProvider);
     timerService.updateDuration(_remaingDurationInSeconds);
     timerService.startTimer();
-
 
     // _remaingDurationInSeconds =
     //     (testDownloadResponse.durationInMinutes ?? 0) * 60;
@@ -127,17 +136,10 @@ class TestProgressProvider with ChangeNotifier {
   }
 
   void next() {
-    final currentQuestion = getCurrentQuestion;
-    if (currentQuestion == null) return;
-
-    if (currentQuestion.questionType == "Numeric") {
-      setNumericAnswer(textEditingController.text);
-      textEditingController.clear();
-      focusNode.unfocus();
-    }
+    if (_currentQuestion == null) return;
     final tempList = [...questions];
     var index =
-        tempList.indexWhere((question) => question.id == currentQuestion.id);
+        tempList.indexWhere((question) => question.id == _currentQuestion!.id);
 
     index = index + 1;
     if ((index) < tempList.length) {
@@ -169,15 +171,44 @@ class TestProgressProvider with ChangeNotifier {
   void markForReview() {
     if (_currentQuestion == null) return;
 
-    if (_currentQuestion?.userSelectedOption == null) {
-      _currentQuestion = _currentQuestion?.copyWith(
-        customAnswerStatus: AnswerStatus.MARK_FOR_REVIEW,
-      );
+    // if (_currentQuestion!.questionType == "Numeric") {
+    //   print("markForReview  :: ");
+    //   setNumericAnswer(textEditingController.text);
+    //   textEditingController.clear();
+    //   focusNode.unfocus();
+    // }
+
+    if (_currentQuestion?.isMultipleAnswer ?? false) {
+      final multipleAnswer =
+          _currentQuestion!.multipleAnswer ?? [false, false, false, false];
+      int trueCount = multipleAnswer.where((element) => element).length;
+      print("MULTIPLE ${trueCount}");
+      if (trueCount > 0) {
+        _currentQuestion = _currentQuestion?.copyWith(
+          customAnswerStatus: AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW,
+        );
+      } else {
+        _currentQuestion = _currentQuestion?.copyWith(
+          customAnswerStatus: AnswerStatus.MARK_FOR_REVIEW,
+        );
+      }
+
+      print("MULTIPLE ${trueCount}   ${_currentQuestion!.customAnswerStatus}");
     } else {
-      _currentQuestion = _currentQuestion?.copyWith(
-        customAnswerStatus: AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW,
-      );
+      if (_currentQuestion?.userSelectedOption == null) {
+        print("markForReview  :: 111");
+        _currentQuestion = _currentQuestion?.copyWith(
+          customAnswerStatus: AnswerStatus.MARK_FOR_REVIEW,
+        );
+      } else {
+        print("markForReview  :: 222");
+        _currentQuestion = _currentQuestion?.copyWith(
+          customAnswerStatus: AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW,
+        );
+        print("markForReview  :: 222  ${_currentQuestion!.customAnswerStatus}");
+      }
     }
+
     final index = currentQuestionIndex();
     questions.removeAt(index);
     questions.insert(index, _currentQuestion!);
@@ -240,6 +271,7 @@ class TestProgressProvider with ChangeNotifier {
     } else {
       print("ELSE $value");
       _currentQuestion = _currentQuestion?.copyWith(
+        userSelectedOption: null,
         customAnswerStatus: AnswerStatus.NOT_ANSWERED,
       );
       _currentQuestion?.update(null);
@@ -248,11 +280,16 @@ class TestProgressProvider with ChangeNotifier {
     final index = currentQuestionIndex();
     questions.removeAt(index);
     questions.insert(index, _currentQuestion!);
-    notifyListeners();
+    // notifyListeners();
   }
 
   void clearAnswer() {
     if (_currentQuestion == null) return;
+
+    if (_currentQuestion?.isMultipleAnswer ?? false) {
+      _currentQuestion = _currentQuestion
+          ?.copyWith(multipleAnswer: [false, false, false, false]);
+    }
     print(
         "BEFORE :: ${_currentQuestion?.userSelectedOption}   ${_currentQuestion?.customAnswerStatus}");
     _currentQuestion = _currentQuestion?.copyWith(
@@ -367,7 +404,7 @@ class TestProgressProvider with ChangeNotifier {
                   index++) {
                 userGivenAnswers[index] = multipleAnswer[index];
               }
-            } else { 
+            } else {
               if (question.solutionAvailable ?? false) {
                 final availableAnswer = question.answerValidity ?? [];
 

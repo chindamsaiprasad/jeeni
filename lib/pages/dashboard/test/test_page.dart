@@ -49,60 +49,28 @@ class _TestPageState extends ConsumerState<TestPage> {
     // });
   }
 
-  void checkAndSubmitTest() {
-    final timerService = ref.read(timerProvider);
-    if (timerService.duration == Duration.zero) {
-      OverlayLoader.show(context: context, title: "Submitting");
-      print("this wroks");
-      ref.read(testProgressProvider).submitTest().then((response) {
-        print("3333333333333333333333333 VALUE");
-        if (response != null) {
-          print("3333333333333333333333333 if VALUE");
-          timerService.stopTimer();
-          Navigator.pop(context, response);
-        }
-      }).catchError((onError) {
-        // Handle error
-        print("111111111111111111111111111111111 ERROR");
-      }).whenComplete(() {
-                print("111111111111111111111111111111111 whenComplete");
-
-         OverlayLoader.hide();});
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            _buildAppBar(),
-            // _buildCollapsebleContainer(),
-            const HidenHeader(),
-            _buildQuestionNumberList(),
-            _buildQuestionContainer(),
-            _buildFooterButtons()
-          ],
+    return PopScope(
+      canPop: false,
+      child: SafeArea(
+        child: Scaffold(
+          body: Column(
+            children: [
+              _buildAppBar(),
+              // _buildCollapsebleContainer(),
+              const HidenHeader(),
+              _buildQuestionNumberList(),
+              _buildQuestionContainer(),
+              _buildFooterButtons()
+            ],
+          ),
         ),
       ),
     );
   }
 
   Container _buildAppBar() {
-    final timerService = ref.watch(timerProvider);
-    int hours = timerService.duration.inHours;
-    int minutes = timerService.duration.inMinutes.remainder(60);
-    int seconds = timerService.duration.inSeconds.remainder(60);
-
-    if (timerService.duration == Duration.zero) {
-      print("ok time over");
-      // Trigger test submission check every time the duration changes
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        checkAndSubmitTest();
-      });
-    }
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 55,
@@ -115,10 +83,10 @@ class _TestPageState extends ConsumerState<TestPage> {
             "Mock Test",
             style: TextStyle(color: AppColour.white),
           ),
-          Text(
-            '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-            style: const TextStyle(fontSize: 18, color: Colors.white),
-          ),
+          // Text(
+          //   '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+          //   style: const TextStyle(fontSize: 18, color: Colors.white),
+          // ),
           // Text(
           //   ref
           //       .watch(testProgressProvider)
@@ -139,34 +107,33 @@ class _TestPageState extends ConsumerState<TestPage> {
                 ),
               ),
               onPressed: () {
-
-
-                ShowSubmitOverlay.show(context: context, onTapYes: () {
-                  ShowSubmitOverlay.hide();
-                  OverlayLoader.show(context: context, title: "Submiting");
-                  print("444444444444444444444444 VALUE");
-                  ref
-                      .read(testProgressProvider)
-                      .submitTest()
-                      .then((response) {
-                        print("3333333333333333333333333 VALUE");
-                        if (response != null) {
-                          print("3333333333333333333333333  if VALUE");
-            
-                          timerService.stopTimer();
-            
-                          print("responsetest page $response");
-                          Navigator.pop(context, response);
-                        }
-                      })
-                      .catchError((onError) {})
-                      .whenComplete(() => OverlayLoader.hide()); 
-                }, onTapNo: () {
+                ShowSubmitOverlay.show(
+                  context: context,
+                  onTapYes: () {
                     ShowSubmitOverlay.hide();
-                },);
+                    OverlayLoader.show(context: context, title: "Submiting");
+                    print("444444444444444444444444 VALUE");
+                    ref
+                        .read(testProgressProvider)
+                        .submitTest()
+                        .then((response) {
+                          print("3333333333333333333333333 VALUE");
+                          if (response != null) {
+                            print("3333333333333333333333333  if VALUE");
 
-                 
-                
+                            ref.read(timerProvider).startTimer();
+
+                            print("responsetest page $response");
+                            Navigator.pop(context, response);
+                          }
+                        })
+                        .catchError((onError) {})
+                        .whenComplete(() => OverlayLoader.hide());
+                  },
+                  onTapNo: () {
+                    ShowSubmitOverlay.hide();
+                  },
+                );
               },
               child: const Text(
                 "Submit Test",
@@ -299,7 +266,7 @@ class _TestPageState extends ConsumerState<TestPage> {
           if (question.questionType == "Integer") {
             // print("_buildQuestionNumberList ${question.customAnswerStatus}");
           }
-    
+
           return InkWell(
             onTap: () {
               // print("question id ${index} ${question.id}");
@@ -308,7 +275,6 @@ class _TestPageState extends ConsumerState<TestPage> {
                   .updateCurrentQuestion(question.id ?? 0);
             },
             child: Stack(
-    
               children: [
                 Container(
                   margin: const EdgeInsets.all(5),
@@ -316,24 +282,20 @@ class _TestPageState extends ConsumerState<TestPage> {
                   height: 50,
                   width: 50,
                   decoration: BoxDecoration(
-                    
-                    border: ref
-                                .read(testProgressProvider)
-                                .getCurrentQuestion
-                                ?.id ==
-                            question.id
-                        ? Border.all(
-                            width: 3,
-                            color: const Color.fromARGB(255, 4, 109, 122),
-                          )
-                        : Border.all(
-                            width: 1,
-                            color: Colors.black,
-                          ),
+                    border:
+                        ref.read(testProgressProvider).getCurrentQuestion?.id ==
+                                question.id
+                            ? Border.all(
+                                width: 3,
+                                color: const Color.fromARGB(255, 4, 109, 122),
+                              )
+                            : Border.all(
+                                width: 1,
+                                color: Colors.black,
+                              ),
                     borderRadius: const BorderRadius.all(Radius.circular(25)),
                     color: question.customAnswerStatus.backgroundColur,
-                                        // color: Colors.red,
-    
+                    // color: Colors.red,
                   ),
                   child: Text(
                     'Q${index + 1}',
@@ -354,8 +316,7 @@ class _TestPageState extends ConsumerState<TestPage> {
                           height: 9,
                           width: 9,
                           decoration: const BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(25)),
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
                             color: Color.fromARGB(255, 9, 233, 16),
                           ),
                         ),
@@ -474,7 +435,7 @@ class _TestPageState extends ConsumerState<TestPage> {
 
   void scrollTo(int index) => questionNumberScrollController.scrollTo(
         index: index,
-        duration: const Duration(seconds: 2),
+        duration: const Duration(seconds: 3),
         curve: Curves.easeInOutCubic,
         alignment: 0,
       );

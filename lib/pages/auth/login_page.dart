@@ -31,8 +31,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   // final TextEditingController _passwordController =
   //     TextEditingController(text: "123456");
 
-  final TextEditingController _userIdController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _userIdController =
+      TextEditingController(text: "joshi_1452");
+  final TextEditingController _passwordController =
+      TextEditingController(text: "123456");
 
   final TextEditingController _phoneController = TextEditingController();
 
@@ -89,12 +91,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         //   style: TextStyle(color: Colors.white),
         // ),
       ),
-      body: Column(
-        children: [
-          // SizedBox(height: 80,),
-          _buildLogo(),
-          Flexible(
-            child: Container(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // SizedBox(height: 80,),
+            _buildLogo(),
+            Container(
               margin: const EdgeInsets.only(left: 4, right: 4),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
@@ -104,6 +106,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   topRight: Radius.circular(20.0),
                 ),
               ),
+              // child: Container(
+              //   height: 100,
+              //   width: 100,
+              //   color: Colors.red,
+              // ),
+              // child: forgotPasswordBool
+              //     ? loginContainer()
+              //     : forgotPasswordContainer(),
               child: Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15, top: 18),
                 child: Column(
@@ -117,8 +127,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -128,8 +138,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Login",style: TextStyle(color: Colors.black, fontSize: 30),),
-        const SizedBox(height: 20,),
+        const Text(
+          "Login",
+          style: TextStyle(color: Colors.black, fontSize: 30),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
         TextField(
           controller: _userIdController,
           decoration: const InputDecoration(
@@ -143,7 +158,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
               hintText: "Enter your student id"),
         ),
-        const SizedBox(height: 20,),
+        const SizedBox(
+          height: 20,
+        ),
         TextField(
           controller: _passwordController,
           obscureText: _obscureText,
@@ -195,7 +212,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ],
           ),
         ),
-        const SizedBox(height: 10,),
+        const SizedBox(
+          height: 10,
+        ),
         SizedBox(
           // width: 120,
           width: double.infinity,
@@ -281,8 +300,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text( "Forgot Password", style: TextStyle(color: Colors.black, fontSize: 26),),
-        const SizedBox(height: 20,),
+        const Text(
+          "Forgot Password",
+          style: TextStyle(color: Colors.black, fontSize: 26),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
         TextField(
           controller: _phoneController,
           inputFormatters: <TextInputFormatter>[
@@ -335,7 +359,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
           ),
         ),
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
         SizedBox(
           width: double.infinity,
           child: Row(

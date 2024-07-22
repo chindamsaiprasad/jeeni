@@ -34,12 +34,14 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
     DateTime startTime =
         DateTime.fromMillisecondsSinceEpoch(widget.test.startTime ?? 0);
     _duration = startTime.difference(DateTime.now());
-    
+
     // ref.read(timerProvider).updateDuration(widget.test.durationInMinutes ?? 0);
     // setTimerprovier();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-    ref.read(timerProvider).updateDuration(widget.test.durationInMinutes ?? 0);
-  });
+      ref
+          .read(timerProvider)
+          .updateDuration(widget.test.durationInMinutes ?? 0);
+    });
     super.initState();
   }
 
@@ -49,11 +51,10 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
 
   @override
   Widget build(BuildContext context) {
-
-    final timerService = ref.watch(timerProvider);
-    int hours = timerService.duration.inHours;
-    int minutes = timerService.duration.inMinutes.remainder(60);
-    int seconds = timerService.duration.inSeconds.remainder(60);
+    // final timerService = ref.watch(timerProvider);
+    // int hours = timerService.duration.inHours;
+    // int minutes = timerService.duration.inMinutes.remainder(60);
+    // int seconds = timerService.duration.inSeconds.remainder(60);
 
     return WillPopScope(
       onWillPop: () {
@@ -73,8 +74,8 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
             style: TextStyle(color: Colors.white),
           ),
           iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
+            color: Colors.white,
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -118,81 +119,83 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
                 thirdText: "",
                 color: Colors.red,
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               Padding(
-                padding: const EdgeInsets.only(left: 5,right: 5),
+                padding: const EdgeInsets.only(left: 5, right: 5),
                 child: Table(
-                        border: TableBorder.all(color: Colors.grey),
-                        columnWidths: const <int, TableColumnWidth>{
-                          0: FlexColumnWidth(),
-                          1: FlexColumnWidth(),
-                        },
-                        children: [
-                          TableRow(
-                            decoration: BoxDecoration(color: Colors.grey[400]),
-                            children: [
-                TableCell(
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    height: 50,
-                    child: const Text(
-                      "  Subject",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                TableCell(
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    height: 50,
-                    child: const Text(
-                      "  Total Questions",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                            ],
+                  border: TableBorder.all(color: Colors.grey),
+                  columnWidths: const <int, TableColumnWidth>{
+                    0: FlexColumnWidth(),
+                    1: FlexColumnWidth(),
+                  },
+                  children: [
+                    TableRow(
+                      decoration: BoxDecoration(color: Colors.grey[400]),
+                      children: [
+                        TableCell(
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            height: 50,
+                            child: const Text(
+                              "  Subject",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
                           ),
-                          TableRow(
-                            children: [
-                TableCell(
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    height: 50,
-                    child: Text(
-                      "  Physics",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                TableCell(
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    height: 50,
-                    child: Text(
-                      " ${widget.test.numberOfQuestions ?? 0}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                            ],
+                        ),
+                        TableCell(
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            height: 50,
+                            child: const Text(
+                              "  Total Questions",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        TableCell(
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            height: 50,
+                            child: Text(
+                              "  Physics",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                        TableCell(
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            height: 50,
+                            child: Text(
+                              " ${widget.test.numberOfQuestions ?? 0}",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               const Spacer(),
               SizedBox(
@@ -255,7 +258,10 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
                   //   timerService.startTimer();
                   //   // timerService.stopTimer();
                   // },
-                  child: const Text("Start Test", style: TextStyle(color: Colors.white),),
+                  child: const Text(
+                    "Start Test",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ],
