@@ -16,6 +16,7 @@ class NumericSolution extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print(result.toString());
     return Column(
       children: [
         Expanded(
@@ -59,20 +60,34 @@ class NumericSolution extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15.0),
-                    child: Container(
-                      color: result.actualAnswer == result.userSelectedOption
-                          ? Colors.green
-                          : Colors.redAccent,
-                      child: Text(
-                        "${result.userSelectedOption}",
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    child: result.status == Status.UNATTEMPTED
+                        ? Container(
+                            color: Colors.grey,
+                            child: const Text(
+                              "Unattempted",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        : Container(
+                            color:
+                                result.actualAnswer == result.userSelectedOption
+                                    ? Colors.green
+                                    : Colors.redAccent,
+                            child: Text(
+                              "${result.userSelectedOption}",
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                   ),
                 ),
               ),

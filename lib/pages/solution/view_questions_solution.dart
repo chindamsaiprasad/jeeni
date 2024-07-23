@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jeeni/enums/answer_status.dart';
 import 'package:jeeni/enums/question_type.dart';
-import 'package:jeeni/models/test_download_response.dart';
 import 'package:jeeni/pages/solution/assertion_and_reason_solution.dart';
+import 'package:jeeni/pages/solution/column_matching_solution.dart';
 import 'package:jeeni/pages/solution/integer_solution.dart';
 import 'package:jeeni/pages/solution/basic_solution.dart';
 import 'package:jeeni/pages/solution/numeric_solution.dart';
 import 'package:jeeni/pages/solution/solution_provider.dart';
-import 'package:jeeni/utils/app_colour.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ViewQuestionSolution extends ConsumerStatefulWidget {
@@ -233,9 +231,17 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
         child: Text("Data not found"),
       );
     }
-    if (currentQuestion.questionType == QuestionType.BASIC ||
-        currentQuestion.questionType == QuestionType.COLUMN_MATCHING ||
-        currentQuestion.questionType == QuestionType.COMPREHENSION) {
+    if (currentQuestion.questionType == QuestionType.COLUMN_MATCHING) {
+      return Expanded(
+        child: ColumnMatchingSolution(
+          result: currentQuestion,
+          solutionProvider: solutionProvider,
+        ),
+      );
+    } else if (currentQuestion.questionType == QuestionType.BASIC ||
+        currentQuestion.questionType == QuestionType.COMPREHENSION ||
+        currentQuestion.questionType == QuestionType.MATRIX ||
+        currentQuestion.questionType.contains("ASSERTION")) {
       return Expanded(
           child: BasicSolution(
               result: currentQuestion, solutionProvider: solutionProvider));
@@ -296,9 +302,11 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
             onPressed: () {
               ref.read(widget.solutionProvider).solutionImage();
             },
-            child: const Text(
-              "Solution",
-              style: TextStyle(
+            child: Text(
+              ref.read(widget.solutionProvider).showSolutionImage
+                  ? "Solution"
+                  : "Question",
+              style: const TextStyle(
                 color: Colors.green,
                 fontSize: 14,
               ),

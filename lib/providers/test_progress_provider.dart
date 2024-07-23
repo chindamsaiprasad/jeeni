@@ -345,11 +345,14 @@ class TestProgressProvider with ChangeNotifier {
       (question) {
         final userGivenAnswers = [false, false, false, false];
 
-        print("  question Type  ${question.questionType}");
+        print(
+            "  question Type  ======================  ${question.questionType}");
+        print(question.toString());
         var status = 0;
 
         //--------------INTEGER------------------
         if (question.questionType == "Integer") {
+          print("INTEGER :: ");
           if (question.customAnswerStatus == AnswerStatus.ANSWERED) {
             if (question.solutionAvailable ?? false) {
               final userSelectedOption = question.userSelectedOption == null
@@ -378,6 +381,7 @@ class TestProgressProvider with ChangeNotifier {
 
         //--------------NUMERIC------------------
         if (question.questionType == "Numeric") {
+          print("NUMERIC :: ");
           if (question.customAnswerStatus == AnswerStatus.ANSWERED ||
               question.customAnswerStatus ==
                   AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW) {
@@ -402,11 +406,17 @@ class TestProgressProvider with ChangeNotifier {
           }
         }
 
+        //--------------Assertion Ans Reason--------------
+        if (question.questionType == "Column Matching") {
+          print("COLUMN MATCHING :: ");
+        }
+
         //--------------BASIC------------------
         if (question.questionType == "Basic" ||
-            question.questionType == "Column Matching" ||
             question.questionType == "COMPREHENSION" ||
-            question.questionType == "Matrix") {
+            question.questionType == "Matrix" ||
+            (question.questionType?.contains("ASSERTION") ?? false)) {
+          print("BASIC  COMPREHENSION   Matrix   ASSERTION");
           String answer = "";
 
           if (question.customAnswerStatus == AnswerStatus.ANSWERED ||
@@ -475,6 +485,8 @@ class TestProgressProvider with ChangeNotifier {
       testId: testId,
       questionResult: questionResult,
     );
+
+    // return null;
 
     if (testResponse is TestDownloadResponse) {
       return await ref

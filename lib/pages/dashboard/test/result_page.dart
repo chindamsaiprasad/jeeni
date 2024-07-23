@@ -11,13 +11,14 @@ class ResultPage extends ConsumerWidget {
   final Test? test;
 
 // Default constructor
-  const ResultPage({super.key, 
+  const ResultPage({
+    super.key,
     required this.submitTestResponse,
     this.test,
   });
 
   // // Named constructor that initializes with only SubmitTestResponse
-  // ResultPage.withSubmitTestResponse({super.key, 
+  // ResultPage.withSubmitTestResponse({super.key,
   //   required this.submitTestResponse,
   // }) : test = Test.defaultTest();
 
@@ -51,12 +52,16 @@ class ResultPage extends ConsumerWidget {
                           color: Colors.black,
                           height: 1,
                         ),
-                        _buildResultCell("Test Date", "${DateFormator.getFormatedDate(test?.startTime ?? 0)}", context),
+                        _buildResultCell(
+                            "Test Date",
+                            "${DateFormator.getFormatedDate(test?.startTime ?? 0)}",
+                            context),
                         const Divider(
                           color: Colors.black,
                           height: 1,
                         ),
-                        _buildResultCell("Duration", "${test?.durationInMinutes} Minutes", context),
+                        _buildResultCell("Duration",
+                            "${test?.durationInMinutes} Minutes", context),
                         const Divider(
                           color: Colors.black,
                           height: 1,
@@ -137,7 +142,10 @@ class ResultPage extends ConsumerWidget {
                 onPressed: () {
                   Navigator.pop(context, submitTestResponse);
                 },
-                child: const Text("View Answer", style: TextStyle(color: Colors.white),),
+                child: const Text(
+                  "View Answer",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
           ],
@@ -164,10 +172,12 @@ class ResultPage extends ConsumerWidget {
                 ),
               ),
             ),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 14,
+            Expanded(
+              child: Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 14,
+                ),
               ),
             ),
           ],

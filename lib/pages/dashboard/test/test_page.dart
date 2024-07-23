@@ -346,12 +346,12 @@ class _TestPageState extends ConsumerState<TestPage> {
   Widget getQuestionWidgetByType(QuestionMobileVos question) {
     print("QUESTION ::${question.questionType}");
     switch (question.questionType) {
-      case QuestionType.BASIC ||
-            QuestionType.COMPREHENSION ||
-            QuestionType.ASSERTION_AND_REASON:
+      case QuestionType.BASIC || QuestionType.COMPREHENSION:
         if (question.isMultipleAnswer ?? false) {
           return MultipleQuestion(question: question);
         }
+        return BasicQuestion(question: question);
+      case QuestionType.ASSERTION_AND_REASON:
         return BasicQuestion(question: question);
       case QuestionType.COLUMN_MATCHING:
         return ColoumMatchingQuestion(question: question);

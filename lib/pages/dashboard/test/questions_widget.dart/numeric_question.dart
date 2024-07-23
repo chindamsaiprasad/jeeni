@@ -91,11 +91,11 @@ class _NumericQuestionState extends ConsumerState<NumericQuestion> {
                   ],
                 ),
               ),
-              // const Positioned(
-              //   bottom: 20,
-              //   right: 20,
-              //   child: ClearButton(),
-              // )
+              const Positioned(
+                bottom: 20,
+                right: 20,
+                child: ClearButton(),
+              )
             ],
           ),
         ),

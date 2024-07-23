@@ -217,7 +217,7 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                               const TextSpan(text: "Start : "),
                                               TextSpan(
                                                 text:
-                                                    "${DateFormator.getFormatedDate(test.startTime ?? 0)}",
+                                                    "${DateFormator.getFormatedDateAndTime(test.startTime ?? 0)}",
                                                 style: const TextStyle(
                                                   fontSize: 12,
                                                   color: Colors.black26,
