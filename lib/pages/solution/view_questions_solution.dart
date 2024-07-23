@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/enums/answer_status.dart';
 import 'package:jeeni/enums/question_type.dart';
 import 'package:jeeni/models/test_download_response.dart';
+import 'package:jeeni/pages/solution/assertion_and_reason_solution.dart';
 import 'package:jeeni/pages/solution/integer_solution.dart';
 import 'package:jeeni/pages/solution/basic_solution.dart';
 import 'package:jeeni/pages/solution/numeric_solution.dart';
@@ -250,6 +251,14 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
         result: currentQuestion,
         solutionProvider: solutionProvider,
       ));
+    } else if (currentQuestion.questionType ==
+        QuestionType.ASSERTION_AND_REASON) {
+      return Expanded(
+        child: AssertionAndReasonSolution(
+          result: currentQuestion,
+          solutionProvider: solutionProvider,
+        ),
+      );
     } else {
       return const Expanded(
         child: Text("Data not found"),

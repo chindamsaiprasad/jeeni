@@ -282,7 +282,10 @@ class TestProgressProvider with ChangeNotifier {
     final index = currentQuestionIndex();
     questions.removeAt(index);
     questions.insert(index, _currentQuestion!);
-    // notifyListeners();
+    // Future.delayed(
+    //   Duration.zero,
+    //   () => notifyListeners(),
+    // );
   }
 
   void clearAnswer() {
@@ -352,8 +355,8 @@ class TestProgressProvider with ChangeNotifier {
               final userSelectedOption = question.userSelectedOption == null
                   ? -1
                   : int.parse(question.userSelectedOption!);
-              List<bool> userGivenAnswers = List.generate(
-                  10, (index) => (index + 1) == userSelectedOption);
+              List<bool> userGivenAnswers =
+                  List.generate(10, (index) => index == userSelectedOption);
               List.generate(10, (index) {
                 print("object");
                 print((index + 1));
@@ -375,7 +378,10 @@ class TestProgressProvider with ChangeNotifier {
 
         //--------------NUMERIC------------------
         if (question.questionType == "Numeric") {
-          if (question.customAnswerStatus == AnswerStatus.ANSWERED) {
+          if (question.customAnswerStatus == AnswerStatus.ANSWERED ||
+              question.customAnswerStatus ==
+                  AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW) {
+            print("11111111111111111111111111111111111111");
             if (question.solutionAvailable ?? false) {
               final numericAnswer = question.numericAnswer ?? -1;
               if (numericAnswer != -1) {
@@ -387,8 +393,12 @@ class TestProgressProvider with ChangeNotifier {
               }
             }
           } else if (question.customAnswerStatus == AnswerStatus.NOT_ANSWERED ||
-              question.customAnswerStatus == AnswerStatus.NOT_VISITED) {
+              question.customAnswerStatus == AnswerStatus.NOT_VISITED ||
+              question.customAnswerStatus == AnswerStatus.MARK_FOR_REVIEW) {
+            print("22222222222222222222222222222222222222222");
             status = 2;
+          } else {
+            print("33333333333333333333333333333333333333333  FALSE CONDITION");
           }
         }
 
@@ -399,7 +409,9 @@ class TestProgressProvider with ChangeNotifier {
             question.questionType == "Matrix") {
           String answer = "";
 
-          if (question.customAnswerStatus == AnswerStatus.ANSWERED) {
+          if (question.customAnswerStatus == AnswerStatus.ANSWERED ||
+              question.customAnswerStatus ==
+                  AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW) {
             if (question.isMultipleAnswer ?? false) {
               for (int index = 0;
                   index < (question.multipleAnswer?.length ?? 0);
@@ -437,7 +449,8 @@ class TestProgressProvider with ChangeNotifier {
               }
             }
           } else if (question.customAnswerStatus == AnswerStatus.NOT_ANSWERED ||
-              question.customAnswerStatus == AnswerStatus.NOT_VISITED) {
+              question.customAnswerStatus == AnswerStatus.NOT_VISITED ||
+              question.customAnswerStatus == AnswerStatus.MARK_FOR_REVIEW) {
             status = 2;
           }
         }

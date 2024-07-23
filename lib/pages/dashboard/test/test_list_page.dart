@@ -28,7 +28,10 @@ class _TestListPageState extends ConsumerState<TestListPage> {
       backgroundColor: Colors.grey[400],
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
-        title: const Text("Test",style: TextStyle(color: Colors.white,fontSize: 22),),
+        title: const Text(
+          "Test",
+          style: TextStyle(color: Colors.white, fontSize: 22),
+        ),
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
@@ -40,7 +43,10 @@ class _TestListPageState extends ConsumerState<TestListPage> {
           children: [
             const Padding(
               padding: EdgeInsets.only(left: 10),
-              child: Text("Mock Test",style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+              child: Text(
+                "Mock Test",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ),
             const SizedBox(
               height: 0,
@@ -64,7 +70,17 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(test.name ?? ""),
+                                        Expanded(
+                                          child: Text(
+                                            test.name ?? "",
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            // style: TextStyle(
+                                            //   fontSize: 12,
+                                            //   fontWeight: FontWeight.bold,
+                                            // ),
+                                          ),
+                                        ),
                                         ElevatedButton(
                                           style: ButtonStyle(
                                             backgroundColor:
@@ -98,21 +114,21 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                     deviceWidth: deviceWidth,
                                                     deviceHeight: deviceHeight)
                                                 .then((response) {
+                                              print(
+                                                  "first step ${response.toString()}");
 
-                                                  print("first step ${response.toString()}");
-                                                  
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       TestInstructions(
-                                                    test:
-                                                        test,
+                                                    test: test,
                                                   ),
                                                 ),
                                               ).then((toStart) {
                                                 if (toStart) {
-                                                  print("second steep $response");
+                                                  print(
+                                                      "second steep $response");
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
@@ -125,21 +141,24 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                   ).then((value) {
                                                     print(
                                                         "111111111111111111111111111");
-                                                        print("third steep $value");
+                                                    print("third steep $value");
 
                                                     if (value
                                                         is SubmitTestResponse) {
                                                       print(
                                                           "22222222222222222222222222222  if");
-                                                          print("fourth step $value");
+                                                      print(
+                                                          "fourth step $value");
                                                       Navigator.push<
                                                           SubmitTestResponse>(
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
                                                               ResultPage(
-                                                                  submitTestResponse:
-                                                                      value,test: test,),
+                                                            submitTestResponse:
+                                                                value,
+                                                            test: test,
+                                                          ),
                                                         ),
                                                       ).then(
                                                           (submitTestResponse) {
@@ -176,12 +195,17 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                               OverlayLoader.hide();
                                             });
                                           },
-                                          child: const Text("Attempt", style: TextStyle(color: Colors.white),),
+                                          child: const Text(
+                                            "Attempt",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
                                         ),
                                       ],
                                     ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         RichText(
                                           text: TextSpan(

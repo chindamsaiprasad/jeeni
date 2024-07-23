@@ -311,6 +311,11 @@ class QuestionMobileVos {
     print("5555555555555555555555555511111111111111");
 
     // columnMatchAnswer = json['columnMatchAnswer'].cast<String>();
+    columnMatchAnswer = (json['columnMatchAnswer'] as List<dynamic>?)
+            ?.map((e) => e as String)
+            .toList() ??
+        [];
+
     print("6666666666666666666666661111111111111 ${json['columnMatchAnswer']}");
 
     questionUrl = json['questionUrl'];
