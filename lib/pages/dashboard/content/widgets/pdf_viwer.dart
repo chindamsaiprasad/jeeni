@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
 
 class PdfViwerPage extends StatefulWidget {
   final String pdfTitleName;
@@ -10,6 +15,8 @@ class PdfViwerPage extends StatefulWidget {
 }
 
 class _PdfViwerPageState extends State<PdfViwerPage> {
+  final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,8 +28,30 @@ class _PdfViwerPageState extends State<PdfViwerPage> {
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.list,
+              color: Colors.white,
+              semanticLabel: 'Bookmark',
+            ),
+            onPressed: () {
+              _pdfViewerKey.currentState?.openBookmarkView();
+            },
+          ),
+        ],
       ),
-      body:Container(),
+      body:Container(
+        child: SfPdfViewer.network(
+          widget.pdfLink,
+          pageLayoutMode:
+              PdfPageLayoutMode.continuous,
+          scrollDirection:
+              PdfScrollDirection.vertical,
+          key: _pdfViewerKey,
+          // controller: _pdfViewerController,
+        ),
+      ),
     );
   }
 }

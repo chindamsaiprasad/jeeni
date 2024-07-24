@@ -87,7 +87,7 @@ class _SubjectPageState extends ConsumerState<SubjectPage> {
                 children: contentData
                     .map(
                       (content) => InkWell(
-                        // onTap: () => navigateToContent(context, content),
+                        onTap: () => navigateToContent(context, content),
                         child: Card(
                           elevation: 5,
                           child: Container(

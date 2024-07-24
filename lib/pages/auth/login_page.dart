@@ -32,10 +32,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   //     TextEditingController(text: "123456");
 
   final TextEditingController _userIdController =
-      TextEditingController(text: "joshi3036");
+      TextEditingController(text: "");
   // TextEditingController(text: "joshi_1452");
   final TextEditingController _passwordController =
-      TextEditingController(text: "abhi9826");
+      TextEditingController(text: "");
 
   final TextEditingController _phoneController = TextEditingController();
 

@@ -1,4 +1,4 @@
-package com.example.jeeni
+package com.jeeni.jeeni
 
 import io.flutter.embedding.android.FlutterActivity
 
