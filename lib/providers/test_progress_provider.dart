@@ -9,7 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jeeni/enums/answer_status.dart';
+import 'package:jeeni/enums/question_type.dart';
 import 'package:jeeni/models/test_download_response.dart';
+import 'package:jeeni/pages/solution/solution_provider.dart';
 import 'package:jeeni/providers/practice_test_provider.dart';
 import 'package:jeeni/providers/test_provider.dart';
 import 'package:jeeni/providers/test_time._provider.dart';
@@ -180,7 +182,23 @@ class TestProgressProvider with ChangeNotifier {
     //   focusNode.unfocus();
     // }
 
-    if (_currentQuestion?.isMultipleAnswer ?? false) {
+    if (_currentQuestion!.questionType == QuestionType.COLUMN_MATCHING) {
+      final userGivenColumnMatchAnswer =
+          _currentQuestion!.userGivenColumnMatchAnswer ?? ["", "", "", ""];
+      final emptyCount =
+          userGivenColumnMatchAnswer.where((element) => element.isEmpty).length;
+      if (emptyCount == 4) {
+        _currentQuestion = _currentQuestion?.copyWith(
+          customAnswerStatus: AnswerStatus.MARK_FOR_REVIEW,
+        );
+      } else {
+        _currentQuestion = _currentQuestion?.copyWith(
+          customAnswerStatus: AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW,
+        );
+      }
+
+      print('Number of empty elements: $emptyCount');
+    } else if (_currentQuestion?.isMultipleAnswer ?? false) {
       final multipleAnswer =
           _currentQuestion!.multipleAnswer ?? [false, false, false, false];
       int trueCount = multipleAnswer.where((element) => element).length;
@@ -290,6 +308,11 @@ class TestProgressProvider with ChangeNotifier {
 
   void clearAnswer() {
     if (_currentQuestion == null) return;
+
+    if (_currentQuestion!.questionType == QuestionType.COLUMN_MATCHING) {
+      _currentQuestion = _currentQuestion
+          ?.copyWith(userGivenColumnMatchAnswer: ["", "", "", ""]);
+    }
 
     if (_currentQuestion?.isMultipleAnswer ?? false) {
       _currentQuestion = _currentQuestion
@@ -409,6 +432,33 @@ class TestProgressProvider with ChangeNotifier {
         //--------------Assertion Ans Reason--------------
         if (question.questionType == "Column Matching") {
           print("COLUMN MATCHING :: ");
+          final userGivenColumnMatchAnswer =
+              question.userGivenColumnMatchAnswer ?? ["", "", "", ""];
+          if (question.customAnswerStatus == AnswerStatus.ANSWERED ||
+              question.customAnswerStatus ==
+                  AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW) {
+            final emptyCount = userGivenColumnMatchAnswer
+                .where((element) => element.isEmpty)
+                .length;
+            if (emptyCount == 4) {
+              status = 0;
+            } else {
+              const listEquality = ListEquality();
+              final isCorrect = listEquality.equals(
+                question.columnMatchAnswer ?? [],
+                userGivenColumnMatchAnswer,
+              );
+              status = isCorrect ? 1 : 0;
+            }
+          } else if (question.customAnswerStatus == AnswerStatus.NOT_ANSWERED ||
+              question.customAnswerStatus == AnswerStatus.NOT_VISITED ||
+              question.customAnswerStatus == AnswerStatus.MARK_FOR_REVIEW) {
+            status = 2;
+          } else {}
+
+          question.userSelectedOption = userGivenColumnMatchAnswer
+              .map((e) => e.isEmpty ? "" : e)
+              .join(',');
         }
 
         //--------------BASIC------------------
@@ -545,6 +595,31 @@ class TestProgressProvider with ChangeNotifier {
     final index = currentQuestionIndex();
     questions.removeAt(index);
     questions.insert(index, _currentQuestion!);
+  }
+
+  List<String> getUserGivenColoumAnswer() {
+    return _currentQuestion?.userGivenColumnMatchAnswer ?? ["", "", "", ""];
+  }
+
+  void setColoumMatchingAnswer(String value, int optionIndex) {
+    if (_currentQuestion == null) return;
+    final userGivenColumnMatchAnswer =
+        _currentQuestion?.userGivenColumnMatchAnswer ?? ["", "", "", ""];
+
+    userGivenColumnMatchAnswer[optionIndex] = value;
+
+    _currentQuestion = _currentQuestion!.copyWith(
+      userGivenColumnMatchAnswer: [...userGivenColumnMatchAnswer],
+      customAnswerStatus: AnswerStatus.ANSWERED,
+    );
+    print(_currentQuestion?.customAnswerStatus);
+
+    print(value);
+    print(optionIndex);
+    final index = currentQuestionIndex();
+    questions.removeAt(index);
+    questions.insert(index, _currentQuestion!);
+    notifyListeners();
   }
 }
 

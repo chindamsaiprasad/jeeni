@@ -231,6 +231,7 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
         child: Text("Data not found"),
       );
     }
+    print(currentQuestion.questionType);
     if (currentQuestion.questionType == QuestionType.COLUMN_MATCHING) {
       return Expanded(
         child: ColumnMatchingSolution(

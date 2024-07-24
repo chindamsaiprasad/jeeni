@@ -68,6 +68,7 @@ class Result {
   final List<bool> userGivenAnswers;
   final List<bool> answerValidity;
   final String questionType;
+  final List<String> columnMatchAnswer;
 
   Result({
     required this.testId,
@@ -86,6 +87,7 @@ class Result {
     required this.userGivenAnswers,
     required this.questionType,
     required this.answerValidity,
+    required this.columnMatchAnswer,
   });
 
   Result copyWith({
@@ -105,25 +107,26 @@ class Result {
     List<bool>? userGivenAnswers,
     List<bool>? answerValidity,
     String? questionType,
+    List<String>? columnMatchAnswer,
   }) {
     return Result(
-      testId: testId ?? this.testId,
-      section: section ?? this.section,
-      questionId: questionId ?? this.questionId,
-      status: status ?? this.status,
-      questionUrl: questionUrl ?? this.questionUrl,
-      solutionUrl: solutionUrl ?? this.solutionUrl,
-      timeTaken: timeTaken ?? this.timeTaken,
-      positiveMark: positiveMark ?? this.positiveMark,
-      negativeMark: negativeMark ?? this.negativeMark,
-      isMultipleAnswer: isMultipleAnswer ?? this.isMultipleAnswer,
-      userSelectedOption: userSelectedOption ?? this.userSelectedOption,
-      actualAnswer: actualAnswer ?? this.actualAnswer,
-      numericAnswer: numericAnswer ?? this.numericAnswer,
-      userGivenAnswers: userGivenAnswers ?? this.userGivenAnswers,
-      answerValidity: answerValidity ?? this.answerValidity,
-      questionType: questionType ?? this.questionType,
-    );
+        testId: testId ?? this.testId,
+        section: section ?? this.section,
+        questionId: questionId ?? this.questionId,
+        status: status ?? this.status,
+        questionUrl: questionUrl ?? this.questionUrl,
+        solutionUrl: solutionUrl ?? this.solutionUrl,
+        timeTaken: timeTaken ?? this.timeTaken,
+        positiveMark: positiveMark ?? this.positiveMark,
+        negativeMark: negativeMark ?? this.negativeMark,
+        isMultipleAnswer: isMultipleAnswer ?? this.isMultipleAnswer,
+        userSelectedOption: userSelectedOption ?? this.userSelectedOption,
+        actualAnswer: actualAnswer ?? this.actualAnswer,
+        numericAnswer: numericAnswer ?? this.numericAnswer,
+        userGivenAnswers: userGivenAnswers ?? this.userGivenAnswers,
+        answerValidity: answerValidity ?? this.answerValidity,
+        questionType: questionType ?? this.questionType,
+        columnMatchAnswer: columnMatchAnswer ?? this.columnMatchAnswer);
   }
 
   @override
@@ -163,86 +166,90 @@ class SolutionProvider with ChangeNotifier {
             case QuestionType.MATRIX:
             case QuestionType.ASSERTION_AND_REASON:
               return Result(
-                testId: testId!,
-                section: question.section ?? "",
-                questionId: question.id!,
-                status: Status.getStatus(userSolution?.status),
-                questionUrl: question.questionUrl ?? "",
-                solutionUrl: question.solutionUrl ?? "",
-                timeTaken: userSolution?.timeTaken ?? 0,
-                negativeMark: question.negativeMark ?? 0,
-                positiveMark: question.positiveMark ?? 0,
-                isMultipleAnswer: question.isMultipleAnswer ?? false,
-                userSelectedOption: userSolution?.userSelectedOption,
-                actualAnswer: null,
-                numericAnswer: null,
-                userGivenAnswers: userSolution?.userGivenAnswers ??
-                    [false, false, false, false],
-                questionType: question.questionType ?? "",
-                answerValidity: question.answerValidity ?? [],
-              );
+                  testId: testId!,
+                  section: question.section ?? "",
+                  questionId: question.id!,
+                  status: Status.getStatus(userSolution?.status),
+                  questionUrl: question.questionUrl ?? "",
+                  solutionUrl: question.solutionUrl ?? "",
+                  timeTaken: userSolution?.timeTaken ?? 0,
+                  negativeMark: question.negativeMark ?? 0,
+                  positiveMark: question.positiveMark ?? 0,
+                  isMultipleAnswer: question.isMultipleAnswer ?? false,
+                  userSelectedOption: userSolution?.userSelectedOption,
+                  actualAnswer: null,
+                  numericAnswer: null,
+                  userGivenAnswers: userSolution?.userGivenAnswers ??
+                      [false, false, false, false],
+                  questionType: question.questionType ?? "",
+                  answerValidity: question.answerValidity ?? [],
+                  columnMatchAnswer:
+                      question.columnMatchAnswer ?? ["", "", "", ""]);
 
             case QuestionType.NUMERIC:
               return Result(
-                testId: testId!,
-                section: question.section ?? "",
-                questionId: question.id!,
-                status: Status.getStatus(userSolution?.status),
-                questionUrl: question.questionUrl ?? "",
-                solutionUrl: question.solutionUrl ?? "",
-                timeTaken: userSolution?.timeTaken ?? 0,
-                negativeMark: question.negativeMark ?? 0,
-                positiveMark: question.positiveMark ?? 0,
-                isMultipleAnswer: question.isMultipleAnswer ?? false,
-                userSelectedOption: userSolution?.userSelectedOption,
-                actualAnswer: question.numericAnswer,
-                numericAnswer: null,
-                userGivenAnswers: userSolution?.userGivenAnswers ??
-                    [false, false, false, false],
-                questionType: question.questionType ?? "",
-                answerValidity: question.answerValidity ?? [],
-              );
+                  testId: testId!,
+                  section: question.section ?? "",
+                  questionId: question.id!,
+                  status: Status.getStatus(userSolution?.status),
+                  questionUrl: question.questionUrl ?? "",
+                  solutionUrl: question.solutionUrl ?? "",
+                  timeTaken: userSolution?.timeTaken ?? 0,
+                  negativeMark: question.negativeMark ?? 0,
+                  positiveMark: question.positiveMark ?? 0,
+                  isMultipleAnswer: question.isMultipleAnswer ?? false,
+                  userSelectedOption: userSolution?.userSelectedOption,
+                  actualAnswer: question.numericAnswer,
+                  numericAnswer: null,
+                  userGivenAnswers: userSolution?.userGivenAnswers ??
+                      [false, false, false, false],
+                  questionType: question.questionType ?? "",
+                  answerValidity: question.answerValidity ?? [],
+                  columnMatchAnswer:
+                      question.columnMatchAnswer ?? ["", "", "", ""]);
             case QuestionType.INTEGER:
               return Result(
-                testId: testId!,
-                section: question.section ?? "",
-                questionId: question.id!,
-                status: Status.getStatus(userSolution?.status),
-                questionUrl: question.questionUrl ?? "",
-                solutionUrl: question.solutionUrl ?? "",
-                timeTaken: userSolution?.timeTaken ?? 0,
-                negativeMark: question.negativeMark ?? 0,
-                positiveMark: question.positiveMark ?? 0,
-                isMultipleAnswer: question.isMultipleAnswer ?? false,
-                userSelectedOption: userSolution?.userSelectedOption,
-                actualAnswer: null,
-                numericAnswer: null,
-                userGivenAnswers: userSolution?.userGivenAnswers ??
-                    [false, false, false, false],
-                questionType: question.questionType ?? "",
-                answerValidity: question.answerValidity ?? [],
-              );
+                  testId: testId!,
+                  section: question.section ?? "",
+                  questionId: question.id!,
+                  status: Status.getStatus(userSolution?.status),
+                  questionUrl: question.questionUrl ?? "",
+                  solutionUrl: question.solutionUrl ?? "",
+                  timeTaken: userSolution?.timeTaken ?? 0,
+                  negativeMark: question.negativeMark ?? 0,
+                  positiveMark: question.positiveMark ?? 0,
+                  isMultipleAnswer: question.isMultipleAnswer ?? false,
+                  userSelectedOption: userSolution?.userSelectedOption,
+                  actualAnswer: null,
+                  numericAnswer: null,
+                  userGivenAnswers: userSolution?.userGivenAnswers ??
+                      [false, false, false, false],
+                  questionType: question.questionType ?? "",
+                  answerValidity: question.answerValidity ?? [],
+                  columnMatchAnswer:
+                      question.columnMatchAnswer ?? ["", "", "", ""]);
 
             default:
               return Result(
-                testId: testId!,
-                section: question.section ?? "",
-                questionId: question.id!,
-                status: Status.getStatus(userSolution?.status),
-                questionUrl: question.questionUrl ?? "",
-                solutionUrl: question.solutionUrl ?? "",
-                timeTaken: userSolution?.timeTaken ?? 0,
-                negativeMark: question.negativeMark ?? 0,
-                positiveMark: question.positiveMark ?? 0,
-                isMultipleAnswer: question.isMultipleAnswer ?? false,
-                userSelectedOption: userSolution?.userSelectedOption,
-                actualAnswer: null,
-                numericAnswer: null,
-                userGivenAnswers: userSolution?.userGivenAnswers ??
-                    [false, false, false, false],
-                questionType: question.questionType ?? "NA",
-                answerValidity: question.answerValidity ?? [],
-              );
+                  testId: testId!,
+                  section: question.section ?? "",
+                  questionId: question.id!,
+                  status: Status.getStatus(userSolution?.status),
+                  questionUrl: question.questionUrl ?? "",
+                  solutionUrl: question.solutionUrl ?? "",
+                  timeTaken: userSolution?.timeTaken ?? 0,
+                  negativeMark: question.negativeMark ?? 0,
+                  positiveMark: question.positiveMark ?? 0,
+                  isMultipleAnswer: question.isMultipleAnswer ?? false,
+                  userSelectedOption: userSolution?.userSelectedOption,
+                  actualAnswer: null,
+                  numericAnswer: null,
+                  userGivenAnswers: userSolution?.userGivenAnswers ??
+                      [false, false, false, false],
+                  questionType: question.questionType ?? "NA",
+                  answerValidity: question.answerValidity ?? [],
+                  columnMatchAnswer:
+                      question.columnMatchAnswer ?? ["", "", "", ""]);
           }
         }).toList();
       }
@@ -355,5 +362,22 @@ class SolutionProvider with ChangeNotifier {
       }
     }
     return null;
+  }
+
+  getUserGivenColoumAnswer() {
+    if (_currentQuestion == null) return ["", "", "", ""];
+    return _currentQuestion!.userSelectedOption == null
+        ? ["", "", "", ""]
+        : _currentQuestion!.userSelectedOption!.split(',');
+  }
+
+  String getActualAnswer() {
+    if (_currentQuestion == null) return "";
+    //Answers :-> A:p, B:p, C:q, D:r
+    final columnMatchAnswer = _currentQuestion!.columnMatchAnswer;
+    if (columnMatchAnswer.length == 4) {
+      return "Answers :-> A:${columnMatchAnswer[0]}, B:${columnMatchAnswer[1]}, C:${columnMatchAnswer[2]}, D:${columnMatchAnswer[3]}";
+    }
+    return "";
   }
 }

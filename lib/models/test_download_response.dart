@@ -215,6 +215,7 @@ class QuestionMobileVos {
   AnswerStatus customAnswerStatus = AnswerStatus.NOT_VISITED;
   String? userSelectedOption;
   List<bool>? multipleAnswer = [false, false, false, false];
+  List<String>? userGivenColumnMatchAnswer = ["", "", "", ""];
 
   QuestionMobileVos({
     this.id,
@@ -240,6 +241,7 @@ class QuestionMobileVos {
     required this.customAnswerStatus,
     this.userSelectedOption,
     this.multipleAnswer,
+    this.userGivenColumnMatchAnswer,
   });
 
   // QuestionMobileVos({
@@ -377,6 +379,7 @@ class QuestionMobileVos {
     AnswerStatus? customAnswerStatus,
     String? userSelectedOption,
     List<bool>? multipleAnswer,
+    List<String>? userGivenColumnMatchAnswer,
   }) {
     return QuestionMobileVos(
       id: id ?? this.id,
@@ -403,6 +406,8 @@ class QuestionMobileVos {
       customAnswerStatus: customAnswerStatus ?? this.customAnswerStatus,
       userSelectedOption: userSelectedOption ?? this.userSelectedOption,
       multipleAnswer: multipleAnswer ?? this.multipleAnswer,
+      userGivenColumnMatchAnswer:
+          userGivenColumnMatchAnswer ?? this.userGivenColumnMatchAnswer,
     );
   }
 

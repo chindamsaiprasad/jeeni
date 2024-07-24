@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 final options = ["A", "B", "C", "D"];
-final PQRSOptions = ["P", "Q", "R", "S"];
+final PQRSOptions = ["p", "q", "r", "s"];
 
 String? formatDateString(String? dateStr) {
   if (dateStr == null || dateStr.isEmpty) {

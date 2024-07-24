@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/models/test_download_response.dart';
 import 'package:jeeni/providers/test_progress_provider.dart';
+import 'package:jeeni/utils/app_colour.dart';
 import 'package:jeeni/utils/constants.dart';
 
 class ColoumMatchingQuestion extends ConsumerStatefulWidget {
@@ -18,6 +19,7 @@ class ColoumMatchingQuestion extends ConsumerStatefulWidget {
 }
 
 class _BasicQuestionState extends ConsumerState<ColoumMatchingQuestion> {
+  bool showOptions = false;
   @override
   Widget build(BuildContext context) {
     print(widget.question);
@@ -49,46 +51,145 @@ class _BasicQuestionState extends ConsumerState<ColoumMatchingQuestion> {
             ],
           ),
         ),
-        SizedBox(
-          height: 200,
-          child: _buildOptionButtons(ref),
+        Column(
+          children: [
+            SizedBox(
+              height: 35,
+              width: double.infinity,
+              child: TextButton.icon(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Colors.grey[300]),
+                ),
+                onPressed: () {
+                  setState(() {
+                    showOptions = !showOptions;
+                  });
+                },
+                icon: Icon(
+                  showOptions
+                      ? Icons.arrow_drop_up_rounded
+                      : Icons.arrow_drop_down,
+                  color: AppColour.green,
+                ),
+                label: showOptions
+                    ? const Text(
+                        "Hide",
+                        style: TextStyle(color: AppColour.green),
+                      )
+                    : const Text(
+                        "Show",
+                        style: TextStyle(color: AppColour.green),
+                      ),
+              ),
+            ),
+            AnimatedContainer(
+              height: showOptions ? 0 : 200,
+              duration: const Duration(milliseconds: 900),
+              curve: Curves.easeIn,
+              child: _buildOptionButtons(ref),
+            ),
+          ],
         ),
+       
+        // SizedBox(
+        //   height: 200,
+        //   width: MediaQuery.of(context).size.width,
+        //   child: _buildOptionButtons(ref),
+        // ),
       ],
     );
   }
 
   ListView _buildOptionButtons(WidgetRef ref) {
-    final userSelectedOption =
-        ref.watch(testProgressProvider).userSelectedOption;
+    final coloumMatchingAnswer =
+        ref.watch(testProgressProvider).getUserGivenColoumAnswer();
+
     return ListView.builder(
       scrollDirection: Axis.vertical,
       itemCount: options.length,
       itemBuilder: (context, index) {
         final option = options[index];
-        return Padding(
-          padding: const EdgeInsets.all(1),
-          child: Container(
-            color: Colors.amber,
-            height: 40,
-            width: MediaQuery.of(context).size.width,
-            child: Text("data"),
-            // child: Row(
-            //   children: PQRSOptions.map(
-            //     (option) => ListTile(
-            //       title: Text(option),
-            //       leading: Radio<String>(
-            //         value: option,
-            //         groupValue: userSelectedOption,
-            //         onChanged: (String? value) {},
+        return Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("$option)", style: const TextStyle(fontSize: 18)),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: PQRSOptions.map((e) {
+                      return Row(
+                        children: [
+                          Transform.scale(
+                            scale: 0.8,
+                            child: Radio<String>(
+                              // splashRadius: 5.0,
+                              value: e,
+                              toggleable: true,
+                              groupValue: coloumMatchingAnswer[index],
+                              onChanged: (String? value) {
+                                if (value != null) {
+                                  ref
+                                      .read(testProgressProvider)
+                                      .setColoumMatchingAnswer(value, index);
+                                }
+                              },
+                            ),
+                          ),
+                          Text(e),
+                        ],
+                      );
+                      // return Row(
+                      //   children: [
+                      //     Text(e),
+                      //     Radio<String>(
+                      //       splashRadius: 10.0,
+                      //       value: e,
+                      //       toggleable: true,
+                      //       groupValue: userSelectedOption,
+                      //       onChanged: (String? value) {},
+                      //     ),
+                      //   ],
+                      // );
+                    }).toList(),
+                  )
+                ],
+              ),
+            ),
+
+            // Expanded(
+            //   child: ListView(
+            //     scrollDirection: Axis.horizontal,
+            //     children: PQRSOptions.map(
+            //       (pqrsOption) => Container(
+            //         width: 50,
+            //         child: ListTile(
+            //           title: Text(pqrsOption),
+            //           leading: Radio<String>(
+            //             value: pqrsOption,
+            //             groupValue: userSelectedOption,
+            //             onChanged: (String? value) {
+            //               setState(() {
+            //                 // userSelectedOption = value;
+            //               });
+            //             },
+            //           ),
+            //         ),
             //       ),
-            //     ),
-            //   ).toList(),
+            //     ).toList(),
+            //   ),
             // ),
-          ),
+          ],
         );
       },
     );
   }
+
 }
 
 class ClearButton extends ConsumerWidget {
