@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/models/test_download_response.dart';
 import 'package:jeeni/pages/dashboard/test/questions_widget.dart/basic_question.dart';
@@ -109,6 +110,9 @@ class _NumericQuestionState extends ConsumerState<NumericQuestion> {
               focusNode: ref.read(testProgressProvider).focusNode,
               controller: ref.watch(testProgressProvider).textEditingController,
               keyboardType: TextInputType.number,
+              inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'(^\d{0,6}\.?\d{0,3})'))
+            ],
               textAlign: TextAlign.center,
               // onChanged: (value) {
               //   print("VALUE $value");

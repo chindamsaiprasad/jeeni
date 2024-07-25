@@ -47,7 +47,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         //     Icons.arrow_right),
 
         navigationList(() {
-          OverlayLoader.show(context: context, title: "Tests Loading...");
+          OverlayLoader.show(context: context, title: "Loading...");
           ref.read(testProvider).fetchAllTestsFromJeeniServer().then((response) {
             if (response.statusCode == 200) {
                 Navigator.push(context, MaterialPageRoute(
@@ -64,7 +64,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         }, FontAwesomeIcons.book, "Test", "Tests for student", Icons.arrow_right),
 
         navigationList(() {
-          OverlayLoader.show(context: context, title: "loading...");
+          OverlayLoader.show(context: context, title: "Loading...");
 
           ref.read(resultProvider).getAllResultsFromJeeniServer().then((response) {
             if(response.statusCode == 200){

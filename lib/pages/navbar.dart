@@ -23,6 +23,7 @@ import 'package:jeeni/providers/test_provider.dart';
 import 'package:jeeni/providers/user_provider.dart';
 import 'package:jeeni/utils/local_data_manager.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class NavBar extends StatefulWidget {
   final VoidCallback callback;
@@ -50,48 +51,40 @@ class _NavBarState extends State<NavBar> {
     updateProfileData();
   }
 
-  
-
   void updateProfileData() async {
-  try {
-    var value = await LocalDataManager().loadStudentFromLocal();
+    try {
+      var value = await LocalDataManager().loadStudentFromLocal();
 
-    setState(() {
-      userName = value.name ?? '';
-      userEmail = value.email ?? '';
-      userImageBase = value.mobileProfileImage ?? '';
+      setState(() {
+        userName = value.name ?? '';
+        userEmail = value.email ?? '';
+        userImageBase = value.mobileProfileImage ?? '';
 
-      dataImage = base64Decode(value.mobileProfileImage ?? '');
-    });
+        dataImage = base64Decode(value.mobileProfileImage ?? '');
+      });
 
-    // Optional: Print the loaded data
-    print("name  : ${value.name}");
-    // print("email : ${value.email}");
-    // print("profile password : ${value.mobileProfileImage}");
-
-
-  } catch (error) {
-    // Handle any errors that occur during loading
-    print("Error loading data: $error");
+      // Optional: Print the loaded data
+      print("name  : ${value.name}");
+      // print("email : ${value.email}");
+      // print("profile password : ${value.mobileProfileImage}");
+    } catch (error) {
+      // Handle any errors that occur during loading
+      print("Error loading data: $error");
+    }
   }
-} 
 
-
-final Uri _url = Uri.parse('https://www.jeeni.in/privacy-policy');
+  final Uri _url = Uri.parse('https://www.jeeni.in/privacy-policy');
 
   Future<void> _launchUrl() async {
-  if (!await launchUrl(_url)) {
-    throw Exception('Could not launch $_url');
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
   }
-}
-
-
-
 
   @override
-void dispose() {
-  super.dispose();
-}
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +96,6 @@ void dispose() {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              
               userProfileBoxDisplay(ref),
 
               ListTile(
@@ -147,7 +139,10 @@ void dispose() {
                   // ref.read(menuProvider).setSelectedMenu(MenuType.content);
 
                   OverlayLoader.show(context: context, title: "Loading...");
-                  ref.read(contentProvider).getAllSubscribedCoursesFromJeeniServer().then((response) {
+                  ref
+                      .read(contentProvider)
+                      .getAllSubscribedCoursesFromJeeniServer()
+                      .then((response) {
                         if (response.statusCode == 200) {
                           Navigator.push(
                             context,
@@ -158,7 +153,9 @@ void dispose() {
                         } else if (response.statusCode == 401) {
                           ref.read(networkErrorProvider).resolveError();
                         }
-                  }).catchError((error) {}).whenComplete(() => OverlayLoader.hide());
+                      })
+                      .catchError((error) {})
+                      .whenComplete(() => OverlayLoader.hide());
 
                   widget.callback();
                 },
@@ -203,9 +200,14 @@ void dispose() {
                   // ref.read(menuProvider).setSelectedMenu(MenuType.selfTest);
 
                   OverlayLoader.show(context: context, title: "Loading...");
-                  ref.read(testProvider).fetchAllTestsFromJeeniServer().then((response) {
+                  ref
+                      .read(testProvider)
+                      .fetchAllTestsFromJeeniServer()
+                      .then((response) {
                     if (response.statusCode == 200) {
-                      Navigator.push(context, MaterialPageRoute(
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
                           builder: (context) => const TestListPage(),
                         ),
                       );
@@ -215,7 +217,9 @@ void dispose() {
                   }).catchError((error) {
                     // TODO: Implement error handling logic
                     print('Error: $error');
-                  }).whenComplete(() { OverlayLoader.hide(); });
+                  }).whenComplete(() {
+                    OverlayLoader.hide();
+                  });
 
                   widget.callback();
                 },
@@ -241,13 +245,18 @@ void dispose() {
                   } else {
                     // ref.read(menuProvider).setSelectedMenu(MenuType.results);
                     OverlayLoader.show(context: context, title: "Loading...");
-                    ref.read(resultProvider).getAllResultsFromJeeniServer().then((response) {
-                      if(response.statusCode == 200){
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => const ResultsPage(),
-                        ),
-                      );
-                      } else if(response.statusCode == 401){
+                    ref
+                        .read(resultProvider)
+                        .getAllResultsFromJeeniServer()
+                        .then((response) {
+                      if (response.statusCode == 200) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ResultsPage(),
+                          ),
+                        );
+                      } else if (response.statusCode == 401) {
                         ref.read(networkErrorProvider).resolveError();
                       }
                       widget.callback();
@@ -293,38 +302,36 @@ void dispose() {
               ListTile(
                 leading: const Icon(
                   FontAwesomeIcons.user,
-                  color:  Colors.black38,
+                  color: Colors.black38,
                   size: 20,
                 ),
                 title: const Text(
                   "User Profile",
                   style: TextStyle(
-                    color:  Colors.black,
+                    color: Colors.black,
                   ),
                 ),
                 onTap: () {
-
-                  
-
                   OverlayLoader.show(context: context, title: "Loading...");
-                              ref.read(userProvider).saveUserDetails().then((response) {
-                                if (response.statusCode == 200) {
-                                  Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) => UserProfilePage( callback: updateProfileData),
-                                    ),
-                                  );
-                                  
-                                } else if (response.statusCode == 401) {
-                                  ref.read(networkErrorProvider).resolveError();
-                                }
-                                widget.callback();
-                              }).catchError((error) {
-                                print('Failed to fetch results: $error');
-                                
-                              }).whenComplete(() {
-                                OverlayLoader.hide();
-                              });
-                  
+                  ref.read(userProvider).saveUserDetails().then((response) {
+                    if (response.statusCode == 200) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              UserProfilePage(callback: updateProfileData),
+                        ),
+                      );
+                    } else if (response.statusCode == 401) {
+                      ref.read(networkErrorProvider).resolveError();
+                    }
+                    widget.callback();
+                  }).catchError((error) {
+                    print('Failed to fetch results: $error');
+                  }).whenComplete(() {
+                    OverlayLoader.hide();
+                  });
+
                   widget.callback();
                 },
               ),
@@ -344,19 +351,49 @@ void dispose() {
                         : Colors.black,
                   ),
                 ),
-               onTap: _launchUrl,
-            //     onTap: () {
-            //       // ref.read(menuProvider).setSelectedMenu(MenuType.selfTest);
-            //       Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => AboutUsPage()),
-            // );
-            //       widget.callback();
-            //     },
+                //  onTap: _launchUrl,
+                onTap: () async {
+                  // ref.read(menuProvider).setSelectedMenu(MenuType.selfTest);
+                  OverlayLoader.show(context: context, title: "Loading...");
+                  var controller = await WebViewController()
+                    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                    ..setBackgroundColor(const Color(0x00000000))
+                    ..setNavigationDelegate(
+                      NavigationDelegate(
+                        onProgress: (int progress) {
+                          // Update loading bar.
+                        },
+                        onPageStarted: (String url) {},
+                        onPageFinished: (String url) {
+                          OverlayLoader.hide();
+                        },
+                        onHttpError: (HttpResponseError error) {},
+                        onWebResourceError: (WebResourceError error) {},
+                        onNavigationRequest: (NavigationRequest request) {
+                          if (request.url
+                              .startsWith('https://www.youtube.com/')) {
+                            return NavigationDecision.prevent;
+                          }
+                          return NavigationDecision.navigate;
+                        },
+                      ),
+                    )
+                    ..loadRequest(
+                        Uri.parse('https://www.jeeni.in/privacy-policy'));
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AboutUsPage(
+                              controller: controller,
+                            )),
+                  );
+                  widget.callback();
+                },
               ),
               ListTile(
                 leading: Icon(
-                  FontAwesomeIcons.powerOff, 
+                  FontAwesomeIcons.powerOff,
                   size: 20,
                   color: selectedMenu == MenuType.logout
                       ? Colors.green
@@ -390,26 +427,30 @@ void dispose() {
   Widget userProfileBoxDisplay(WidgetRef ref) {
     Padding userProfileColumn() {
       return Padding(
-        padding: const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
+        padding:
+            const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 60,),
+            SizedBox(
+              height: 60,
+            ),
             Container(
               height: 90,
               width: 100,
               decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    // color: const Color(0xff7654FF),
-                    color: Colors.white,
-                    width: 3,
-                  ),
-                  image: DecorationImage(
-          image: NetworkImage('https://kuc-test.s3.ap-south-1.amazonaws.com/b187548d-2735-4519-84ec-815b8edeee84content'),
-          fit: BoxFit.cover,
-        ),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  // color: const Color(0xff7654FF),
+                  color: Colors.white,
+                  width: 3,
                 ),
+                image: DecorationImage(
+                  image: NetworkImage(
+                      'https://kuc-test.s3.ap-south-1.amazonaws.com/b187548d-2735-4519-84ec-815b8edeee84content'),
+                  fit: BoxFit.cover,
+                ),
+              ),
               // color: Colors.red,
               // child: CircleAvatar(
               //   child: ClipOval(
@@ -423,7 +464,9 @@ void dispose() {
               //   ),
               // ),
             ),
-            const SizedBox(height: 30,),
+            const SizedBox(
+              height: 30,
+            ),
             Text(
               userName,
               style: const TextStyle(color: Colors.white, fontSize: 16),
@@ -470,7 +513,7 @@ void dispose() {
                 //                 widget.callback();
                 //               }).catchError((error) {
                 //                 print('Failed to fetch results: $error');
-                                
+
                 //               }).whenComplete(() {
                 //                 OverlayLoader.hide();
                 //               });

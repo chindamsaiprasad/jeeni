@@ -9,6 +9,7 @@ class TimerWidget extends ConsumerWidget {
 
   void checkAndSubmitTest(WidgetRef ref, BuildContext context) {
     final timerService = ref.read(timerProvider);
+    
     if (timerService.duration == Duration.zero) {
       OverlayLoader.show(context: context, title: "Submitting");
       print("this wroks");
@@ -41,7 +42,7 @@ class TimerWidget extends ConsumerWidget {
       });
     }
 
-    return Text(
+    return timerService.duration == Duration.zero ? Container() : Text(
       '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
       style: const TextStyle(fontSize: 18, color: Colors.white),
     );

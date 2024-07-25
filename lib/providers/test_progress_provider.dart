@@ -127,8 +127,13 @@ class TestProgressProvider with ChangeNotifier {
 
   void initTimer() {
     final timerService = ref.read(timerProvider);
-    timerService.updateDuration(_remaingDurationInSeconds);
-    timerService.startTimer();
+
+    if(_remaingDurationInSeconds == 0){
+
+    } else{
+      timerService.updateDuration(_remaingDurationInSeconds);
+      timerService.startTimer();
+    }
 
     // _remaingDurationInSeconds =
     //     (testDownloadResponse.durationInMinutes ?? 0) * 60;

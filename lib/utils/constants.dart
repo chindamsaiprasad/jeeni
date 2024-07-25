@@ -43,3 +43,32 @@ class ImageConstants {
   static const String loginImageBg = "assets/images/loginImageBg.jpg";
   static const String profileImageBg = "assets/images/profileBg.jpg";
 }
+
+
+
+  String convertEpochToCustomTimeZone(int? ipocTime) {
+  // Check if the input is null
+  if (ipocTime == null) {
+    return '';
+  }
+
+  // Convert milliseconds to seconds
+  int epochTime = (ipocTime / 1000).round();
+
+  // Create a DateTime object from the epoch time
+  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(epochTime * 1000, isUtc: true);
+
+  // Define the desired timezone (GMT+05:30)
+  var desiredTimezone = 'Asia/Kolkata';
+
+  // Set the desired time zone
+  dateTime = dateTime.toUtc().add(const Duration(hours: 5, minutes: 30));
+
+  // Format the DateTime object to the desired timezone and format it
+  var formatter = DateFormat('dd/MM/yyyy').addPattern(' z');
+  String convertedTime = formatter.format(dateTime);
+
+  // Return the formatted time string
+  return convertedTime;
+}
+

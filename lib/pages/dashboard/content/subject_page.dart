@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/dashboard/content/widgets/pdf_viwer.dart';
 import 'package:jeeni/pages/dashboard/content/widgets/viemo_player.dart';
-import 'package:jeeni/pages/dashboard/content/widgets/youtube_player.dart';
+import 'package:jeeni/pages/dashboard/content/widgets/youtube_player/yoututbe_player.dart';
+import 'package:jeeni/pages/widgets/overlay_loader.dart';
 import 'package:jeeni/response_models/content_response.dart';
 import 'package:jeeni/utils/app_colour.dart';
+import 'package:http/http.dart' as http;
 
 class SubjectPage extends ConsumerStatefulWidget {
   final Chapter chapter;
@@ -29,11 +32,45 @@ class _SubjectPageState extends ConsumerState<SubjectPage> {
     selectedChapter = contentData.isNotEmpty ? contentData.first : null;
   }
 
+  Future<String> getContentType(String url) async {
+    try {
+      final response = await http.head(Uri.parse(url));
+      final contentType = response.headers['content-type'];
+
+      if(response.statusCode == 200){
+
+      if (contentType != null) {
+        if (contentType.contains('application/pdf')) {
+          return 'PDF';
+        } else if (contentType.contains('video/')) {
+          return 'Video';
+        }
+      }
+
+      if (url.contains('youtube.com') || url.contains('youtu.be')) {
+        return 'YouTube';
+      }
+      } else{
+        // EasyLoading.showError("something went wrong");
+        return "error";
+      }
+
+      return 'Unknown';
+    } catch (e) {
+      return 'Error';
+    }
+  }
 
 
-  void navigateToContent(BuildContext context, Content content) {
-    switch (content.contentType) {
-      case 'LMS':
+  void navigateToContent(BuildContext context, Content content) async {
+
+    String islinkworking = await getContentType(content.contentLink ?? '');
+
+    print("${islinkworking}");
+
+
+    switch (islinkworking) {
+      case 'PDF':
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -41,7 +78,7 @@ class _SubjectPageState extends ConsumerState<SubjectPage> {
           ),
         );
         break;
-      case 'Youtube':
+      case 'YouTube':
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -59,8 +96,11 @@ class _SubjectPageState extends ConsumerState<SubjectPage> {
         break;
       default:
         // Handle other content types if necessary
+        EasyLoading.showError("Content not available");
         break;
     }
+    
+    OverlayLoader.hide();
   }
 
   @override
@@ -69,7 +109,7 @@ class _SubjectPageState extends ConsumerState<SubjectPage> {
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
         title: Text(
-          widget.chapter.chapterName ?? "", 
+          "Chapter ${widget.chapter.chapterName}", 
           style: TextStyle(color: Colors.white, fontSize: 22),
         ),
         iconTheme: const IconThemeData(
@@ -87,7 +127,11 @@ class _SubjectPageState extends ConsumerState<SubjectPage> {
                 children: contentData
                     .map(
                       (content) => InkWell(
-                        onTap: () => navigateToContent(context, content),
+                        onTap: () {
+                          OverlayLoader.show(context: context, title: "Loading...");
+                          navigateToContent(context, content);
+
+                        },
                         child: Card(
                           elevation: 5,
                           child: Container(

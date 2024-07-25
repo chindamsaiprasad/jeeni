@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/dashboard/result/result_details_page.dart';
 import 'package:jeeni/pages/widgets/overlay_loader.dart';
@@ -22,7 +23,24 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
 
   List<ResultModelClass> resultData = [];
 
+  bool searchenable = false;
 
+  refreshResults(BuildContext context) {
+    // Add your onPressed code here!
+    OverlayLoader.show(context: context, title: "Loading...");
+
+    ref.read(resultProvider).getAllResultsFromJeeniServer().then((response) {
+      if (response.statusCode == 200) {
+      } else if (response.statusCode == 401) {
+        ref.read(networkErrorProvider).resolveError();
+      }
+    }).catchError((error) {
+      print('Failed to fetch results: $error');
+      // ref.read(networkErrorProvider).resolveError();
+    }).whenComplete(() {
+      OverlayLoader.hide();
+    });
+  }
 
   @override
   void dispose() {
@@ -33,34 +51,63 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:AppBar(
+      appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
-        title: const Text("Results", style: TextStyle(color: Colors.white,fontSize: 22),),
+        title: const Text(
+          "Attempted Test",
+          style: TextStyle(color: Colors.white, fontSize: 22),
+        ),
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.magnifyingGlass,
+              size: 18,
+            ),
+            onPressed: () {
+              // Add your onPressed code here!
+              setState(() {
+                searchenable = !searchenable;
+              });
+            },
+          ),
+          IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.arrowsRotate,
+              size: 18,
+            ),
+            onPressed: () {
+              refreshResults(context);
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 12,right: 12,left: 12,bottom: 0),
-            child: TextField(
-              controller: searchTextController,
-              decoration: InputDecoration(
-                hintText: 'Search test...',
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () {
-                    setState(() {});
-                  },
-                ),
-              ),
-              // onChanged: filterResults,
-              onChanged: (value) {
-                setState(() {});
-              },
-            ),
-          ),
+          searchenable
+              ? Padding(
+                  padding: const EdgeInsets.only(
+                      top: 12, right: 12, left: 12, bottom: 0),
+                  child: TextField(
+                    controller: searchTextController,
+                    decoration: InputDecoration(
+                      hintText: 'Search Test...',
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () {
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    // onChanged: filterResults,
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                  ),
+                )
+              : Container(),
           Expanded(
             child: Padding(
               padding:
@@ -85,23 +132,22 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
     // print("ok widget check ${resultData.length}  , and filterr ${filteredResultData.length}");
 
     return filteredResultData.isEmpty
-    ? Center(
-        child: Text(
-          'No results found',
-          style: TextStyle(fontSize: 18),
-        ),
-      )
-    : SizedBox(
-        // color: Colors.green,
-        child: ListView.builder(
-          itemCount: filteredResultData.length,
-          itemBuilder: (context, index) {
-            ResultModelClass data = filteredResultData[index];
-            return resultCard(data);
-          },
-        ),
-      );
-
+        ? Center(
+            child: Text(
+              'No results found',
+              style: TextStyle(fontSize: 18),
+            ),
+          )
+        : SizedBox(
+            // color: Colors.green,
+            child: ListView.builder(
+              itemCount: filteredResultData.length,
+              itemBuilder: (context, index) {
+                ResultModelClass data = filteredResultData[index];
+                return resultCard(data);
+              },
+            ),
+          );
   }
 
   Widget resultCard(ResultModelClass data) {
@@ -109,8 +155,14 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Attempted on : ${formatDateString(data.strExamDate)}",style: const TextStyle(fontSize: 14,color: Colors.black),),
-          Text("Duration : ${data.durationInMinutes} Minutes", style: const TextStyle(fontSize: 14,color: Colors.black),),
+          Text(
+            "Attempted on : ${formatDateString(data.strExamDate)}",
+            style: const TextStyle(fontSize: 14, color: Colors.black),
+          ),
+          Text(
+            "Duration : ${data.durationInMinutes} Minutes",
+            style: const TextStyle(fontSize: 14, color: Colors.black),
+          ),
         ],
       );
     }
@@ -145,10 +197,14 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
               onPressed: () {
                 //ToDo
                 OverlayLoader.show(context: context, title: "loading");
-                ref.read(resultProvider).getResultDetailsFromJeeniServer(data.id).then((value) {
-
+                ref
+                    .read(resultProvider)
+                    .getResultDetailsFromJeeniServer(data.id)
+                    .then((value) {
                   // print("data $value");
-                  Navigator.push(context, MaterialPageRoute(
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
                         builder: (context) => ResultDetailsPage(data: data)),
                   );
                 }).catchError((error) {
@@ -173,18 +229,22 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
       child: GestureDetector(
         onTap: () {
           OverlayLoader.show(context: context, title: "loading");
-                ref.read(resultProvider).getResultDetailsFromJeeniServer(data.id).then((value) {
-
-                  // print("data $value");
-                  Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => ResultDetailsPage(data: data)),
-                  );
-                }).catchError((error) {
-                  print('Failed to fetch results: $error');
-                  // ref.read(networkErrorProvider).resolveError();
-                }).whenComplete(() {
-                  OverlayLoader.hide();
-                });
+          ref
+              .read(resultProvider)
+              .getResultDetailsFromJeeniServer(data.id)
+              .then((value) {
+            // print("data $value");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ResultDetailsPage(data: data)),
+            );
+          }).catchError((error) {
+            print('Failed to fetch results: $error');
+            // ref.read(networkErrorProvider).resolveError();
+          }).whenComplete(() {
+            OverlayLoader.hide();
+          });
         },
         child: Container(
           height: 110,
