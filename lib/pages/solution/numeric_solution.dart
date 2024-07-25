@@ -68,7 +68,7 @@ class NumericSolution extends ConsumerWidget {
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: Colors.white,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -83,7 +83,7 @@ class NumericSolution extends ConsumerWidget {
                               style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: Colors.white,
                               ),
                               textAlign: TextAlign.center,
                             ),

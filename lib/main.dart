@@ -30,7 +30,10 @@ class MyApp extends StatelessWidget {
             LogoutOverlay.show(
               context: context,
               onTapYes: () {
-                ref.read(authenticationProvider.notifier).logOut().whenComplete(() {
+                ref
+                    .read(authenticationProvider.notifier)
+                    .logOut()
+                    .whenComplete(() {
                   ref.read(menuProvider).setSelectedMenu(MenuType.home);
                   LogoutOverlay.hide();
                 });
@@ -44,8 +47,10 @@ class MyApp extends StatelessWidget {
             AlreadyLoggedInOverlay.show(
               context: context,
               onTapYes: () {
-                
-                ref.read(authenticationProvider.notifier).logOut().then((value) => AlreadyLoggedInOverlay.hide());
+                ref
+                    .read(authenticationProvider.notifier)
+                    .logOut()
+                    .then((value) => AlreadyLoggedInOverlay.hide());
                 ref.read(menuProvider).setSelectedMenu(MenuType.home);
               },
             );
@@ -55,7 +60,7 @@ class MyApp extends StatelessWidget {
         final user = ref.watch(authenticationProvider);
 
         return user == null
-            ? const LoginPage() 
+            ? const LoginPage()
             : user.authenticationState.getPage(user.authenticationState);
       }),
       builder: EasyLoading.init(),

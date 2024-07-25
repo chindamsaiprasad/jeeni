@@ -24,6 +24,8 @@ class _BasicQuestionState extends ConsumerState<ColoumMatchingQuestion> {
   Widget build(BuildContext context) {
     print(widget.question);
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           child: Stack(
@@ -52,6 +54,8 @@ class _BasicQuestionState extends ConsumerState<ColoumMatchingQuestion> {
           ),
         ),
         Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
               height: 35,
@@ -83,14 +87,14 @@ class _BasicQuestionState extends ConsumerState<ColoumMatchingQuestion> {
               ),
             ),
             AnimatedContainer(
-              height: showOptions ? 0 : 200,
+              height: showOptions ? 0 : 160,
               duration: const Duration(milliseconds: 900),
               curve: Curves.easeIn,
               child: _buildOptionButtons(ref),
             ),
           ],
         ),
-       
+
         // SizedBox(
         //   height: 200,
         //   width: MediaQuery.of(context).size.width,
@@ -109,12 +113,13 @@ class _BasicQuestionState extends ConsumerState<ColoumMatchingQuestion> {
       itemCount: options.length,
       itemBuilder: (context, index) {
         final option = options[index];
-        return Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+        return SizedBox(
+          height: 40,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
                 children: [
                   Text("$option)", style: const TextStyle(fontSize: 18)),
                   const SizedBox(
@@ -160,36 +165,35 @@ class _BasicQuestionState extends ConsumerState<ColoumMatchingQuestion> {
                   )
                 ],
               ),
-            ),
 
-            // Expanded(
-            //   child: ListView(
-            //     scrollDirection: Axis.horizontal,
-            //     children: PQRSOptions.map(
-            //       (pqrsOption) => Container(
-            //         width: 50,
-            //         child: ListTile(
-            //           title: Text(pqrsOption),
-            //           leading: Radio<String>(
-            //             value: pqrsOption,
-            //             groupValue: userSelectedOption,
-            //             onChanged: (String? value) {
-            //               setState(() {
-            //                 // userSelectedOption = value;
-            //               });
-            //             },
-            //           ),
-            //         ),
-            //       ),
-            //     ).toList(),
-            //   ),
-            // ),
-          ],
+              // Expanded(
+              //   child: ListView(
+              //     scrollDirection: Axis.horizontal,
+              //     children: PQRSOptions.map(
+              //       (pqrsOption) => Container(
+              //         width: 50,
+              //         child: ListTile(
+              //           title: Text(pqrsOption),
+              //           leading: Radio<String>(
+              //             value: pqrsOption,
+              //             groupValue: userSelectedOption,
+              //             onChanged: (String? value) {
+              //               setState(() {
+              //                 // userSelectedOption = value;
+              //               });
+              //             },
+              //           ),
+              //         ),
+              //       ),
+              //     ).toList(),
+              //   ),
+              // ),
+            ],
+          ),
         );
       },
     );
   }
-
 }
 
 class ClearButton extends ConsumerWidget {

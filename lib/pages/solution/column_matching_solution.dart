@@ -80,7 +80,7 @@ class _ColumnMatchingSolutionState
         Column(
           children: [
             AnimatedContainer(
-              height: showOptions ? 0 : 200,
+              height: showOptions ? 0 : 160,
               duration: const Duration(milliseconds: 900),
               curve: Curves.easeIn,
               child: _buildOptionButtons(ref),
@@ -88,9 +88,20 @@ class _ColumnMatchingSolutionState
           ],
         ),
         !showOptions
-            ? Text(
-                ref.read(widget.solutionProvider).getActualAnswer(),
-                style: const TextStyle(fontSize: 18),
+            ? Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius:
+                      BorderRadius.circular(12), // Adjust the radius as needed
+                ),
+                child: Text(
+                  ref.read(widget.solutionProvider).getActualAnswer(),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
               )
             : Container(),
       ],
@@ -108,12 +119,13 @@ class _ColumnMatchingSolutionState
       itemCount: options.length,
       itemBuilder: (context, index) {
         final option = options[index];
-        return Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+        return SizedBox(
+          height: 40,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
                 children: [
                   Text("$option)", style: const TextStyle(fontSize: 18)),
                   const SizedBox(
@@ -159,8 +171,8 @@ class _ColumnMatchingSolutionState
                   )
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
