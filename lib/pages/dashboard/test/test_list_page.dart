@@ -238,6 +238,7 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                   builder: (context) =>
                                                       TestInstructions(
                                                     test: test,
+                                                    downloadTestResult: response,
                                                   ),
                                                 ),
                                               ).then((toStart) {

@@ -52,6 +52,9 @@ class ResultPage extends ConsumerWidget {
           "Result Summary",
           style: TextStyle(color: Colors.white),
         ),
+        iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -176,28 +179,33 @@ class ResultPage extends ConsumerWidget {
   }
 
   _buildResultCell(String title, String value, BuildContext context) {
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
+    return Container(
+      // height: 50,
+      constraints: BoxConstraints(minHeight: 50),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 14,
+            Expanded(
+              flex: 5,
+              child: Flexible(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 14,
+                  ),
                 ),
               ),
             ),
             Expanded(
-              child: Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 14,
+              flex: 5,
+              child: Flexible(
+                child: Text(
+                  "$value",
+                  style: const TextStyle(
+                    fontSize: 14,
+                  ),
                 ),
               ),
             ),

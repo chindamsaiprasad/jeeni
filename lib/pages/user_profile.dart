@@ -112,7 +112,7 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
         parentEmailController.text = user.parentEmail;
         parentMobileController.text = user.parentMobileNumber;
         cityNameController.text = user.city;
-        orgNameController.text = user.institute;
+        orgNameController.text = user.organizationVos[0].name;
         batchNameController.text = user.batchName;
         existingPassword = user.password;
         imageString = user.mobileProfileImage;

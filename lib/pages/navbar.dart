@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/about_page.dart';
@@ -150,6 +151,8 @@ class _NavBarState extends State<NavBar> {
                               builder: (context) => const ContentPage(),
                             ),
                           );
+                        } else if (response.statusCode == 204) {
+                          EasyLoading.showError("Content not found");
                         } else if (response.statusCode == 401) {
                           ref.read(networkErrorProvider).resolveError();
                         }
@@ -271,32 +274,47 @@ class _NavBarState extends State<NavBar> {
                   // widget.callback();
                 },
               ),
-              // ListTile(
-              //   leading: Icon(
-              //     Icons.warning_amber,
-              //     color: selectedMenu == MenuType.issueReport
-              //         ? Colors.green
-              //         : Colors.black38,
-              //   ),
-              //   title: Text(
-              //     "Issue Reporting",
-              //     style: TextStyle(
-              //       color: selectedMenu == MenuType.issueReport
-              //           ? Colors.green
-              //           : Colors.black,
-              //     ),
-              //   ),
-              //   onTap: () {
-              //     // ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) => const ReportIssuePage(),
-              //       ),
-              //     );
-              //     widget.callback();
-              //   },
-              // ),
+              ListTile(
+                leading: Icon(
+                  FontAwesomeIcons.triangleExclamation,
+                  size: 20,
+                  color: selectedMenu == MenuType.issueReport
+                      ? Colors.green
+                      : Colors.black38,
+                ),
+                title: Text(
+                  "Issue Reporting",
+                  style: TextStyle(
+                    color: selectedMenu == MenuType.issueReport
+                        ? Colors.green
+                        : Colors.black,
+                  ),
+                ),
+                onTap: () {
+                  // ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
+                  OverlayLoader.show(context: context, title: "Loading...");
+
+                  Future.delayed(
+                    Duration(seconds: 1),
+                    () {
+                      OverlayLoader.hide();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ReportIssuePage(),
+                        ),
+                      );
+                    },
+                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const ReportIssuePage(),
+                  //   ),
+                  // );
+                  widget.callback();
+                },
+              ),
 
               Divider(),
               ListTile(

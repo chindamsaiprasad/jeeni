@@ -341,28 +341,112 @@ class OrganizationVosTwo {
   late final bool isEnrollStudentRollnoWise;
   late final int productId;
   
-  OrganizationVosTwo.fromJson(Map<String, dynamic> json){
-    id = json['id'];
-    name = json['name'];
-    active = json['active'];
-    adminId = json['adminId'];
-    admin = json['admin'] ?? '';
-    batches = json['batches'] ?? '';
-    wifiAccessPointName = json['wifiAccessPointName'];
-    wifiPassword = json['wifiPassword'];
-    courseIds = json['courseIds'] ?? 0;
-    loginIdLabel = json['loginIdLabel'];
-    inetAddress = json['inetAddress'];
-    partialResult = json['partialResult'];
-    apkUrl = json['apkUrl'] ?? '';
-    apkVersion = json['apkVersion'];
-    resultVerificationFlag = json['resultVerificationFlag'];
-    isTestQuestionsDownload = json['isTestQuestionsDownload'];
-    isOnPrem = json['isOnPrem'];
-    noOfDevice = json['noOfDevice'];
-    isEnrollStudentRollnoWise = json['isEnrollStudentRollnoWise'];
-    productId = json['productId'];
-  }
+  // OrganizationVosTwo.fromJson(Map<String, dynamic> json){
+  //   id = json['id'];
+  //   print("1");
+  //   name = json['name'];
+  //   print("2");
+  //   active = json['active'];
+  //   print("11111111");
+  //   adminId = json['adminId'];
+  //   print("11111111");
+  //   admin = json['admin'] ?? '';
+  //   print("11111111");
+  //   batches = json['batches'] ?? '';
+  //   print("11111111");
+  //   wifiAccessPointName = json['wifiAccessPointName'];
+  //   print("11111111");
+  //   wifiPassword = json['wifiPassword'];
+  //   print("11111111");
+  //   courseIds = json['courseIds'] ?? 0;
+  //   print("11111111");
+  //   loginIdLabel = json['loginIdLabel'];
+  //   print("11111111");
+  //   inetAddress = json['inetAddress'];
+  //   print("11111111");
+  //   partialResult = json['partialResult'];
+  //   print("11111111");
+  //   apkUrl = json['apkUrl'] ?? '';
+  //   print("11111111");
+  //   apkVersion = json['apkVersion'];
+  //   print("11111111");
+  //   resultVerificationFlag = json['resultVerificationFlag'];
+  //   print("11111111");
+  //   isTestQuestionsDownload = json['isTestQuestionsDownload'];
+  //   print("11111111");
+  //   isOnPrem = json['isOnPrem'];
+  //   print("11111111");
+  //   noOfDevice = json['noOfDevice'];
+  //   print("11111111");
+  //   isEnrollStudentRollnoWise = json['isEnrollStudentRollnoWise'];
+  //   print("11111111");
+  //   productId = json['productId'];
+  //   print("11111111");
+  // }
+
+
+  OrganizationVosTwo.fromJson(Map<String, dynamic> json) {
+  id = json['id'];
+  print("Step 1: id = $id");
+  
+  name = json['name'];
+  print("Step 2: name = $name");
+  
+  active = json['active'];
+  print("Step 3: active = $active");
+  
+  adminId = json['adminId'];
+  print("Step 4: adminId = $adminId");
+  
+  admin = json['admin'] ?? '';
+  print("Step 5: admin = $admin");
+  
+  batches = json['batches'] ?? '';
+  print("Step 6: batches = $batches");
+  
+  wifiAccessPointName = json['wifiAccessPointName'] ?? '';
+  print("Step 7: wifiAccessPointName = $wifiAccessPointName");
+  
+  wifiPassword = json['wifiPassword'] ?? '';
+  print("Step 8: wifiPassword = $wifiPassword");
+  
+  courseIds = json['courseIds'] ?? 0;
+  print("Step 9: courseIds = $courseIds");
+  
+  loginIdLabel = json['loginIdLabel'];
+  print("Step 10: loginIdLabel = $loginIdLabel");
+  
+  inetAddress = json['inetAddress'] ?? '';
+  print("Step 11: inetAddress = $inetAddress");
+  
+  partialResult = json['partialResult'];
+  print("Step 12: partialResult = $partialResult");
+  
+  apkUrl = json['apkUrl'] ?? '';
+  print("Step 13: apkUrl = $apkUrl");
+  
+  apkVersion = json['apkVersion'];
+  print("Step 14: apkVersion = $apkVersion");
+  
+  resultVerificationFlag = json['resultVerificationFlag'];
+  print("Step 15: resultVerificationFlag = $resultVerificationFlag");
+  
+  isTestQuestionsDownload = json['isTestQuestionsDownload'];
+  print("Step 16: isTestQuestionsDownload = $isTestQuestionsDownload");
+  
+  isOnPrem = json['isOnPrem'];
+  print("Step 17: isOnPrem = $isOnPrem");
+  
+  noOfDevice = json['noOfDevice'];
+  print("Step 18: noOfDevice = $noOfDevice");
+  
+  isEnrollStudentRollnoWise = json['isEnrollStudentRollnoWise'];
+  print("Step 19: isEnrollStudentRollnoWise = $isEnrollStudentRollnoWise");
+  
+  productId = json['productId'];
+  print("Step 20: productId = $productId");
+}
+
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
