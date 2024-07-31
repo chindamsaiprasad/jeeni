@@ -4,11 +4,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jeeni/response_models/view_solution.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:jeeni/enums/question_type.dart';
 import 'package:jeeni/models/test_download_response.dart';
 import 'package:jeeni/response_models/submit_test_response.dart';
+
+class Solution with ChangeNotifier {}
 
 enum Status {
   INCORRECT_ANSWER,
@@ -135,191 +138,264 @@ class Result {
   }
 }
 
+// class SolutionProvider with ChangeNotifier {
+//   final SubmitTestResponse submitTestResponse;
+//   // late ViewSolution viewSolution;
+//   final Ref ref;
+//   List<QuestionMobileVos> _questions = [];
+//   // Map<int, QuestionResult> userSolutions = {};
+
+//   List<Result> _solution = [];
+
+//   Result? _currentQuestion;
+
+//   SolutionProvider({
+//     required this.submitTestResponse,
+//     required this.ref,
+//   }) {
+//     _questions = submitTestResponse.questions ?? [];
+//     final testId = submitTestResponse.testId;
+//     if (_questions.isNotEmpty) {
+//       final userSolutions = submitTestResponse.questionResult ?? [];
+//       if (userSolutions.isNotEmpty) {
+//         _solution = _questions.map((question) {
+//           final userSolution =
+//               findUserSolutionById(question.id!, userSolutions);
+
+//           switch (question.questionType ?? "") {
+//             case QuestionType.BASIC:
+//             case QuestionType.COLUMN_MATCHING:
+//             case QuestionType.COMPREHENSION:
+//             case QuestionType.MATRIX:
+//             case QuestionType.ASSERTION_AND_REASON:
+//               return Result(
+//                   testId: testId!,
+//                   section: question.section ?? "",
+//                   questionId: question.id!,
+//                   status: Status.getStatus(userSolution?.status),
+//                   questionUrl: question.questionUrl ?? "",
+//                   solutionUrl: question.solutionUrl ?? "",
+//                   timeTaken: userSolution?.timeTaken ?? 0,
+//                   negativeMark: question.negativeMark ?? 0,
+//                   positiveMark: question.positiveMark ?? 0,
+//                   isMultipleAnswer: question.isMultipleAnswer ?? false,
+//                   userSelectedOption: userSolution?.userSelectedOption,
+//                   actualAnswer: null,
+//                   numericAnswer: null,
+//                   userGivenAnswers: userSolution?.userGivenAnswers ??
+//                       [false, false, false, false],
+//                   questionType: question.questionType ?? "",
+//                   answerValidity: question.answerValidity ?? [],
+//                   columnMatchAnswer:
+//                       question.columnMatchAnswer ?? ["", "", "", ""]);
+
+//             case QuestionType.NUMERIC:
+//               return Result(
+//                   testId: testId!,
+//                   section: question.section ?? "",
+//                   questionId: question.id!,
+//                   status: Status.getStatus(userSolution?.status),
+//                   questionUrl: question.questionUrl ?? "",
+//                   solutionUrl: question.solutionUrl ?? "",
+//                   timeTaken: userSolution?.timeTaken ?? 0,
+//                   negativeMark: question.negativeMark ?? 0,
+//                   positiveMark: question.positiveMark ?? 0,
+//                   isMultipleAnswer: question.isMultipleAnswer ?? false,
+//                   userSelectedOption: userSolution?.userSelectedOption,
+//                   actualAnswer: question.numericAnswer,
+//                   numericAnswer: null,
+//                   userGivenAnswers: userSolution?.userGivenAnswers ??
+//                       [false, false, false, false],
+//                   questionType: question.questionType ?? "",
+//                   answerValidity: question.answerValidity ?? [],
+//                   columnMatchAnswer:
+//                       question.columnMatchAnswer ?? ["", "", "", ""]);
+//             case QuestionType.INTEGER:
+//               return Result(
+//                   testId: testId!,
+//                   section: question.section ?? "",
+//                   questionId: question.id!,
+//                   status: Status.getStatus(userSolution?.status),
+//                   questionUrl: question.questionUrl ?? "",
+//                   solutionUrl: question.solutionUrl ?? "",
+//                   timeTaken: userSolution?.timeTaken ?? 0,
+//                   negativeMark: question.negativeMark ?? 0,
+//                   positiveMark: question.positiveMark ?? 0,
+//                   isMultipleAnswer: question.isMultipleAnswer ?? false,
+//                   userSelectedOption: userSolution?.userSelectedOption,
+//                   actualAnswer: null,
+//                   numericAnswer: null,
+//                   userGivenAnswers: userSolution?.userGivenAnswers ??
+//                       [false, false, false, false],
+//                   questionType: question.questionType ?? "",
+//                   answerValidity: question.answerValidity ?? [],
+//                   columnMatchAnswer:
+//                       question.columnMatchAnswer ?? ["", "", "", ""]);
+
+//             default:
+//               return Result(
+//                   testId: testId!,
+//                   section: question.section ?? "",
+//                   questionId: question.id!,
+//                   status: Status.getStatus(userSolution?.status),
+//                   questionUrl: question.questionUrl ?? "",
+//                   solutionUrl: question.solutionUrl ?? "",
+//                   timeTaken: userSolution?.timeTaken ?? 0,
+//                   negativeMark: question.negativeMark ?? 0,
+//                   positiveMark: question.positiveMark ?? 0,
+//                   isMultipleAnswer: question.isMultipleAnswer ?? false,
+//                   userSelectedOption: userSolution?.userSelectedOption,
+//                   actualAnswer: null,
+//                   numericAnswer: null,
+//                   userGivenAnswers: userSolution?.userGivenAnswers ??
+//                       [false, false, false, false],
+//                   questionType: question.questionType ?? "NA",
+//                   answerValidity: question.answerValidity ?? [],
+//                   columnMatchAnswer:
+//                       question.columnMatchAnswer ?? ["", "", "", ""]);
+//           }
+//         }).toList();
+//       }
+//       _currentQuestion = _solution.first;
+//     }
+//   }
+
+//   Result? get currentQuestion => _currentQuestion;
+
+//   List<Result> get getQuestion => _solution;
+
+//   Result? get getCurrentQuestion => _currentQuestion;
+
+//   int get getQuestionCount => _solution.length;
+
+//   void updateCurrentQuestion(int questionId) {
+//     // final currentQuestion = getCurrentQuestion;
+//     if (questionId == 0) return;
+
+//     final tempList = [..._solution];
+//     var index =
+//         tempList.indexWhere((question) => question.questionId == questionId);
+//     _currentQuestion = tempList.elementAt(index).copyWith();
+//     // _reset();
+//     notifyListeners();
+//   }
+
+//   void next() {
+//     final currentQuestion = getCurrentQuestion;
+//     if (currentQuestion == null) return;
+//     final tempList = [..._solution];
+//     var index = tempList.indexWhere(
+//         (question) => question.questionId == currentQuestion.questionId);
+
+//     index = index + 1;
+//     if ((index) < tempList.length) {
+//       _currentQuestion = tempList.elementAt(index).copyWith();
+//     } else {
+//       _currentQuestion = tempList.first.copyWith();
+//     }
+//     notifyListeners();
+//   }
+
+//   int currentQuestionIndex() {
+//     final currentQuestion = getCurrentQuestion;
+//     if (currentQuestion == null) return -1;
+//     return [..._solution].indexWhere(
+//         (question) => question.questionId == currentQuestion.questionId);
+//   }
+
+//   void previous() {
+//     final currentQuestion = getCurrentQuestion;
+//     if (currentQuestion == null) return;
+
+//     final tempList = [..._solution];
+//     var index = tempList.indexWhere(
+//         (question) => question.questionId == currentQuestion.questionId);
+
+//     index = index - 1;
+//     if ((index) >= 0) {
+//       _currentQuestion = tempList.elementAt(index).copyWith();
+//     } else {
+//       _currentQuestion = tempList.last.copyWith();
+//     }
+//     notifyListeners();
+//   }
+
+//   bool showSolutionImage = false;
+//   void solutionImage() {
+//     showSolutionImage = !showSolutionImage;
+//     notifyListeners();
+//   }
+
+//   QuestionResult? findUserSolutionById(
+//       int questionId, List<QuestionResult> userSolutions) {
+//     for (var solution in userSolutions) {
+//       if (solution.questionId == questionId) {
+//         return solution;
+//       }
+//     }
+//     return null;
+//   }
+
+//   getUserGivenColoumAnswer() {
+//     if (_currentQuestion == null) return ["", "", "", ""];
+//     return _currentQuestion!.userSelectedOption == null
+//         ? ["", "", "", ""]
+//         : _currentQuestion!.userSelectedOption!.split(',');
+//   }
+
+//   String getActualAnswer() {
+//     if (_currentQuestion == null) return "";
+//     //Answers :-> A:p, B:p, C:q, D:r
+//     final columnMatchAnswer = _currentQuestion!.columnMatchAnswer;
+//     if (columnMatchAnswer.length == 4) {
+//       return "Answers :-> A:${columnMatchAnswer[0]}, B:${columnMatchAnswer[1]}, C:${columnMatchAnswer[2]}, D:${columnMatchAnswer[3]}";
+//     }
+//     return "";
+//   }
+// }
+
 class SolutionProvider with ChangeNotifier {
-  final SubmitTestResponse submitTestResponse;
-
-  List<QuestionMobileVos> _questions = [];
-  // Map<int, QuestionResult> userSolutions = {};
-
-  List<Result> _solution = [];
-
-  Result? _currentQuestion;
-
   final Ref ref;
+  final List<Result> solution;
+  Result currentQuestion;
+
   SolutionProvider({
-    required this.submitTestResponse,
+    required this.solution,
     required this.ref,
-  }) {
-    _questions = submitTestResponse.questions ?? [];
-    final testId = submitTestResponse.testId;
-    if (_questions.isNotEmpty) {
-      final userSolutions = submitTestResponse.questionResult ?? [];
-      if (userSolutions.isNotEmpty) {
-        _solution = _questions.map((question) {
-          final userSolution =
-              findUserSolutionById(question.id!, userSolutions);
+    required this.currentQuestion,
+  });
 
-          switch (question.questionType ?? "") {
-            case QuestionType.BASIC:
-            case QuestionType.COLUMN_MATCHING:
-            case QuestionType.COMPREHENSION:
-            case QuestionType.MATRIX:
-            case QuestionType.ASSERTION_AND_REASON:
-              return Result(
-                  testId: testId!,
-                  section: question.section ?? "",
-                  questionId: question.id!,
-                  status: Status.getStatus(userSolution?.status),
-                  questionUrl: question.questionUrl ?? "",
-                  solutionUrl: question.solutionUrl ?? "",
-                  timeTaken: userSolution?.timeTaken ?? 0,
-                  negativeMark: question.negativeMark ?? 0,
-                  positiveMark: question.positiveMark ?? 0,
-                  isMultipleAnswer: question.isMultipleAnswer ?? false,
-                  userSelectedOption: userSolution?.userSelectedOption,
-                  actualAnswer: null,
-                  numericAnswer: null,
-                  userGivenAnswers: userSolution?.userGivenAnswers ??
-                      [false, false, false, false],
-                  questionType: question.questionType ?? "",
-                  answerValidity: question.answerValidity ?? [],
-                  columnMatchAnswer:
-                      question.columnMatchAnswer ?? ["", "", "", ""]);
+  // Result get currentQuestion => currentQuestion;
 
-            case QuestionType.NUMERIC:
-              return Result(
-                  testId: testId!,
-                  section: question.section ?? "",
-                  questionId: question.id!,
-                  status: Status.getStatus(userSolution?.status),
-                  questionUrl: question.questionUrl ?? "",
-                  solutionUrl: question.solutionUrl ?? "",
-                  timeTaken: userSolution?.timeTaken ?? 0,
-                  negativeMark: question.negativeMark ?? 0,
-                  positiveMark: question.positiveMark ?? 0,
-                  isMultipleAnswer: question.isMultipleAnswer ?? false,
-                  userSelectedOption: userSolution?.userSelectedOption,
-                  actualAnswer: question.numericAnswer,
-                  numericAnswer: null,
-                  userGivenAnswers: userSolution?.userGivenAnswers ??
-                      [false, false, false, false],
-                  questionType: question.questionType ?? "",
-                  answerValidity: question.answerValidity ?? [],
-                  columnMatchAnswer:
-                      question.columnMatchAnswer ?? ["", "", "", ""]);
-            case QuestionType.INTEGER:
-              return Result(
-                  testId: testId!,
-                  section: question.section ?? "",
-                  questionId: question.id!,
-                  status: Status.getStatus(userSolution?.status),
-                  questionUrl: question.questionUrl ?? "",
-                  solutionUrl: question.solutionUrl ?? "",
-                  timeTaken: userSolution?.timeTaken ?? 0,
-                  negativeMark: question.negativeMark ?? 0,
-                  positiveMark: question.positiveMark ?? 0,
-                  isMultipleAnswer: question.isMultipleAnswer ?? false,
-                  userSelectedOption: userSolution?.userSelectedOption,
-                  actualAnswer: null,
-                  numericAnswer: null,
-                  userGivenAnswers: userSolution?.userGivenAnswers ??
-                      [false, false, false, false],
-                  questionType: question.questionType ?? "",
-                  answerValidity: question.answerValidity ?? [],
-                  columnMatchAnswer:
-                      question.columnMatchAnswer ?? ["", "", "", ""]);
+  List<Result> get getQuestion => solution;
 
-            default:
-              return Result(
-                  testId: testId!,
-                  section: question.section ?? "",
-                  questionId: question.id!,
-                  status: Status.getStatus(userSolution?.status),
-                  questionUrl: question.questionUrl ?? "",
-                  solutionUrl: question.solutionUrl ?? "",
-                  timeTaken: userSolution?.timeTaken ?? 0,
-                  negativeMark: question.negativeMark ?? 0,
-                  positiveMark: question.positiveMark ?? 0,
-                  isMultipleAnswer: question.isMultipleAnswer ?? false,
-                  userSelectedOption: userSolution?.userSelectedOption,
-                  actualAnswer: null,
-                  numericAnswer: null,
-                  userGivenAnswers: userSolution?.userGivenAnswers ??
-                      [false, false, false, false],
-                  questionType: question.questionType ?? "NA",
-                  answerValidity: question.answerValidity ?? [],
-                  columnMatchAnswer:
-                      question.columnMatchAnswer ?? ["", "", "", ""]);
-          }
-        }).toList();
-      }
-      _currentQuestion = _solution.first;
-    }
-  }
+  Result? get getCurrentQuestion => currentQuestion;
 
-  Result? get currentQuestion => _currentQuestion;
-
-  List<Result> get getQuestion => _solution;
-
-  Result? get getCurrentQuestion => _currentQuestion;
-
-  int get getQuestionCount => _solution.length;
-
-  // Future<void> _storeLocally(SubmitTestResponse submitTestResponse) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   String userJson = submitTestResponse.toJson().toString();
-  //   await prefs.setString("submitTestResponse", userJson);
-  //   print(prefs.getString("submitTestResponse"));
-  //   print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
-  // }
-
-  // Future<void> _load() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   String? userJson = prefs.getString("submitTestResponse");
-  //   if (userJson != null) {
-  //     Map<String, dynamic> userMap =
-  //         Map<String, dynamic>.from(jsonDecode(userJson));
-  //     final submitTestResponse = SubmitTestResponse.fromJson(userMap);
-
-  //     _questions = submitTestResponse.questions ?? [];
-  //     if (_questions.isNotEmpty) {
-  //       _currentQuestion = _questions.first;
-
-  //       userSolutions = Map.fromEntries(
-  //         (submitTestResponse.questionResult ?? []).map(
-  //           (userSolution) => MapEntry(userSolution.questionId!, userSolution),
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
+  int get getQuestionCount => solution.length;
 
   void updateCurrentQuestion(int questionId) {
-    // final currentQuestion = getCurrentQuestion;
     if (questionId == 0) return;
 
-    final tempList = [..._solution];
+    final tempList = [...solution];
     var index =
         tempList.indexWhere((question) => question.questionId == questionId);
-
-    // print("ok provider checking $index ${tempList.elementAt(index).copyWith().id}");
-    _currentQuestion = tempList.elementAt(index).copyWith();
+    currentQuestion = tempList.elementAt(index).copyWith();
     // _reset();
     notifyListeners();
   }
 
   void next() {
-    final currentQuestion = getCurrentQuestion;
-    if (currentQuestion == null) return;
-    final tempList = [..._solution];
+    // final currentQuestion = getCurrentQuestion;
+    // if (currentQuestion == null) return;
+    final tempList = [...solution];
     var index = tempList.indexWhere(
         (question) => question.questionId == currentQuestion.questionId);
 
     index = index + 1;
     if ((index) < tempList.length) {
-      _currentQuestion = tempList.elementAt(index).copyWith();
+      currentQuestion = tempList.elementAt(index).copyWith();
     } else {
-      _currentQuestion = tempList.first.copyWith();
+      currentQuestion = tempList.first.copyWith();
     }
     notifyListeners();
   }
@@ -327,23 +403,23 @@ class SolutionProvider with ChangeNotifier {
   int currentQuestionIndex() {
     final currentQuestion = getCurrentQuestion;
     if (currentQuestion == null) return -1;
-    return [..._solution].indexWhere(
+    return [...solution].indexWhere(
         (question) => question.questionId == currentQuestion.questionId);
   }
 
   void previous() {
-    final currentQuestion = getCurrentQuestion;
-    if (currentQuestion == null) return;
+    // final currentQuestion = getCurrentQuestion;
+    // if (currentQuestion == null) return;
 
-    final tempList = [..._solution];
+    final tempList = [...solution];
     var index = tempList.indexWhere(
         (question) => question.questionId == currentQuestion.questionId);
 
     index = index - 1;
     if ((index) >= 0) {
-      _currentQuestion = tempList.elementAt(index).copyWith();
+      currentQuestion = tempList.elementAt(index).copyWith();
     } else {
-      _currentQuestion = tempList.last.copyWith();
+      currentQuestion = tempList.last.copyWith();
     }
     notifyListeners();
   }
@@ -365,16 +441,16 @@ class SolutionProvider with ChangeNotifier {
   }
 
   getUserGivenColoumAnswer() {
-    if (_currentQuestion == null) return ["", "", "", ""];
-    return _currentQuestion!.userSelectedOption == null
+    // if (_currentQuestion == null) return ["", "", "", ""];
+    return currentQuestion!.userSelectedOption == null
         ? ["", "", "", ""]
-        : _currentQuestion!.userSelectedOption!.split(',');
+        : currentQuestion!.userSelectedOption!.split(',');
   }
 
   String getActualAnswer() {
-    if (_currentQuestion == null) return "";
+    // if (_currentQuestion == null) return "";
     //Answers :-> A:p, B:p, C:q, D:r
-    final columnMatchAnswer = _currentQuestion!.columnMatchAnswer;
+    final columnMatchAnswer = currentQuestion!.columnMatchAnswer;
     if (columnMatchAnswer.length == 4) {
       return "Answers :-> A:${columnMatchAnswer[0]}, B:${columnMatchAnswer[1]}, C:${columnMatchAnswer[2]}, D:${columnMatchAnswer[3]}";
     }

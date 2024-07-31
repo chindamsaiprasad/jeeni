@@ -19,37 +19,41 @@ class ResultProvider with ChangeNotifier {
     required this.ref,
   });
 
-  List<ResultModelClass> resultData=[];
+  List<ResultModelClass> resultData = [];
   Map<String, dynamic>? resultDetailsData;
 
   Future<http.Response> getAllResultsFromJeeniServer() async {
-    final response = await ref.read(networkProvider).networkHandlerMethod(url: "$BASE_URL/mtest/getAttemptedTestByStudentId", httpMethodType: RequestType.get);
+    final response = await ref.read(networkProvider).networkHandlerMethod(
+        url: "$BASE_URL/mtest/getAttemptedTestByStudentId",
+        httpMethodType: RequestType.get);
 
     if (response.statusCode == 200) {
-        List<dynamic> jsonList = jsonDecode(response.body);
-        resultData = jsonList.map((json) => ResultModelClass.fromJson(json)).toList();
-        notifyListeners();
-      }
+      print("BODY  ${response.body}");
+      List<dynamic> jsonList = jsonDecode(response.body);
+      resultData =
+          jsonList.map((json) => ResultModelClass.fromJson(json)).toList();
+      notifyListeners();
+    }
 
-      return response;
-
+    return response;
   }
 
   Future<bool> getResultDetailsFromJeeniServer(int resultID) async {
-    Map<String, String> headers = {"Content-Type": "application/json",};
-    
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+    };
+
     final responseData = await ref.read(networkProvider).networkHandlerMethod(
         url: "$BASE_URL/report/getRank/${resultID}",
-        httpMethodType: RequestType.get,headers: headers);
+        httpMethodType: RequestType.get,
+        headers: headers);
 
-        if(responseData.statusCode == 200){
-          // print("data ${responseData.body}");
-          resultDetailsData = jsonDecode(responseData.body);
-          notifyListeners();
-        }
-        // resultDetailsData = jsonDecode(responseData.body);
-
-    
+    if (responseData.statusCode == 200) {
+      // print("data ${responseData.body}");
+      resultDetailsData = jsonDecode(responseData.body);
+      notifyListeners();
+    }
+    // resultDetailsData = jsonDecode(responseData.body);
 
     return true;
   }

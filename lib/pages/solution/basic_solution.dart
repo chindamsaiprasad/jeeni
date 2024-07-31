@@ -49,6 +49,8 @@ class BasicSolution extends ConsumerWidget {
   }
 
   ListView _buildOptionButtons(WidgetRef ref) {
+    print("=========================");
+    print(result.toString());
     return ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: options.length,

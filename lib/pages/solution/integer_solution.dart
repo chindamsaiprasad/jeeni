@@ -56,16 +56,11 @@ class IntegerSolution extends ConsumerWidget {
                       alignment: Alignment.center,
                       width: (MediaQuery.of(context).size.width / 5) - 3,
                       height: 40,
-                      color:
-                          ref.watch(testProgressProvider).userSelectedOption ==
-                                  null
-                              ? Colors.grey[400]
-                              : ref
-                                          .watch(testProgressProvider)
-                                          .userSelectedOption ==
-                                      index.toString()
-                                  ? Colors.green[600]
-                                  : Colors.grey[400],
+                      color: result.userSelectedOption == null
+                          ? Colors.grey[600]
+                          : result.userSelectedOption == index.toString()
+                              ? result.status.getColor()
+                              : Colors.grey[600],
                       child: Text(
                         "$index",
                         style: const TextStyle(color: Colors.white),

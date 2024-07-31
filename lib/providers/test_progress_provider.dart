@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -128,9 +127,8 @@ class TestProgressProvider with ChangeNotifier {
   void initTimer() {
     final timerService = ref.read(timerProvider);
 
-    if(_remaingDurationInSeconds == 0){
-
-    } else{
+    if (_remaingDurationInSeconds == 0) {
+    } else {
       timerService.updateDuration(_remaingDurationInSeconds);
       timerService.startTimer();
     }
@@ -381,7 +379,9 @@ class TestProgressProvider with ChangeNotifier {
         //--------------INTEGER------------------
         if (question.questionType == "Integer") {
           print("INTEGER :: ");
-          if (question.customAnswerStatus == AnswerStatus.ANSWERED) {
+          if (question.customAnswerStatus == AnswerStatus.ANSWERED ||
+              question.customAnswerStatus ==
+                  AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW) {
             if (question.solutionAvailable ?? false) {
               final userSelectedOption = question.userSelectedOption == null
                   ? -1
@@ -402,7 +402,8 @@ class TestProgressProvider with ChangeNotifier {
               status = isCorrect ? 1 : 0;
             }
           } else if (question.customAnswerStatus == AnswerStatus.NOT_ANSWERED ||
-              question.customAnswerStatus == AnswerStatus.NOT_VISITED) {
+              question.customAnswerStatus == AnswerStatus.NOT_VISITED ||
+              question.customAnswerStatus == AnswerStatus.MARK_FOR_REVIEW) {
             status = 2;
           }
         }
@@ -437,6 +438,8 @@ class TestProgressProvider with ChangeNotifier {
         //--------------Assertion Ans Reason--------------
         if (question.questionType == "Column Matching") {
           print("COLUMN MATCHING :: ");
+          userGivenAnswers.clear();
+          userGivenAnswers.add(true);
           final userGivenColumnMatchAnswer =
               question.userGivenColumnMatchAnswer ?? ["", "", "", ""];
           if (question.customAnswerStatus == AnswerStatus.ANSWERED ||
@@ -462,7 +465,7 @@ class TestProgressProvider with ChangeNotifier {
           } else {}
 
           question.userSelectedOption = userGivenColumnMatchAnswer
-              .map((e) => e.isEmpty ? "" : e)
+              .map((e) => e.isEmpty ? null : e)
               .join(',');
         }
 
@@ -531,18 +534,24 @@ class TestProgressProvider with ChangeNotifier {
       },
     ).toList();
 
+    final correctAnswers =
+        questionResult.where((result) => result.status == 1).toList().length;
+    final unAttemptedQuestions =
+        questionResult.where((result) => result.status == 2).toList().length;
+
     final testResultRequest = TestResultRequest(
-      correctAnswers: 0,
+      correctAnswers: correctAnswers,
       isAutoSubmit: false,
       isLogActive: false,
       totalQuestions: questions.length,
-      unAttemptedQuestions: 0,
+      unAttemptedQuestions: unAttemptedQuestions,
       testId: testId,
       questionResult: questionResult,
     );
 
-    // return null;
+    print(testResultRequest.toJson());
 
+    // return null;
     if (testResponse is TestDownloadResponse) {
       return await ref
           .read(testProvider)
@@ -687,6 +696,11 @@ class TestResultRequest {
 
   factory TestResultRequest.fromJson(String source) =>
       TestResultRequest.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'TestResultRequest(correctAnswers: $correctAnswers, isAutoSubmit: $isAutoSubmit, isLogActive: $isLogActive, questionResult: $questionResult, testId: $testId, totalQuestions: $totalQuestions, unAttemptedQuestions: $unAttemptedQuestions)';
+  }
 }
 
 class QuestionResult {
@@ -731,4 +745,13 @@ class QuestionResult {
 
   factory QuestionResult.fromJson(String source) =>
       QuestionResult.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'QuestionResult(questionId: $questionId,'
+        ' status: $status, '
+        'timeTaken: $timeTaken, '
+        'userGivenAnswers: $userGivenAnswers,'
+        'userSelectedOption: $userSelectedOption)';
+  }
 }

@@ -157,7 +157,7 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
 
             return InkWell(
               onTap: () {
-                // print("sotions ${question.questionId}");
+                print("STATUS ${question.status}");
                 ref
                     .read(widget.solutionProvider)
                     .updateCurrentQuestion(question.questionId);

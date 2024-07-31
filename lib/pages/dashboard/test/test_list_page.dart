@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:jeeni/enums/question_type.dart';
 import 'package:jeeni/pages/dashboard/test/result_page.dart';
 import 'package:jeeni/pages/dashboard/test/test_instructions.dart';
 import 'package:jeeni/pages/dashboard/test/test_page.dart';
@@ -13,6 +14,7 @@ import 'package:jeeni/providers/test_provider.dart';
 import 'package:jeeni/response_models/submit_test_response.dart';
 import 'package:jeeni/response_models/test_response.dart';
 import 'package:jeeni/utils/date_formator.dart';
+import 'package:jeeni/utils/result_util.dart';
 
 class TestListPage extends ConsumerStatefulWidget {
   const TestListPage({super.key});
@@ -24,52 +26,47 @@ class TestListPage extends ConsumerStatefulWidget {
 class _TestListPageState extends ConsumerState<TestListPage> {
   bool isLoading = false;
 
-
   bool searchenable = false;
   TextEditingController searchTextController = TextEditingController();
 
   Iterable<Test> tests = [];
   Iterable<Test> filtertests = [];
 
-
-
-
   String convertTime(int? ipocTime) {
-  // Check if the input is null
-  if (ipocTime == null) {
-    return '';
+    // Check if the input is null
+    if (ipocTime == null) {
+      return '';
+    }
+
+    int epochTime = (ipocTime / 1000).round();
+    DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(epochTime * 1000, isUtc: true);
+    var desiredTimezone = 'Asia/Kolkata';
+    dateTime = dateTime.toUtc().add(const Duration(hours: 5, minutes: 30));
+    var formatter = DateFormat('dd/MM/yyyy, hh:mm a');
+    String convertedTime = formatter.format(dateTime);
+    return convertedTime;
   }
 
-  int epochTime = (ipocTime / 1000).round();
-  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(epochTime * 1000, isUtc: true);
-  var desiredTimezone = 'Asia/Kolkata';
-  dateTime = dateTime.toUtc().add(const Duration(hours: 5, minutes: 30));
-  var formatter = DateFormat('dd/MM/yyyy, hh:mm a');
-  String convertedTime = formatter.format(dateTime);
-  return convertedTime;
-  }
-
-
-   @override
+  @override
   void dispose() {
     searchTextController.dispose();
     super.dispose();
   }
 
-
-
-  getrefreshData(){
+  getrefreshData() {
     OverlayLoader.show(context: context, title: "Loading...");
-          ref.read(testProvider).fetchAllTestsFromJeeniServer().then((response) {
-            if (response.statusCode == 200) {
-                
-                    } else if (response.statusCode == 401) {
-                      ref.read(networkErrorProvider).resolveError();
-                    }
-                  }).catchError((error) {
-                    // TODO: Implement error handling logic
-                    print('Error: $error');
-                  }).whenComplete(() { OverlayLoader.hide(); });
+    ref.read(testProvider).fetchAllTestsFromJeeniServer().then((response) {
+      if (response.statusCode == 200) {
+      } else if (response.statusCode == 401) {
+        ref.read(networkErrorProvider).resolveError();
+      }
+    }).catchError((error) {
+      // TODO: Implement error handling logic
+      print('Error: $error');
+    }).whenComplete(() {
+      OverlayLoader.hide();
+    });
   }
 
   @override
@@ -129,34 +126,37 @@ class _TestListPageState extends ConsumerState<TestListPage> {
           //   ),
           // ),
           searchenable
-            ? Padding(
-                padding: const EdgeInsets.only(
-                    top: 12, right: 12, left: 12, bottom: 0),
-                child: TextField(
-                  controller: searchTextController,
-                  decoration: InputDecoration(
-                    hintText: 'Search Test...',
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.search),
-                      onPressed: () {
-                        setState(() {});
-                      },
+              ? Padding(
+                  padding: const EdgeInsets.only(
+                      top: 12, right: 12, left: 12, bottom: 0),
+                  child: TextField(
+                    controller: searchTextController,
+                    decoration: InputDecoration(
+                      hintText: 'Search Test...',
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () {
+                          setState(() {});
+                        },
+                      ),
                     ),
+                    // onChanged: filterResults,
+                    onChanged: (value) {
+                      setState(() {});
+                    },
                   ),
-                  // onChanged: filterResults,
-                  onChanged: (value) {
-                    setState(() {});
-                  },
-                ),
-              )
-            : Container(),
+                )
+              : Container(),
           const SizedBox(
             height: 10,
           ),
           Expanded(
             child: filteredResultData.isEmpty
                 ? const Center(
-                    child: Text("No tests found",style: TextStyle(fontSize: 18),),
+                    child: Text(
+                      "No tests found",
+                      style: TextStyle(fontSize: 18),
+                    ),
                   )
                 : ListView(
                     children: filteredResultData
@@ -165,15 +165,16 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                               decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black,
-                                            blurRadius: 2,
-                                          ),
-                                        ],
-                                        color: Colors.white,
-                                      ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    blurRadius: 2,
+                                  ),
+                                ],
+                                color: Colors.white,
+                              ),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
@@ -191,7 +192,7 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                             maxLines: 1,
                                             style: const TextStyle(
                                               fontSize: 15,
-                                            //   fontWeight: FontWeight.bold,
+                                              //   fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ),
@@ -217,7 +218,7 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                 MediaQuery.of(context)
                                                     .size
                                                     .height;
-                                
+
                                             OverlayLoader.show(
                                                 context: context);
                                             final testId = test.id!;
@@ -230,7 +231,7 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                 .then((response) {
                                               print(
                                                   "first step ${response.toString()}");
-                                
+
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -256,7 +257,7 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                     print(
                                                         "111111111111111111111111111");
                                                     print("third steep $value");
-                                
+
                                                     if (value
                                                         is SubmitTestResponse) {
                                                       print(
@@ -277,26 +278,35 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                       ).then(
                                                           (submitTestResponse) {
                                                         print(
-                                                            "11111111111111111111111111 result");
+                                                            "11111111111111111111111111 result  $submitTestResponse");
                                                         if (submitTestResponse !=
                                                             null) {
+                                                          final result =
+                                                              ResultUtil()
+                                                                  .convertToResult(
+                                                            submitTestResponse,
+                                                          );
                                                           Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                            builder: (context) {
-                                                              return ViewQuestionSolution(
-                                                                solutionProvider:
-                                                                    ChangeNotifierProvider(
-                                                                  (ref) =>
-                                                                      SolutionProvider(
-                                                                    submitTestResponse:
-                                                                        submitTestResponse,
-                                                                    ref: ref,
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                                return ViewQuestionSolution(
+                                                                  solutionProvider:
+                                                                      ChangeNotifierProvider(
+                                                                    (ref) => SolutionProvider(
+                                                                        currentQuestion:
+                                                                            result
+                                                                                .first,
+                                                                        solution:
+                                                                            result,
+                                                                        ref:
+                                                                            ref),
                                                                   ),
-                                                                ),
-                                                              );
-                                                            },
-                                                          ));
+                                                                );
+                                                              },
+                                                            ),
+                                                          );
                                                         }
                                                       });
                                                     }
@@ -305,7 +315,6 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                               }).then((value) {});
                                               OverlayLoader.hide();
                                             }).catchError((error) {
-                                              //TODO :: HANDLE ERROR
                                               OverlayLoader.hide();
                                             });
                                           },
@@ -328,11 +337,14 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                               color: Colors.black87,
                                             ),
                                             children: [
-                                              const TextSpan(text: "Start : ",style: TextStyle(color: Colors.black87,fontSize: 13)),
+                                              const TextSpan(
+                                                  text: "Start : ",
+                                                  style: TextStyle(
+                                                      color: Colors.black87,
+                                                      fontSize: 13)),
                                               TextSpan(
-                                                text: 
-                                                convertTime(test.endTime),
-                                                    // convertTime(test.examDate),
+                                                text: convertTime(test.endTime),
+                                                // convertTime(test.examDate),
                                                 style: const TextStyle(
                                                   fontSize: 13,
                                                   color: Colors.black,

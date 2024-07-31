@@ -63,7 +63,6 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +81,7 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
             child: SizedBox(
               height: 40,
               width: MediaQuery.of(context).size.width,
-              // child: viewSolutionButton(),
+              child: viewSolutionButton(),
             ),
           ),
         ],
@@ -151,11 +150,12 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
                 getResultDetails("Test Name", widget.data.name),
 
                 Divider(),
-                getResultDetails("Test Date", formatDateString(widget.data.strExamDate) ?? ''),
+                getResultDetails("Test Date",
+                    formatDateString(widget.data.strExamDate) ?? ''),
 
                 Divider(),
-                getResultDetails(
-                    "Duration", "${widget.data.durationInMinutes.toString()} Minutes"),
+                getResultDetails("Duration",
+                    "${widget.data.durationInMinutes.toString()} Minutes"),
 
                 Divider(),
                 getResultDetails("Total Questions",
@@ -215,7 +215,6 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
     );
   }
 
-
   _handleButtonPress(BuildContext context) {
     try {
       // Show an overlay loader (assuming OverlayLoader.show is implemented)
@@ -229,85 +228,30 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
       int testId = widget.data.id;
       // print("Test ID: $testId");
 
-      ref
-      .read(testProvider)
-      .viewSolutions(testId: testId)
-      .then((response) {
+      ref.read(testProvider).viewSolutions(testId: testId).then((response) {
         // print("Response: ${response}");
-
-        print("first step $response");
-                                                  
-                                                  // print("second steep $response");
-                                                  // Navigator.push(
-                                                  //   context,
-                                                  //   MaterialPageRoute(
-                                                  //     builder: (context) =>
-                                                  //         TestPage(
-                                                  //       testDownloadResponse:
-                                                  //           response,
-                                                  //           diffrentBool: true,
-                                                  //     ),
-                                                  //   ),
-                                                  // ).then((value) {
-                                                  //   print(
-                                                  //       "111111111111111111111111111");
-                                                  //       print("third steep $value");
-
-                                                  //   if (value
-                                                  //       is SubmitTestResponse) {
-                                                  //     print(
-                                                  //         "22222222222222222222222222222  if");
-                                                  //         print("fourth step ${value.batchId}");
-                                                  //     Navigator.push<
-                                                  //         SubmitTestResponse>(
-                                                  //       context,
-                                                  //       MaterialPageRoute(
-                                                  //         builder: (context) =>
-                                                  //             ResultPage(
-                                                  //                 submitTestResponse:
-                                                  //                     value),
-                                                  //       ),
-                                                  //     ).then(
-                                                  //         (submitTestResponse) {
-                                                  //       print(
-                                                  //           "11111111111111111111111111 result ${value.testId} ${submitTestResponse?.batchId}");
-                                                  //       if (submitTestResponse !=
-                                                  //           null) {
-                                                  //         Navigator.push(
-                                                  //             context,
-                                                  //             MaterialPageRoute(
-                                                  //           builder: (context) {
-                                                  //             return ViewQuestionSolution(
-                                                  //               solutionProvider:
-                                                  //                   ChangeNotifierProvider(
-                                                  //                 (ref) =>
-                                                  //                     SolutionProvider(
-                                                  //                   submitTestResponse:
-                                                  //                       submitTestResponse,
-                                                  //                   ref: ref,
-                                                  //                 ),
-                                                  //               ),
-                                                  //             );
-                                                  //           },
-                                                  //         ));
-                                                  //       }
-                                                  //     });
-                                                  //   }
-                                                  // });
-                                                
-                                              
-                                              // OverlayLoader.hide();
-
-
-      })
-      .catchError((error) {
+        print("first step ${response.toString()}");
+        if (response.isNotEmpty) {
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context) {
+              return ViewQuestionSolution(
+                solutionProvider: ChangeNotifierProvider(
+                  (ref) => SolutionProvider(
+                    solution: response,
+                    ref: ref,
+                    currentQuestion: response.first,
+                  ),
+                ),
+              );
+            },
+          ));
+        }
+      }).catchError((error) {
         print("Error: $error");
-      })
-      .whenComplete(() {
+      }).whenComplete(() {
         // Hide the overlay loader after the operation completes
         OverlayLoader.hide();
       });
-
     } catch (error) {
       // Handle the error properly
       print("Error: $error");
@@ -316,5 +260,4 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
       OverlayLoader.hide();
     }
   }
-
 }

@@ -68,11 +68,11 @@ class _ColumnMatchingSolutionState
             ),
             label: showOptions
                 ? const Text(
-                    "Hide",
+                    "Show",
                     style: TextStyle(color: AppColour.green),
                   )
                 : const Text(
-                    "Show",
+                    "Hide",
                     style: TextStyle(color: AppColour.green),
                   ),
           ),
@@ -91,7 +91,7 @@ class _ColumnMatchingSolutionState
             ? Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: Colors.green,
+                  color: widget.result.status.getColor(),
                   borderRadius:
                       BorderRadius.circular(12), // Adjust the radius as needed
                 ),

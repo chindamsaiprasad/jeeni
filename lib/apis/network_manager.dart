@@ -47,7 +47,8 @@ class NetworkManager with ChangeNotifier {
   //********************CONTENT******************//
 
   Future<http.Response> getAllSubscribedCoursesFromJeeniServer() async {
-    final response = networkHandlerMethod(url: "$BASE_URL/jca/content", httpMethodType: RequestType.get);
+    final response = networkHandlerMethod(
+        url: "$BASE_URL/jca/content", httpMethodType: RequestType.get);
     return response;
   }
 
@@ -60,6 +61,7 @@ class NetworkManager with ChangeNotifier {
     Map<String, String>? headers,
     required RequestType httpMethodType,
   }) async {
+    print("URL $url");
     final jauth = ref.read(authenticationProvider)?.jauth;
     // print("jauth token $jauth");
 

@@ -189,6 +189,11 @@ class TestDownloadResponse extends TestResponse {
     data['jee2021Flag'] = this.jee2021Flag;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'TestDownloadResponse(id: $id, name: $name, password: $password, durationInMinutes: $durationInMinutes, spentTimeInMinutes: $spentTimeInMinutes, questionMobileVos: $questionMobileVos, testType: $testType, examDate: $examDate, startTime: $startTime, endTime: $endTime, fixedTime: $fixedTime, numberOfQuestions: $numberOfQuestions, testStatus: $testStatus, orgId: $orgId, timeLeftForStartExam: $timeLeftForStartExam, wifiNames: $wifiNames, isDeletable: $isDeletable, score: $score, wifiPassword: $wifiPassword, wifiName: $wifiName, isLogActive: $isLogActive, isEditable: $isEditable, bonus: $bonus, reportStatus: $reportStatus, correctAnswer: $correctAnswer, inCorrectAnswer: $inCorrectAnswer, isPartial: $isPartial, syncStatus: $syncStatus, resultVerificationFlag: $resultVerificationFlag, resultShowHode: $resultShowHode, smsFlag: $smsFlag, mockTestType: $mockTestType, partialAnswer: $partialAnswer, rankingSchemeType: $rankingSchemeType, classPracticeTest: $classPracticeTest, isOnPremTest: $isOnPremTest, organisationVo: $organisationVo, batchStatus: $batchStatus, jee2021Flag: $jee2021Flag)';
+  }
 }
 
 class QuestionMobileVos {
@@ -314,7 +319,7 @@ class QuestionMobileVos {
 
     // columnMatchAnswer = json['columnMatchAnswer'].cast<String>();
     columnMatchAnswer = (json['columnMatchAnswer'] as List<dynamic>?)
-            ?.map((e) => e as String)
+            ?.map((e) => e == null ? "" : e as String)
             .toList() ??
         [];
 

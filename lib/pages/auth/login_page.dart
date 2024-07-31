@@ -21,21 +21,21 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  // final TextEditingController _userIdController =
-  //     TextEditingController(text: "joshi_352");
-  // final TextEditingController _passwordController =
-  //     TextEditingController(text: "Nish@nt1");
+  final TextEditingController _userIdController =
+      TextEditingController(text: "joshi4099"); //"joshi4100");
+  final TextEditingController _passwordController =
+      TextEditingController(text: "123456");
 
   // final TextEditingController _userIdController =
   //     TextEditingController(text: "joshi3052");
   // final TextEditingController _passwordController =
   //     TextEditingController(text: "123456");
 
-  final TextEditingController _userIdController =
-      TextEditingController(text: "");
-  // TextEditingController(text: "joshi_1452");
-  final TextEditingController _passwordController =
-      TextEditingController(text: "");
+  // final TextEditingController _userIdController =
+  //     TextEditingController(text: "");
+  // // TextEditingController(text: "joshi_1452");
+  // final TextEditingController _passwordController =
+  //     TextEditingController(text: "");
 
   final TextEditingController _phoneController = TextEditingController();
 
