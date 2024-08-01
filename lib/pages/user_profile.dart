@@ -509,9 +509,9 @@ if (cityName.isEmpty) {
               //   }
               // });
             },
-            iconData: Icons.lock,
+            // iconData: Icons.lock,
           ),
-          updateUserInfoButton(),
+          // updateUserInfoButton(),
         ],
       ),
     );
@@ -532,12 +532,12 @@ if (cityName.isEmpty) {
     if (boolEdited) {
       icon = Icon(iconData);
     } else if (iconData != null) {
-      icon = Icon(iconData);
+      icon = null;
     }
 
     return Container(
       // color: Colors.green,
-      padding: EdgeInsets.only(top: 5,bottom: 5, left: 5),
+      padding: EdgeInsets.only(top: 5,bottom: 5, left: 5,right: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -550,50 +550,99 @@ if (cityName.isEmpty) {
           Row(
             children: [
               Expanded(
-                  child: boolEdited
-                      ? TextField(
-                          controller: textController,
-                          maxLength: maxChars,
-                          keyboardType: isNumber
-                              ? TextInputType.number
-                              : TextInputType.text,
-                          inputFormatters: isNumber
-                              ? <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly
-                                ]
-                              : null,
-                          decoration: const InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                              ),
-                              hintText: 'Enter your text here',
-                              counterText: ''),
-                        )
-                      : TextField(
-                          controller: textController,
-                          enabled: false,
-                          decoration: const InputDecoration(
+                child: boolEdited
+                    ? TextField(
+                        controller: textController,
+                        maxLength: maxChars,
+                        keyboardType: isNumber
+                            ? TextInputType.number
+                            : TextInputType.text,
+                        inputFormatters: isNumber
+                            ? <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ]
+                            : null,
+                        decoration: const InputDecoration(
                             enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.black),
                             ),
                             hintText: 'Enter your text here',
+                            counterText: ''),
+                      )
+                    : TextField(
+                        controller: textController,
+                        enabled: false,
+                        decoration: const InputDecoration(
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
                           ),
-                        )),
-              IconButton(
-                icon: icon ?? Icon(Icons.edit),
-                color: Colors.black38,
-                onPressed: () {
-                  if (textController.text.isEmpty) {
-                    // Controller is empty
-                    // print("this is not ok");
-                    onPressed();
-                  } else {
-                    onPressed();
-                  }
-                },
+                          hintText: 'Enter your text here',
+                        ),
+                      ),
+              ),
+              Visibility(
+                visible: icon != null,
+                child: IconButton(
+                  icon: icon ?? SizedBox(),
+                  color: Colors.black38,
+                  onPressed: () {
+                    // Your onPressed functionality here
+                  },
+                ),
               ),
             ],
           ),
+
+          // Row(
+          //   children: [
+          //     Expanded(
+          //         child: boolEdited
+          //             ? TextField(
+          //                 controller: textController,
+          //                 maxLength: maxChars,
+          //                 keyboardType: isNumber
+          //                     ? TextInputType.number
+          //                     : TextInputType.text,
+          //                 inputFormatters: isNumber
+          //                     ? <TextInputFormatter>[
+          //                         FilteringTextInputFormatter.digitsOnly
+          //                       ]
+          //                     : null,
+          //                 decoration: const InputDecoration(
+          //                     enabledBorder: UnderlineInputBorder(
+          //                       borderSide: BorderSide(color: Colors.black),
+          //                     ),
+          //                     hintText: 'Enter your text here',
+          //                     counterText: ''),
+          //               )
+          //             : TextField(
+          //                 controller: textController,
+          //                 enabled: false,
+          //                 decoration: const InputDecoration(
+          //                   enabledBorder: UnderlineInputBorder(
+          //                     borderSide: BorderSide(color: Colors.black),
+          //                   ),
+          //                   hintText: 'Enter your text here',
+          //                 ),
+          //               )),
+          //     IconButton(
+          //       icon: icon ?? SizedBox(),
+          //       color: Colors.black38,
+          //       onPressed: () {
+                  
+          //       },
+          //       // onPressed: () {
+          //       //   if (textController.text.isEmpty) {
+          //       //     // Controller is empty
+          //       //     // print("this is not ok");
+          //       //     onPressed();
+          //       //   } else {
+          //       //     onPressed();
+          //       //   }
+          //       // },
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );

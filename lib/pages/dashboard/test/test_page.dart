@@ -33,7 +33,7 @@ class TestPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _TestPageState();
 }
 
-class _TestPageState extends ConsumerState<TestPage> {
+class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver {
   final ItemScrollController questionNumberScrollController =
       ItemScrollController();
   @override
@@ -49,7 +49,64 @@ class _TestPageState extends ConsumerState<TestPage> {
     //    WidgetsBinding.instance.addPostFrameCallback((_) {
     //   checkAndSubmitTest();
     // });
+
+    WidgetsBinding.instance.addObserver(this);
+
   }
+
+
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        print("app in resumed");
+        // _showDialog();
+        break;
+      case AppLifecycleState.inactive:
+        print("app in inactive");
+        break;
+      case AppLifecycleState.paused:
+        print("app in paused");
+        break;
+      case AppLifecycleState.detached:
+        print("app in detached");
+        break;
+      case AppLifecycleState.hidden:
+        print("app in hidden");
+        break;
+    }
+  }
+
+  void _showDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('App Resumed'),
+          content: Text('The app has returned to the foreground.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {

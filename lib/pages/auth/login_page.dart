@@ -24,7 +24,7 @@ class LoginPage extends ConsumerStatefulWidget {
 
 class _LoginPageState extends ConsumerState<LoginPage> {
   // final TextEditingController _userIdController =
-  //     TextEditingController(text: "joshi4099"); //"joshi4100");
+  //     TextEditingController(text: "joshi_359"); //"joshi4100");
   // final TextEditingController _passwordController =
   //     TextEditingController(text: "123456");
 
@@ -35,7 +35,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   final TextEditingController _userIdController =
       TextEditingController(text: "");
-  // TextEditingController(text: "joshi_1452");
   final TextEditingController _passwordController =
       TextEditingController(text: "");
 
@@ -244,6 +243,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ref
                   .read(authenticationProvider.notifier)
                   .loginWithIdAndPassword(
+                    context:  context,
                     userId: _userIdController.text,
                     password: _passwordController.text,
                     deviceIMEI: deviceId,
