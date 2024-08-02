@@ -14,7 +14,7 @@ class ResetPassDailog extends ChangeNotifier {
   void showResetPassword(
     BuildContext context,
     String jauth,
-    String email,
+    int studentId,
     String password,
     VoidCallback onButtonPressed,
   ) {
@@ -181,21 +181,21 @@ class ResetPassDailog extends ChangeNotifier {
                                           "New password and confirm password don't match");
                                     } else {
                                       print(
-                                          "pass ${email} ${password} ${newPasswordController.text}");
+                                          "pass ${studentId} ${password} ${newPasswordController.text}");
 
                                       // String data = await ref.read(userProvider).changePassword(email, password, newPasswordController.text);
                                       // ref.read(userProvider).changePassword(email, password, newPasswordController.text);
 
                                       String data = await changePassword(
                                           jauth,
-                                          email,
+                                          studentId,
                                           password,
                                           newPasswordController.text);
 
                                       if (data ==
                                           "Password changed successfully") {
                                         EasyLoading.showSuccess(data);
-                                        onButtonPressed();
+                                        // onButtonPressed();
                                         Navigator.of(context).pop();
                                       } else {
                                         EasyLoading.showError(data);
@@ -229,11 +229,11 @@ class ResetPassDailog extends ChangeNotifier {
     );
   }
 
-  Future<String> changePassword(String jauth, String email, String oldPassword,
+  Future<String> changePassword(String jauth, int studentId, String oldPassword,
       String newPassword) async {
     String message = "";
 
-    final url = Uri.parse('$BASE_URL/student/changePassword');
+    final url = Uri.parse('$BASE_URL/login/updatePassword');
 
     if (jauth == null) {
       throw Exception('Authentication token (jauth) is null');
@@ -247,9 +247,9 @@ class ResetPassDailog extends ChangeNotifier {
     };
 
     Map<String, String> body = {
-      'email': email,
-      'oldPass': oldPassword,
-      'newPass': newPassword,
+      'studentId': studentId.toString(),
+      'cnfPassword': newPassword,
+      'newPassword': newPassword,
     };
 
     try {

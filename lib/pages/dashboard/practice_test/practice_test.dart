@@ -462,7 +462,7 @@ class PracticeTest extends ConsumerWidget {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        ResultPage(submitTestResponse: value),
+                                        ResultPage(submitTestResponse: value,onBack: (){},),
                                   ),
                                 ).then((submitTestResponse) {
                                   print("11111111111111111111111111");

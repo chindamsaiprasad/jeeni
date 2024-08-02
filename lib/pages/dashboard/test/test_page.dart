@@ -314,9 +314,10 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
 
     return Container(
       alignment: Alignment.center,
-      color: Colors.white,
+      // color: Colors.white,
+      // color: Colors.green,
       height: 60,
-      width: 500,
+      width: MediaQuery.of(context).size.width *0.95,
       child: ScrollablePositionedList.builder(
         itemScrollController: questionNumberScrollController,
         itemCount: questions.length,
@@ -326,63 +327,64 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
           if (question.questionType == "Integer") {
             // print("_buildQuestionNumberList ${question.customAnswerStatus}");
           }
-
           return InkWell(
             onTap: () {
               // print("question id ${index} ${question.id}");
-              ref
-                  .read(testProgressProvider)
-                  .updateCurrentQuestion(question.id ?? 0);
+              ref.read(testProgressProvider).updateCurrentQuestion(question.id ?? 0);
             },
-            child: Stack(
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(5),
-                  alignment: Alignment.center,
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    border:
-                        ref.read(testProgressProvider).getCurrentQuestion?.id ==
-                                question.id
-                            ? Border.all(
-                                width: 3,
-                                color: const Color.fromARGB(255, 4, 109, 122),
-                              )
-                            : Border.all(
-                                width: 1,
-                                color: Colors.black,
-                              ),
-                    borderRadius: const BorderRadius.all(Radius.circular(25)),
-                    color: question.customAnswerStatus.backgroundColur,
-                    // color: Colors.red,
-                  ),
-                  child: Text(
-                    'Q${index + 1}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
+            child: Container(
+              child: Stack(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(5),
+                    alignment: Alignment.center,
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      border:
+                          ref.read(testProgressProvider).getCurrentQuestion?.id ==
+                                  question.id
+                              ? Border.all(
+                                  width: 3,
+                                  // color: const Color.fromARGB(255, 4, 109, 122),
+                                  color: Colors.black,
+                                )
+                              : Border.all(
+                                  width: 1,
+                                  // color: Colors.black,
+                                  color: const Color.fromARGB(255, 4, 109, 122),
+                                ),
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
+                      color: question.customAnswerStatus.backgroundColur,
+                      // color: Colors.red,
+                    ),
+                    child: Text(
+                      'Q${index + 1}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
-                ),
-                question.customAnswerStatus ==
-                        AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW
-                    ? Positioned(
-                        top: 8,
-                        right: 10,
-                        child: Container(
-                          margin: const EdgeInsets.all(5),
-                          alignment: Alignment.center,
-                          height: 9,
-                          width: 9,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(25)),
-                            color: Color.fromARGB(255, 9, 233, 16),
+                  question.customAnswerStatus ==
+                          AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW
+                      ? Positioned(
+                          top: 8,
+                          right: 10,
+                          child: Container(
+                            margin: const EdgeInsets.all(5),
+                            alignment: Alignment.center,
+                            height: 9,
+                            width: 9,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(25)),
+                              color: Color.fromARGB(255, 9, 233, 16),
+                            ),
                           ),
-                        ),
-                      )
-                    : Container(),
-              ],
+                        )
+                      : Container(),
+                ],
+              ),
             ),
           );
         },
@@ -436,13 +438,21 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
         children: [
           TextButton(
             onPressed: () {
-              ref.read(testProgressProvider).previous();
-              jumpToSelectedIndex();
+
+              final currentIndex = ref.read(testProgressProvider).currentQuestionIndex();
+
+              if (currentIndex > 0) {
+                ref.read(testProgressProvider).previous();
+                jumpToSelectedIndex();
+              }
+              
             },
-            child: const Text(
+            child: Text(
               "Prev",
               style: TextStyle(
-                color: Colors.green,
+                color: ref.read(testProgressProvider).currentQuestionIndex() > 0
+                    ? AppColour.darkGrey  // Button enabled color
+                    : Colors.grey, // Button disabled color
                 fontSize: 14,
               ),
             ),
@@ -455,6 +465,7 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
           TextButton(
             onPressed: () {
               ref.read(testProgressProvider).markForReview();
+              jumpToSelectedIndex();
             },
             child: Text(
               "Mark Review & Next",
@@ -471,15 +482,25 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
           ),
           TextButton(
             onPressed: () {
-              ref.read(testProgressProvider).next();
-              jumpToSelectedIndex();
+              
+              final currentIndex = ref.read(testProgressProvider).currentQuestionIndex();
+              final lastIndex = ref.read(testProgressProvider).questions.length - 1; // Adjust for zero-based index
+
+              if (currentIndex < lastIndex) {
+                ref.read(testProgressProvider).next();
+                jumpToSelectedIndex();
+              }
             },
-            child: const Text(
+            child: Text(
               "Next",
               style: TextStyle(
-                color: Colors.green,
+                color: ref.read(testProgressProvider).currentQuestionIndex() <
+                        ref.read(testProgressProvider).questions.length - 1
+                    ? AppColour.darkGrey // Button enabled, use default color
+                    : Colors.grey,
                 fontSize: 14,
               ),
+
             ),
           ),
         ],
@@ -496,8 +517,8 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
 
   void scrollTo(int index) => questionNumberScrollController.scrollTo(
         index: index,
-        duration: const Duration(seconds: 3),
-        curve: Curves.easeInOutCubic,
+        duration: const Duration(seconds: 1),
+        // curve: Curves.easeInOutCubic,
         alignment: 0,
       );
 }

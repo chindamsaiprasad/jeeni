@@ -7,6 +7,7 @@ import 'package:jeeni/pages/solution/integer_solution.dart';
 import 'package:jeeni/pages/solution/basic_solution.dart';
 import 'package:jeeni/pages/solution/numeric_solution.dart';
 import 'package:jeeni/pages/solution/solution_provider.dart';
+import 'package:jeeni/utils/app_colour.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ViewQuestionSolution extends ConsumerStatefulWidget {
@@ -138,86 +139,84 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
     );
   }
 
-  Material _buildQuestionNumberList() {
+  Container _buildQuestionNumberList() {
     final questions = ref.watch(widget.solutionProvider).getQuestion;
 
-    return Material(
-      elevation: 5,
-      child: Container(
-        alignment: Alignment.center,
-        color: Colors.white,
-        height: 60,
-        width: double.infinity,
-        child: ScrollablePositionedList.builder(
-          itemScrollController: questionNumberScrollController,
-          itemCount: questions.length,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            final question = questions[index];
-
-            return InkWell(
-              onTap: () {
-                print("STATUS ${question.status}");
-                ref
-                    .read(widget.solutionProvider)
-                    .updateCurrentQuestion(question.questionId);
-                ref.read(widget.solutionProvider).showSolutionImage = true;
-                // ref.read(widget.solutionProvider).solutionImage();
-              },
-              child: Stack(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(5),
-                    alignment: Alignment.center,
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: question.status.getColor(),
-                      border: ref
-                                  .read(widget.solutionProvider)
-                                  .getCurrentQuestion
-                                  ?.questionId ==
-                              question.questionId
-                          ? Border.all(
-                              width: 3,
-                              color: const Color.fromARGB(255, 4, 109, 122),
-                            )
-                          : Border.all(
-                              width: 1,
-                              color: Colors.black38,
-                            ),
-                      borderRadius: const BorderRadius.all(Radius.circular(25)),
-                    ),
-                    child: Text(
-                      'Q${index + 1}',
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                      ),
+    return Container(
+      alignment: Alignment.center,
+      // color: Colors.white,
+      // color: Colors.transparent,
+      height: 60,
+      width: MediaQuery.of(context).size.width *0.95,
+      child: ScrollablePositionedList.builder(
+        itemScrollController: questionNumberScrollController,
+        itemCount: questions.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          final question = questions[index];
+    
+          return InkWell(
+            onTap: () {
+              print("STATUS ${question.status}");
+              ref
+                  .read(widget.solutionProvider)
+                  .updateCurrentQuestion(question.questionId);
+              ref.read(widget.solutionProvider).showSolutionImage = true;
+              // ref.read(widget.solutionProvider).solutionImage();
+            },
+            child: Stack(
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(5),
+                  alignment: Alignment.center,
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    color: question.status.getColor(),
+                    border: ref
+                                .read(widget.solutionProvider)
+                                .getCurrentQuestion
+                                ?.questionId ==
+                            question.questionId
+                        ? Border.all(
+                            width: 3,
+                            color: const Color.fromARGB(255, 4, 109, 122),
+                          )
+                        : Border.all(
+                            width: 1,
+                            color: Colors.black38,
+                          ),
+                    borderRadius: const BorderRadius.all(Radius.circular(25)),
+                  ),
+                  child: Text(
+                    'Q${index + 1}',
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
                     ),
                   ),
-                  // question.customAnswerStatus ==
-                  //         AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW
-                  //     ? Positioned(
-                  //         top: 8,
-                  //         right: 10,
-                  //         child: Container(
-                  //           margin: const EdgeInsets.all(5),
-                  //           alignment: Alignment.center,
-                  //           height: 9,
-                  //           width: 9,
-                  //           decoration: const BoxDecoration(
-                  //             borderRadius: BorderRadius.all(Radius.circular(25)),
-                  //             color: TestPageColour.answeredColor,
-                  //           ),
-                  //         ),
-                  //       )
-                  //     : Container(),
-                ],
-              ),
-            );
-          },
-        ),
+                ),
+                // question.customAnswerStatus ==
+                //         AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW
+                //     ? Positioned(
+                //         top: 8,
+                //         right: 10,
+                //         child: Container(
+                //           margin: const EdgeInsets.all(5),
+                //           alignment: Alignment.center,
+                //           height: 9,
+                //           width: 9,
+                //           decoration: const BoxDecoration(
+                //             borderRadius: BorderRadius.all(Radius.circular(25)),
+                //             color: TestPageColour.answeredColor,
+                //           ),
+                //         ),
+                //       )
+                //     : Container(),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -281,15 +280,36 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
+          // TextButton(
+          //   onPressed: () {
+          //     ref.read(widget.solutionProvider).previous();
+          //     jumpToSelectedIndex();
+          //   },
+          //   child: const Text(
+          //     "Prev",
+          //     style: TextStyle(
+          //       color: Colors.green,
+          //       fontSize: 14,
+          //     ),
+          //   ),
+          // ),
           TextButton(
             onPressed: () {
-              ref.read(widget.solutionProvider).previous();
-              jumpToSelectedIndex();
+
+              final currentIndex = ref.read(widget.solutionProvider).currentQuestionIndex();
+
+              if (currentIndex > 0) {
+                ref.read(widget.solutionProvider).previous();
+                jumpToSelectedIndex();
+              }
+              
             },
-            child: const Text(
+            child: Text(
               "Prev",
               style: TextStyle(
-                color: Colors.green,
+                color: ref.read(widget.solutionProvider).currentQuestionIndex() > 0
+                    ? AppColour.darkGrey  // Button enabled color
+                    : Colors.grey, // Button disabled color
                 fontSize: 14,
               ),
             ),
@@ -318,17 +338,40 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
             color: Colors.grey,
             width: 0.5,
           ),
+          // TextButton(
+          //   onPressed: () {
+          //     ref.read(widget.solutionProvider).next();
+          //     jumpToSelectedIndex();
+          //   },
+          //   child: const Text(
+          //     "Next",
+          //     style: TextStyle(
+          //       color: Colors.green,
+          //       fontSize: 14,
+          //     ),
+          //   ),
+          // ),
           TextButton(
             onPressed: () {
-              ref.read(widget.solutionProvider).next();
-              jumpToSelectedIndex();
+              
+              final currentIndex = ref.read(widget.solutionProvider).currentQuestionIndex();
+              final lastIndex = ref.read(widget.solutionProvider).getQuestion.length - 1; // Adjust for zero-based index
+
+              if (currentIndex < lastIndex) {
+                ref.read(widget.solutionProvider).next();
+                jumpToSelectedIndex();
+              }
             },
-            child: const Text(
+            child: Text(
               "Next",
               style: TextStyle(
-                color: Colors.green,
+                color: ref.read(widget.solutionProvider).currentQuestionIndex() <
+                        ref.read(widget.solutionProvider).getQuestion.length - 1
+                    ? AppColour.darkGrey // Button enabled, use default color
+                    : Colors.grey,
                 fontSize: 14,
               ),
+
             ),
           ),
         ],
@@ -345,8 +388,8 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
 
   void scrollTo(int index) => questionNumberScrollController.scrollTo(
         index: index,
-        duration: const Duration(seconds: 2),
-        curve: Curves.easeInOutCubic,
+        duration: const Duration(seconds: 1),
+        // curve: Curves.easeInOutCubic,
         alignment: 0,
       );
 
