@@ -136,6 +136,11 @@ class Result {
   String toString() {
     return 'Result(testId: $testId, section: $section, questionId: $questionId, status: $status, questionUrl: $questionUrl, solutionUrl: $solutionUrl, timeTaken: $timeTaken, positiveMark: $positiveMark, negativeMark: $negativeMark, isMultipleAnswer: $isMultipleAnswer, userSelectedOption: $userSelectedOption, actualAnswer: $actualAnswer, numericAnswer: $numericAnswer, userGivenAnswers: $userGivenAnswers, answerValidity: $answerValidity, questionType: $questionType)';
   }
+
+  getUserSelecetdOption() {
+    print("getUserSelecetdOption");
+    print(userGivenAnswers);
+  }
 }
 
 // class SolutionProvider with ChangeNotifier {
@@ -440,7 +445,7 @@ class SolutionProvider with ChangeNotifier {
     return null;
   }
 
-  getUserGivenColoumAnswer() {
+  List<String> getUserGivenColoumAnswer() {
     // if (_currentQuestion == null) return ["", "", "", ""];
     return currentQuestion!.userSelectedOption == null
         ? ["", "", "", ""]
@@ -455,5 +460,32 @@ class SolutionProvider with ChangeNotifier {
       return "Answers :-> A:${columnMatchAnswer[0]}, B:${columnMatchAnswer[1]}, C:${columnMatchAnswer[2]}, D:${columnMatchAnswer[3]}";
     }
     return "";
+  }
+
+  List<bool> getUserSelecetdOption() {
+    final userGivenAnswer = [false, false, false, false];
+
+    List<String> userSelectedOptions = getUserGivenColoumAnswer();
+
+    for (int index = 0; index < userSelectedOptions.length; index++) {
+      if (index == 0) {
+        if (userSelectedOptions[index] == "A") {
+          userGivenAnswer[index] = true;
+        }
+      } else if (index == 1) {
+        if (userSelectedOptions[index] == "B") {
+          userGivenAnswer[index] = true;
+        }
+      } else if (index == 2) {
+        if (userSelectedOptions[index] == "C") {
+          userGivenAnswer[index] = true;
+        }
+      } else if (index == 3) {
+        if (userSelectedOptions[index] == "D") {
+          userGivenAnswer[index] = true;
+        }
+      }
+    }
+    return userGivenAnswer;
   }
 }

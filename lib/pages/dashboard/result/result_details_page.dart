@@ -230,7 +230,7 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
 
       ref.read(testProvider).viewSolutions(testId: testId).then((response) {
         // print("Response: ${response}");
-        print("first step ${response.toString()}");
+        print("first step ============${response.toString()}");
         if (response.isNotEmpty) {
           Navigator.push(context, MaterialPageRoute(
             builder: (context) {

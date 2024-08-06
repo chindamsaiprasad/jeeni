@@ -220,7 +220,7 @@ class QuestionMobileVos {
   AnswerStatus customAnswerStatus = AnswerStatus.NOT_VISITED;
   String? userSelectedOption;
   List<bool>? multipleAnswer = [false, false, false, false];
-  List<String>? userGivenColumnMatchAnswer = ["", "", "", ""];
+  List<String?>? userGivenColumnMatchAnswer = [null, null, null, null];
 
   QuestionMobileVos({
     this.id,
@@ -289,7 +289,6 @@ class QuestionMobileVos {
     print("333333333333333333333");
 
     status = json['status'];
-    print("444444444444444444444444");
 
     questionTypeId = json['questionTypeId'];
     print("55555555555555555555555");
@@ -313,7 +312,6 @@ class QuestionMobileVos {
     answerStatus = json['answerStatus'];
     print("333333333333333333333333");
     numericAnswerDifference = json['numericAnswerDifference'];
-    print("4444444444444444444444444");
     partialRule = json['partialRule'];
     print("5555555555555555555555555511111111111111");
 
@@ -384,7 +382,7 @@ class QuestionMobileVos {
     AnswerStatus? customAnswerStatus,
     String? userSelectedOption,
     List<bool>? multipleAnswer,
-    List<String>? userGivenColumnMatchAnswer,
+    List<String?>? userGivenColumnMatchAnswer,
   }) {
     return QuestionMobileVos(
       id: id ?? this.id,
@@ -418,7 +416,8 @@ class QuestionMobileVos {
 
   @override
   String toString() {
-    return 'QuestionMobileVos(id: $id, answerValidity: $answerValidity, type: $type, solutionAvailable: $solutionAvailable, durationInMinutes: $durationInMinutes, status: $status, questionTypeId: $questionTypeId, section: $section, questionType: $questionType, isMultipleAnswer: $isMultipleAnswer, positiveMark: $positiveMark, negativeMark: $negativeMark, groupId: $groupId, answerStatus: $answerStatus, numericAnswerDifference: $numericAnswerDifference, partialRule: $partialRule, columnMatchAnswer: $columnMatchAnswer, questionUrl: $questionUrl, solutionUrl: $solutionUrl, numericAnswer: $numericAnswer, customAnswerStatus: $customAnswerStatus, userSelectedOption: $userSelectedOption, multipleAnswer: $multipleAnswer)';
+    return 'QuestionMobileVos(id: $id,\nanswerValidity: $answerValidity, '
+        'type: $type, \nsolutionAvailable: $solutionAvailable, \ndurationInMinutes: $durationInMinutes, \nstatus: $status, \nquestionTypeId: $questionTypeId, \nsection: $section, \nquestionType: $questionType, \nisMultipleAnswer: $isMultipleAnswer, \npositiveMark: $positiveMark, \nnegativeMark: $negativeMark, \ngroupId: $groupId, \nanswerStatus: $answerStatus, \nnumericAnswerDifference: $numericAnswerDifference, \npartialRule: $partialRule, \ncolumnMatchAnswer: $columnMatchAnswer, \nquestionUrl: $questionUrl, \nsolutionUrl: $solutionUrl, \nnumericAnswer: $numericAnswer, \ncustomAnswerStatus: $customAnswerStatus, \nuserSelectedOption: $userSelectedOption, \nmultipleAnswer: $multipleAnswer)';
   }
 }
 

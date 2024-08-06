@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/enums/question_type.dart';
 import 'package:jeeni/pages/solution/assertion_and_reason_solution.dart';
+import 'package:jeeni/pages/solution/basic_multiple_solution.dart';
 import 'package:jeeni/pages/solution/column_matching_solution.dart';
 import 'package:jeeni/pages/solution/integer_solution.dart';
 import 'package:jeeni/pages/solution/basic_solution.dart';
@@ -243,9 +244,18 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
         currentQuestion.questionType == QuestionType.COMPREHENSION ||
         currentQuestion.questionType == QuestionType.MATRIX ||
         currentQuestion.questionType.contains("ASSERTION")) {
+      if (currentQuestion.isMultipleAnswer) {
+        return Expanded(
+          child: BasicMultipleSolution(
+            result: currentQuestion,
+            solutionProvider: solutionProvider,
+          ),
+        );
+      }
       return Expanded(
-          child: BasicSolution(
-              result: currentQuestion, solutionProvider: solutionProvider));
+        child: BasicSolution(
+            result: currentQuestion, solutionProvider: solutionProvider),
+      );
     } else if (currentQuestion.questionType == QuestionType.INTEGER) {
       return Expanded(
           child: IntegerSolution(

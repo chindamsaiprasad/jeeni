@@ -189,7 +189,7 @@ class TestProgressProvider with ChangeNotifier {
       final userGivenColumnMatchAnswer =
           _currentQuestion!.userGivenColumnMatchAnswer ?? ["", "", "", ""];
       final emptyCount =
-          userGivenColumnMatchAnswer.where((element) => element.isEmpty).length;
+          userGivenColumnMatchAnswer.where((element) => element == null).length;
       if (emptyCount == 4) {
         _currentQuestion = _currentQuestion?.copyWith(
           customAnswerStatus: AnswerStatus.MARK_FOR_REVIEW,
@@ -371,9 +371,6 @@ class TestProgressProvider with ChangeNotifier {
       (question) {
         final userGivenAnswers = [false, false, false, false];
 
-        print(
-            "  question Type  ======================  ${question.questionType}");
-        print(question.toString());
         var status = 0;
 
         //--------------INTEGER------------------
@@ -441,32 +438,66 @@ class TestProgressProvider with ChangeNotifier {
           userGivenAnswers.clear();
           userGivenAnswers.add(true);
           final userGivenColumnMatchAnswer =
-              question.userGivenColumnMatchAnswer ?? ["", "", "", ""];
+              question.userGivenColumnMatchAnswer ?? [null, null, null, null];
           if (question.customAnswerStatus == AnswerStatus.ANSWERED ||
               question.customAnswerStatus ==
                   AnswerStatus.ANSWERED_AND_MARK_FOR_REVIEW) {
             final emptyCount = userGivenColumnMatchAnswer
-                .where((element) => element.isEmpty)
+                .where((element) => element == null)
                 .length;
-            if (emptyCount == 4) {
-              status = 0;
-            } else {
-              const listEquality = ListEquality();
-              final isCorrect = listEquality.equals(
-                question.columnMatchAnswer ?? [],
-                userGivenColumnMatchAnswer,
-              );
-              status = isCorrect ? 1 : 0;
+            Map<int, String> resultMap = {};
+
+            // Iterate over the array
+            for (int i = 0; i < userGivenColumnMatchAnswer.length; i++) {
+              if (userGivenColumnMatchAnswer[i] != null) {
+                resultMap[i] = userGivenColumnMatchAnswer[i]!;
+              }
             }
+
+            // if (emptyCount == 4) {
+            //   status = 0;
+            // } else if (emptyCount == 3) {
+            final actualCorrect = resultMap.entries.map((entry) {
+              final columnMatchAnswer = question.columnMatchAnswer;
+              // if (columnMatchAnswer.length == 4) {
+              print(
+                  "11111111111111111111111111111111111111111 ${columnMatchAnswer?.length}");
+              // }
+              if (columnMatchAnswer != null) {
+                return userGivenColumnMatchAnswer[entry.key] ==
+                    columnMatchAnswer[entry.key];
+              } else {
+                return false;
+              }
+            }).toList();
+
+            int trueCount =
+                actualCorrect.where((value) => value == true).length;
+
+            if (resultMap.length == 4) {
+              status = trueCount == resultMap.length ? 1 : 0;
+            } else {
+              status = trueCount == resultMap.length ? 3 : 0;
+            }
+
+            // } else if (emptyCount == 2) {
+            // } else if (emptyCount == 1) {
+            // } else if (emptyCount == 0) {
+            //   const listEquality = ListEquality();
+            //   final isCorrect = listEquality.equals(
+            //     question.columnMatchAnswer ?? [],
+            //     userGivenColumnMatchAnswer,
+            //   );
+            //   status = isCorrect ? 1 : 0;
+            // }
           } else if (question.customAnswerStatus == AnswerStatus.NOT_ANSWERED ||
               question.customAnswerStatus == AnswerStatus.NOT_VISITED ||
               question.customAnswerStatus == AnswerStatus.MARK_FOR_REVIEW) {
             status = 2;
           } else {}
 
-          question.userSelectedOption = userGivenColumnMatchAnswer
-              .map((e) => e.isEmpty ? null : e)
-              .join(',');
+          question.userSelectedOption =
+              userGivenColumnMatchAnswer.map((e) => e).join(',');
         }
 
         //--------------BASIC------------------
@@ -475,6 +506,7 @@ class TestProgressProvider with ChangeNotifier {
             question.questionType == "Matrix" ||
             (question.questionType?.contains("ASSERTION") ?? false)) {
           print("BASIC  COMPREHENSION   Matrix   ASSERTION");
+
           String answer = "";
 
           if (question.customAnswerStatus == AnswerStatus.ANSWERED ||
@@ -484,8 +516,84 @@ class TestProgressProvider with ChangeNotifier {
               for (int index = 0;
                   index < (question.multipleAnswer?.length ?? 0);
                   index++) {
-                userGivenAnswers[index] = multipleAnswer[index];
+                userGivenAnswers[index] = question.multipleAnswer![index];
               }
+
+              print("userGivenAnswers  $userGivenAnswers");
+              final availableAnswer = question.answerValidity;
+
+              Map<int, bool> resultMap = {};
+
+              for (int i = 0; i < userGivenAnswers.length; i++) {
+                if (userGivenAnswers[i]) {
+                  resultMap[i] = userGivenAnswers[i];
+                }
+              }
+
+              final actualCorrect = resultMap.entries.map((entry) {
+                if (availableAnswer != null) {
+                  return userGivenAnswers[entry.key] ==
+                      availableAnswer[entry.key];
+                } else {
+                  return false;
+                }
+              }).toList();
+
+              int trueCount =
+                  actualCorrect.where((value) => value == true).length;
+
+              if (trueCount == resultMap.length) {
+                final answerValidityCount = question.answerValidity
+                    ?.where((value) => value == true)
+                    .length;
+
+                if (answerValidityCount == resultMap.length) {
+                  status = 1;
+                } else {
+                  status = 3;
+                }
+              } else {
+                status = 0;
+              }
+
+              String userSelectedOption = "";
+
+              for (int index = 0; index < userGivenAnswers.length; index++) {
+                if (index == 0) {
+                  if (userGivenAnswers[0]) {
+                    userSelectedOption = "${userSelectedOption}A,";
+                  } else {
+                    userSelectedOption = "${userSelectedOption}null,";
+                  }
+                } else if (index == 1) {
+                  if (userGivenAnswers[1]) {
+                    userSelectedOption = "${userSelectedOption}B,";
+                  } else {
+                    userSelectedOption = "${userSelectedOption}null,";
+                  }
+                } else if (index == 2) {
+                  if (userGivenAnswers[2]) {
+                    userSelectedOption = "${userSelectedOption}C,";
+                  } else {
+                    userSelectedOption = "${userSelectedOption}null,";
+                  }
+                } else if (index == 3) {
+                  if (userGivenAnswers[3]) {
+                    userSelectedOption = "${userSelectedOption}D";
+                  } else {
+                    userSelectedOption = "${userSelectedOption}null";
+                  }
+                }
+              }
+
+              question =
+                  question.copyWith(userSelectedOption: userSelectedOption);
+
+              // if (resultMap.length == 4) {
+              //   status = trueCount == resultMap.length ? 1 : 0;
+              // } else {
+              //   status = trueCount == resultMap.length ? 3 : 0;
+              // }
             } else {
               if (question.solutionAvailable ?? false) {
                 final availableAnswer = question.answerValidity ?? [];
@@ -549,6 +657,10 @@ class TestProgressProvider with ChangeNotifier {
       questionResult: questionResult,
     );
 
+    for (var result in questionResult) {
+      print(result.toString());
+    }
+
     print(testResultRequest.toJson());
 
     // return null;
@@ -611,14 +723,16 @@ class TestProgressProvider with ChangeNotifier {
     questions.insert(index, _currentQuestion!);
   }
 
-  List<String> getUserGivenColoumAnswer() {
-    return _currentQuestion?.userGivenColumnMatchAnswer ?? ["", "", "", ""];
+  List<String?> getUserGivenColoumAnswer() {
+    return _currentQuestion?.userGivenColumnMatchAnswer ??
+        [null, null, null, null];
   }
 
   void setColoumMatchingAnswer(String value, int optionIndex) {
     if (_currentQuestion == null) return;
     final userGivenColumnMatchAnswer =
-        _currentQuestion?.userGivenColumnMatchAnswer ?? ["", "", "", ""];
+        _currentQuestion?.userGivenColumnMatchAnswer ??
+            [null, null, null, null];
 
     userGivenColumnMatchAnswer[optionIndex] = value;
 
@@ -748,10 +862,6 @@ class QuestionResult {
 
   @override
   String toString() {
-    return 'QuestionResult(questionId: $questionId,'
-        ' status: $status, '
-        'timeTaken: $timeTaken, '
-        'userGivenAnswers: $userGivenAnswers,'
-        'userSelectedOption: $userSelectedOption)';
+    return 'QuestionResult(\nquestionId: $questionId,\n status: $status, \ntimeTaken: $timeTaken, \nuserGivenAnswers: $userGivenAnswers,\nuserSelectedOption: $userSelectedOption)';
   }
 }

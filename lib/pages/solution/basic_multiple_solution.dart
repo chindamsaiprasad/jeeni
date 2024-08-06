@@ -66,12 +66,17 @@ class BasicMultipleSolution extends ConsumerWidget {
                   width: (MediaQuery.of(context).size.width / 4) - 3,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: result.userSelectedOption == null
-                          ? Colors.grey[600]
-                          : result.userSelectedOption == option
-                              ? result.status.getColor()
-                              : Colors.grey[600],
-                    ),
+                        backgroundColor: ref
+                                .read(solutionProvider)
+                                .getUserSelecetdOption()[index]
+                            ? result.status.getColor()
+                            : Colors.grey[600]
+                        // backgroundColor: result.userSelectedOption == null
+                        //     ? Colors.grey[600]
+                        //     : result.userSelectedOption == option
+                        //         ? result.status.getColor()
+                        //         : Colors.grey[600],
+                        ),
                     onPressed: () {},
                     child: Text(option),
                   ),
@@ -96,7 +101,7 @@ class BasicMultipleSolution extends ConsumerWidget {
                           left: 0,
                           child: Icon(
                             size: 40,
-                            color: Colors.green,
+                            color: Color.fromARGB(255, 21, 108, 24),
                             IconData(
                               0xf3fd,
                               fontFamily: CupertinoIcons.iconFont,

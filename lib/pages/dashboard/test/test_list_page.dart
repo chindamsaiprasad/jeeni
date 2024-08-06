@@ -229,8 +229,15 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                     deviceWidth: deviceWidth,
                                                     deviceHeight: deviceHeight)
                                                 .then((response) {
-                                              print(
-                                                  "first step ${response.toString()}");
+                                              // print(
+                                              // "first step ${response.toString()}");
+                                              final questions =
+                                                  response.questionMobileVos ??
+                                                      [];
+                                              for (var question in questions) {
+                                                print("===============");
+                                                print(question.toString());
+                                              }
 
                                               Navigator.push(
                                                 context,
