@@ -52,10 +52,15 @@ class ResultPage extends ConsumerWidget {
     return PopScope(
       canPop: false,
           onPopInvoked: (bool didPop) async {
+
+              if (didPop) {
+                return;
+              }
             
             print("didpop $didPop");
             onBack!();
             Navigator.pop(context);
+            // Navigator.pop(context, true);
           },
       child: Scaffold(
         appBar: AppBar(
@@ -68,7 +73,7 @@ class ResultPage extends ConsumerWidget {
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             onBack!(); 
-            Navigator.pop(context); 
+            Navigator.pop(context);
           },
         ),
           iconTheme: const IconThemeData(

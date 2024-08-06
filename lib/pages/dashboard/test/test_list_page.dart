@@ -353,6 +353,10 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                                         ref:
                                                                             ref),
                                                                   ),
+                                                                  onBack: () {
+                                                                    print("data from test list");
+                                                                    getrefreshDataTwo();
+                                                                  },
                                                                 );
                                                               },
                                                             ),

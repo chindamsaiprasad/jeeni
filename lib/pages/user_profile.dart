@@ -92,6 +92,11 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
 
   Uint8List dataImage = Uint8List(0);
 
+
+  bool currentPassBool = false;
+  bool newPassBool = false;
+  bool confirmPassBool = false;
+
   @override
   void initState() {
     super.initState();
@@ -525,6 +530,8 @@ if (cityName.isEmpty) {
     int maxChars = 30,
     bool isNumber = false,
     IconData? iconData,
+    String hintText = '-',
+    bool isPassword= false,
   }) {
     Icon? icon; // Declare icon as nullable
 
@@ -550,8 +557,9 @@ if (cityName.isEmpty) {
           Row(
             children: [
               Expanded(
-                child: boolEdited
+                child: isPassword
                     ? TextField(
+                      obscureText: boolEdited,
                         controller: textController,
                         maxLength: maxChars,
                         keyboardType: isNumber
@@ -562,34 +570,42 @@ if (cityName.isEmpty) {
                                 FilteringTextInputFormatter.digitsOnly
                               ]
                             : null,
-                        decoration: const InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
+                        decoration: InputDecoration(
+                          suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(
+                 boolEdited ?   Icons.visibility_off : Icons.visibility, 
+                ),
+                onPressed: onPressed,
+              )
+            : null,
+                            enabledBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.black),
                             ),
-                            hintText: 'Enter your text here',
+                            hintText: hintText,
                             counterText: ''),
                       )
                     : TextField(
                         controller: textController,
                         enabled: false,
-                        decoration: const InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
+                        decoration: InputDecoration(
+                          enabledBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.black),
                           ),
-                          hintText: 'Enter your text here',
+                          hintText: hintText,
                         ),
                       ),
               ),
-              Visibility(
-                visible: icon != null,
-                child: IconButton(
-                  icon: icon ?? SizedBox(),
-                  color: Colors.black38,
-                  onPressed: () {
-                    // Your onPressed functionality here
-                  },
-                ),
-              ),
+              // Visibility(
+              //   visible: icon != null,
+              //   child: IconButton(
+              //     icon: icon ?? SizedBox(),
+              //     color: Colors.black38,
+              //     onPressed: () {
+              //       // Your onPressed functionality here
+              //     },
+              //   ),
+              // ),
             ],
           ),
 
@@ -822,6 +838,18 @@ if (cityName.isEmpty) {
 
         if (data == "Password changed successfully") {
           EasyLoading.showSuccess(data);
+
+          setState(() {
+                    changePassword = !changePassword;
+                    boolCurrentPass = true;
+                    boolNewPass = true;
+                    boolConfirmPass = true;
+                  });
+
+                  currentPasswordController.clear();
+                  newPasswordController.clear();
+                  confirmPasswordController.clear();
+
         } else {
           EasyLoading.showError(data);
         }
@@ -837,48 +865,54 @@ if (cityName.isEmpty) {
             boolCurrentPass,
             currentPasswordController,
             () {
-              // setState(() {
-              //   boolCurrentPass = !boolCurrentPass;
-              //   if (boolCurrentPass) {
-              //     print("Editing Student Name started");
-              //   } else {
-              //     print("Editing Student Name ended");
-              //   }
-              // });
+              setState(() {
+                boolCurrentPass = !boolCurrentPass;
+                if (boolCurrentPass) {
+                  print("Editing Student Name started");
+                } else {
+                  print("Editing Student Name ended");
+                }
+              });
             },
             iconData: Icons.password,
+            hintText: "Enter current password",
+            isPassword: true,
           ),
           textFieldWidget(
             "New Password",
             boolNewPass,
             newPasswordController,
             () {
-              // setState(() {
-              //   boolNewPass = !boolNewPass;
-              //   if (boolNewPass) {
-              //     print("Editing Student Name started");
-              //   } else {
-              //     print("Editing Student Name ended");
-              //   }
-              // });
+              setState(() {
+                boolNewPass = !boolNewPass;
+                if (boolNewPass) {
+                  print("Editing Student Name started");
+                } else {
+                  print("Editing Student Name ended");
+                }
+              });
             },
             iconData: Icons.password,
+            hintText: "Enter new password",
+            isPassword: true,
           ),
           textFieldWidget(
             "Confirm Password",
             boolConfirmPass,
             confirmPasswordController,
             () {
-              // setState(() {
-              //   boolConfirmPass = !boolConfirmPass;
-              //   if (boolConfirmPass) {
-              //     print("Editing Student Name started");
-              //   } else {
-              //     print("Editing Student Name ended");
-              //   }
-              // });
+              setState(() {
+                boolConfirmPass = !boolConfirmPass;
+                if (boolConfirmPass) {
+                  print("Editing Student Name started");
+                } else {
+                  print("Editing Student Name ended");
+                }
+              });
             },
             iconData: Icons.password,
+            hintText: "Enter confirm password",
+            isPassword: true,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -917,6 +951,9 @@ if (cityName.isEmpty) {
                 onPressed: () {
                   setState(() {
                     changePassword = !changePassword;
+                    boolCurrentPass = true;
+                    boolNewPass = true;
+                    boolConfirmPass = true;
                   });
 
                   currentPasswordController.clear();

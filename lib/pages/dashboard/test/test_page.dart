@@ -36,6 +36,8 @@ class TestPage extends ConsumerStatefulWidget {
 class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver {
   final ItemScrollController questionNumberScrollController =
       ItemScrollController();
+
+  String savedState = '';
   @override
   void initState() {
     super.initState();
@@ -67,6 +69,9 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
     switch (state) {
       case AppLifecycleState.resumed:
         print("app in resumed");
+        setState(() {
+          savedState = "AppResumed";
+        });
         // _showDialog();
         break;
       case AppLifecycleState.inactive:
@@ -105,6 +110,27 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
     );
   }
 
+  void checkAndSubmitTest(WidgetRef ref, BuildContext context) {
+    final timerService = ref.read(timerProvider);
+    
+      OverlayLoader.show(context: context, title: "Submitting");
+      print("this wroks");
+      ref.read(testProgressProvider).submitTest().then((response) {
+        if (response != null) {
+          timerService.stopTimer();
+          Navigator.pop(context, response);
+        }
+      }).catchError((onError) {
+        // Handle error
+        print("111111111111111111111111111111111 ERROR");
+      }).whenComplete(() {
+        print("111111111111111111111111111111111 whenComplete");
+
+        OverlayLoader.hide();
+      });
+    
+  }
+
 
 
 
@@ -130,6 +156,13 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
   }
 
   Container _buildAppBar() {
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+          if(savedState == "AppResumed"){
+            print("data");
+            checkAndSubmitTest(ref,context);
+          }
+        });
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 55,

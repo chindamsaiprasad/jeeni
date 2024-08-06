@@ -13,10 +13,12 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ViewQuestionSolution extends ConsumerStatefulWidget {
   final ChangeNotifierProvider<SolutionProvider> solutionProvider;
+  final VoidCallback? onBack;
 
   const ViewQuestionSolution({
     super.key,
     required this.solutionProvider,
+    required this.onBack,
   });
 
   @override
@@ -30,33 +32,55 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
     final currentQuestion = ref.watch(widget.solutionProvider).currentQuestion;
 
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color(0xff1c5e20),
-          title: const Text(
-            "Test Verification",
-            style: TextStyle(color: Colors.white),
+      child: PopScope(
+        canPop: false,
+          onPopInvoked: (bool didPop) async {
+
+              if (didPop) {
+                return;
+              }
+            
+            print("didpop $didPop");
+            widget.onBack!();
+            Navigator.pop(context);
+            // Navigator.pop(context, true);
+          },
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: const Color(0xff1c5e20),
+            title: const Text(
+              "Test Verification",
+              style: TextStyle(color: Colors.white),
+            ),
+            iconTheme: const IconThemeData(
+              color: Colors.white,
+            ),
+            leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              print("back");
+              widget.onBack!(); 
+              Navigator.pop(context);
+            },
           ),
-          iconTheme: const IconThemeData(
-            color: Colors.white,
+            // actions: [
+            //   IconButton(
+            //     icon: Icon(Icons.print),
+            //     onPressed: () {
+            //       final questions = ref.watch(widget.solutionProvider).getQuestion;
+            //       print("questions ${questions.length}");
+            //     },
+            //   ),
+            // ],
           ),
-          // actions: [
-          //   IconButton(
-          //     icon: Icon(Icons.print),
-          //     onPressed: () {
-          //       final questions = ref.watch(widget.solutionProvider).getQuestion;
-          //       print("questions ${questions.length}");
-          //     },
-          //   ),
-          // ],
-        ),
-        body: Column(
-          children: [
-            _buildHeader(currentQuestion),
-            _buildQuestionNumberList(),
-            _buildQuestionContainer(currentQuestion, widget.solutionProvider),
-            _buildFooterButtons()
-          ],
+          body: Column(
+            children: [
+              _buildHeader(currentQuestion),
+              _buildQuestionNumberList(),
+              _buildQuestionContainer(currentQuestion, widget.solutionProvider),
+              _buildFooterButtons()
+            ],
+          ),
         ),
       ),
     );

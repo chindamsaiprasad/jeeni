@@ -245,6 +245,9 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
                     currentQuestion: response.first,
                   ),
                 ),
+                onBack: () {
+                  print("soltuion provider click");
+                },
               );
             },
           ));

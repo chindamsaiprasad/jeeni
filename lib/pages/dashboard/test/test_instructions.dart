@@ -94,13 +94,26 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
                 thirdText: ".",
                 color: AppColour.darkGreen,
               ),
+              // CustomRichText(
+              //   number: "2",
+              //   firstText: "The total duration of exam is ",
+              //   secondText: widget.test.durationInMinutes?.toString() ?? "",
+              //   thirdText: " Minutes.",
+              //   color: Colors.red,
+              // ),
               CustomRichText(
-                number: "2",
-                firstText: "The total duration of exam is ",
-                secondText: widget.test.durationInMinutes?.toString() ?? "",
-                thirdText: " Minutes.",
-                color: Colors.red,
-              ),
+  number: "2",
+  firstText: widget.test.durationInMinutes == 0 
+    ? "The exam has no time limit." 
+    : "The total duration of exam is ",
+  secondText: widget.test.durationInMinutes != 0 
+    ? widget.test.durationInMinutes?.toString() ?? "" 
+    : "",
+  thirdText: widget.test.durationInMinutes != 0 
+    ? " Minutes."
+    : "",
+  color: Colors.red,
+),
               CustomRichText(
                 number: "3",
                 firstText: "The exam is contains ",
@@ -124,6 +137,13 @@ class _TestInstructionsState extends ConsumerState<TestInstructions> {
                 thirdText: "",
                 color: Colors.red,
               ),
+              const CustomRichText(
+  number: "5",
+  firstText: "Unusual activity can lead to automatic exam submission.",
+  secondText: "",
+  thirdText: "",
+  color: Colors.red,
+),
               SizedBox(
                 height: 10,
               ),
