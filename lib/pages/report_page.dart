@@ -1,8 +1,12 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jeeni/pages/widgets/overlay_loader.dart';
 import 'package:jeeni/providers/user_provider.dart';
+import 'package:screenshot/screenshot.dart';
 
 enum SingingCharacter {
   unableLogin,
@@ -22,12 +26,30 @@ class ReportIssuePage extends ConsumerStatefulWidget {
 class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
   SingingCharacter? _character;
 
+  int _groupValue = -1;
+
+  int _counter = 0;
+  late Uint8List _imageFile;
+
+  ScreenshotController screenshotController = ScreenshotController();
+  TextEditingController reportTextController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
-        title: const Text("Report Issues", style: TextStyle(color: Colors.white,fontSize: 22),),
+        title: const Text(
+          "Report Issues",
+          style: TextStyle(color: Colors.white, fontSize: 22),
+        ),
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
@@ -35,8 +57,14 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            OptionsContainer(),
-            TextFiledContianer(),
+            Screenshot(
+                controller: screenshotController,
+                child: Column(
+                  children: [
+                    OptionsContainer(),
+                    TextFiledContianer(),
+                  ],
+                )),
             reportButton(),
           ],
         ),
@@ -45,21 +73,15 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
   }
 
   Widget OptionsContainer() {
-    ListTile radioOption({
-      required String text,
-      required SingingCharacter value,
-      required SingingCharacter? groupValue,
-      required void Function(SingingCharacter?) onChanged,
-    }) {
-      return ListTile(
-        title: Text(text),
-        leading: Radio<SingingCharacter>(
-          value: value,
-          groupValue: groupValue,
-          onChanged: onChanged,
-        ),
-      );
-    }
+    
+   RadioListTile<int> _myRadioButton({required String title, required int value, required void Function(int?) onChanged}) {
+    return RadioListTile<int>(
+      value: value,
+      groupValue: _groupValue,
+      onChanged: onChanged,
+      title: Text(title),
+    );
+  }
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -70,56 +92,61 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
             border: Border.all(color: Colors.black, width: 1)),
         child: Column(
           children: <Widget>[
-            radioOption(
-              text: "Unable to login",
-              value: SingingCharacter.unableLogin,
-              groupValue: _character,
-              onChanged: (SingingCharacter? value) {
-                setState(() {
-                  _character = value;
-                });
-              },
-            ),
-            radioOption(
-              text: "Incorrect Answer",
-              value: SingingCharacter.incorrectAnswer,
-              groupValue: _character,
-              onChanged: (SingingCharacter? value) {
-                setState(() {
-                  _character = value;
-                });
-              },
-            ),
-            radioOption(
-              text: "Incorrect Question",
-              value: SingingCharacter.incorrectQuestion,
-              groupValue: _character,
-              onChanged: (SingingCharacter? value) {
-                setState(() {
-                  _character = value;
-                });
-              },
-            ),
-            radioOption(
-              text: "Test not seen",
-              value: SingingCharacter.testNotSeen,
-              groupValue: _character,
-              onChanged: (SingingCharacter? value) {
-                setState(() {
-                  _character = value;
-                });
-              },
-            ),
-            radioOption(
-              text: "Others",
-              value: SingingCharacter.others,
-              groupValue: _character,
-              onChanged: (SingingCharacter? value) {
-                setState(() {
-                  _character = value;
-                });
-              },
-            ),
+            _myRadioButton(
+            title: "Unable to login",
+            value: 0,
+            onChanged: (newValue) {
+              setState(() {
+                if (newValue != null) {
+                  _groupValue = newValue;
+                }
+              });
+            },
+          ),
+          _myRadioButton(
+            title: "Incorrect Answer",
+            value: 1,
+            onChanged: (newValue) {
+              setState(() {
+                if (newValue != null) {
+                  _groupValue = newValue;
+                }
+              });
+            },
+          ),
+          _myRadioButton(
+            title: "Incorrect Question",
+            value: 2,
+            onChanged: (newValue) {
+              setState(() {
+                if (newValue != null) {
+                  _groupValue = newValue;
+                }
+              });
+            },
+          ),
+          _myRadioButton(
+            title: "Test not seen",
+            value: 3,
+            onChanged: (newValue) {
+              setState(() {
+                if (newValue != null) {
+                  _groupValue = newValue;
+                }
+              });
+            },
+          ),
+          _myRadioButton(
+            title: "Others",
+            value: 4,
+            onChanged: (newValue) {
+              setState(() {
+                if (newValue != null) {
+                  _groupValue = newValue;
+                }
+              });
+            },
+          ),
           ],
         ),
       ),
@@ -135,14 +162,18 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
           borderRadius: BorderRadius.circular(5),
           border: Border.all(color: Colors.black),
         ),
-        child: const Padding(
-          padding: EdgeInsets.all(8.0),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8,right: 8),
           child: TextField(
+            controller: reportTextController,
+            maxLength: 200,
             expands: true,
             maxLines: null,
-            decoration: InputDecoration.collapsed(
+            textAlign: TextAlign.justify,
+            decoration: const InputDecoration(
               hintText: "Write issues... (Only 200 characters)",
               border: InputBorder.none,
+              counterText: "",
             ),
           ),
         ),
@@ -150,32 +181,93 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
     );
   }
 
-  Widget reportButton(){
+  Widget reportButton() {
     return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 40,
-                width: MediaQuery.of(context).size.width,
-                child: ElevatedButton(
-                  onPressed: () async{
-                    File emptyImageFile = await File('path_to_empty_image.png');
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        height: 40,
+        width: MediaQuery.of(context).size.width,
+        child: ElevatedButton(
+          onPressed: () async {
 
-                    ref.read(userProvider).sendScreenshotLogs(emptyImageFile);
-                  },
-                                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0), 
-                        ),
-                      ),
-                    ),
-                  child: Text(
-                    "Report",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
+            screenshotController
+                .capture(delay: Duration(milliseconds: 10))
+                .then((capturedImage) async {
+              // showImagePopup(context, capturedImage);
+
+
+              OverlayLoader.show(context: context, title: "Loading...");
+
+              ref.read(userProvider).sendScreenshotLogs(capturedImage!).then((response) {
+                if(response == "OK"){
+                  print('Screenshot logs sent successfully');
+                setState(() {
+                _groupValue = -1;
+              });
+              reportTextController.clear();
+              FocusManager.instance.primaryFocus?.unfocus();
+                EasyLoading.showSuccess("Report sent successfully.");
+                } else{
+                  EasyLoading.showError("Please try again later");
+                }
+                
+              }).catchError((error) {
+                print('Failed to send screenshot logs: $error');
+                EasyLoading.showError("Please try again later");
+              }).whenComplete(() {
+                print('Operation completed');
+                OverlayLoader.hide();
+              });
+            }).catchError((onError) {
+              print(onError);
+            });
+          },
+          style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Color(0xff1c5e20)),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
               ),
-            );
+            ),
+          ),
+          child: Text(
+            "Report",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showImagePopup(BuildContext context, Uint8List? imageBytes) {
+    if (imageBytes == null || imageBytes.isEmpty) {
+      print('Invalid image data');
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.memory(imageBytes),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

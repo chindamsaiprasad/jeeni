@@ -182,7 +182,50 @@ class UserProviderClass with ChangeNotifier {
   }
 
   /////////////////////////////////////////////////////////////////////////////////
-  Future<void> sendScreenshotLogs(File file) async {
+  ///  upload report 
+  
+//   Future<void> sendScreenshotLogs(File file) async {
+//   final String url = 'https://exam.jeeni.in/Jeeni/rest/login/sendScreenshotLogs';
+
+//   final jauth = ref.read(authenticationProvider)?.jauth;
+//   try {
+//     Map<String, String> headers = {
+//       "Accept-Encoding": "gzip, deflate, br, zstd",
+//       "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+//       "Accept": "application/json",
+//       "Jauth": jauth!,
+//     };
+//     // Create a multipart request
+//     var request = http.MultipartRequest('POST', Uri.parse(url));
+
+//     request.headers.addAll(headers);
+
+//     // Add the file to the request
+//     var multipartFile = await http.MultipartFile.fromPath(
+//       'files',
+//       file.path,
+//     );
+//     request.files.add(multipartFile);
+
+//     // Send the request
+//     var response = await request.send();
+
+//     // Check the response status
+//     if (response.statusCode == 200) {
+//       // Read the response
+//       var responseData = await response.stream.toBytes();
+//       var responseString = String.fromCharCodes(responseData);
+//       print('Response: $responseString');
+//     } else {
+//       print('Failed to send screenshot logs. Status code: ${response.statusCode}');
+//     }
+//   } catch (e) {
+//     print('Error: $e');
+//   }
+// }
+
+
+Future<String> sendScreenshotLogs(Uint8List fileBytes) async {
   final String url = 'https://exam.jeeni.in/Jeeni/rest/login/sendScreenshotLogs';
 
   final jauth = ref.read(authenticationProvider)?.jauth;
@@ -193,15 +236,17 @@ class UserProviderClass with ChangeNotifier {
       "Accept": "application/json",
       "Jauth": jauth!,
     };
+
     // Create a multipart request
     var request = http.MultipartRequest('POST', Uri.parse(url));
 
     request.headers.addAll(headers);
 
     // Add the file to the request
-    var multipartFile = await http.MultipartFile.fromPath(
+    var multipartFile = http.MultipartFile.fromBytes(
       'files',
-      file.path,
+      fileBytes,
+      filename: "report.png",
     );
     request.files.add(multipartFile);
 
@@ -214,11 +259,18 @@ class UserProviderClass with ChangeNotifier {
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       print('Response: $responseString');
+
+      return responseString;
+
     } else {
       print('Failed to send screenshot logs. Status code: ${response.statusCode}');
+
+      return "Error";
     }
   } catch (e) {
     print('Error: $e');
+
+    return "Error";
   }
 }
 

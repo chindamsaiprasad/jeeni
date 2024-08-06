@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jeeni/pages/dashboard/content/content_page.dart';
@@ -35,6 +36,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                   builder: (context) => const ContentPage(),
                 ),
               );
+            } else if (response.statusCode == 204) { 
+              EasyLoading.showError("Content not found");  
             } else if (response.statusCode == 401) { 
                 ref.read(networkErrorProvider).resolveError();
             }
@@ -83,13 +86,23 @@ class _HomePageState extends ConsumerState<HomePage> {
           });
         }, FontAwesomeIcons.squarePollVertical, "Results", "See the results", Icons.arrow_right),
 
-        // navigationList(() {
-        //   // ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
-        //    Navigator.push(context,MaterialPageRoute(
-        //                     builder: (context) => const ReportIssuePage(),
-        //                   ),
-        //                 );
-        // }, Icons.warning_amber, "Issue Reporting", "Report the issue here", Icons.arrow_right),
+        navigationList(() {
+          // ref.read(menuProvider).setSelectedMenu(MenuType.issueReport);
+           OverlayLoader.show(context: context, title: "Loading...");
+
+          Future.delayed(
+            Duration(seconds: 1),
+            () {
+              OverlayLoader.hide();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ReportIssuePage(),
+                ),
+              );
+            },
+          );
+        }, Icons.warning_amber, "Issue Reporting", "Report the issue here", Icons.arrow_right),
       ],
     );
   }

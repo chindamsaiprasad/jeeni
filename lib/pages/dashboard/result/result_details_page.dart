@@ -50,9 +50,10 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
         List<dynamic> students, int studenId) {
       return students.firstWhere(
         (student) => student['studenId'] == studenId,
-        orElse: () => null,
+        orElse: () => [],
       );
     }
+    
 
     List<Map<String, dynamic>?> studentsList = [
       findStudentById(testWise, studentId)
@@ -66,6 +67,7 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color(0xff1c5e20),
         title: Text("Result Details", style: TextStyle(color: Colors.white)),
@@ -137,7 +139,8 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
           // ],
           color: Colors.white,
         ),
-        child: ListView.builder(
+        child: testDetails.isEmpty ?  const Center(child: Text("Result not found"),) : 
+        ListView.builder(
           itemCount: testDetails.length,
           itemBuilder: (BuildContext context, int index) {
             final test = testDetails[index];

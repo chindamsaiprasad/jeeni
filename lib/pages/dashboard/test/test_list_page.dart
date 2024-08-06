@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -49,6 +51,15 @@ class _TestListPageState extends ConsumerState<TestListPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+
+    tests = ref.read(testProvider).tests;
+    filtertests = tests;
+    super.initState();
+  }
+
+  @override
   void dispose() {
     searchTextController.dispose();
     super.dispose();
@@ -58,6 +69,12 @@ class _TestListPageState extends ConsumerState<TestListPage> {
     OverlayLoader.show(context: context, title: "Loading...");
     ref.read(testProvider).fetchAllTestsFromJeeniServer().then((response) {
       if (response.statusCode == 200) {
+        var responseData = json.decode(response.body) as List;
+        setState(() {
+          tests = responseData.map((test) => Test.fromJson(test));
+          filtertests = tests; 
+        });
+
       } else if (response.statusCode == 401) {
         ref.read(networkErrorProvider).resolveError();
       }
@@ -69,9 +86,30 @@ class _TestListPageState extends ConsumerState<TestListPage> {
     });
   }
 
+
+  getrefreshDataTwo(){
+    ref.read(testProvider).fetchAllTestsFromJeeniServer().then((response) {
+      if (response.statusCode == 200) {
+        var responseData = json.decode(response.body) as List;
+        setState(() {
+          tests = responseData.map((test) => Test.fromJson(test));
+          filtertests = tests; 
+        });
+
+      } else if (response.statusCode == 401) {
+        ref.read(networkErrorProvider).resolveError();
+      }
+    }).catchError((error) {
+      // TODO: Implement error handling logic
+      print('Error: $error');
+    }).whenComplete(() {
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    final tests = ref.watch(testProvider).tests;
+    
 
     final String searchText = searchTextController.text;
 
@@ -245,6 +283,7 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                   builder: (context) =>
                                                       TestInstructions(
                                                     test: test,
+                                                    downloadTestResult: response,
                                                   ),
                                                 ),
                                               ).then((toStart) {
@@ -280,6 +319,10 @@ class _TestListPageState extends ConsumerState<TestListPage> {
                                                             submitTestResponse:
                                                                 value,
                                                             test: test,
+                                                            onBack: () async {
+                                                              print("test list refresh");
+                                                              getrefreshDataTwo();
+                                                            }
                                                           ),
                                                         ),
                                                       ).then(
