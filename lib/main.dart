@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'jeeni',
+      title: 'Jeeni',
       home: Consumer(builder: (context, ref, child) {
         ref.listen<Student?>(authenticationProvider, (previous, next) {
           if (next != null &&

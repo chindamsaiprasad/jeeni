@@ -263,10 +263,11 @@ class ResultPage extends ConsumerWidget {
             ),
             Flexible(
               flex: 5,
-              child: Row(
+              child: Column(
                 children: [
                   Text(
                     "$value",
+                    // overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 14,
                     ),

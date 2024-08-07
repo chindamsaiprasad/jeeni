@@ -47,6 +47,7 @@ enum Status {
       case Status.UNATTEMPTED:
         return Colors.grey.shade400;
       case Status.PARTIAL_CORRECT:
+        return const Color(0xfff0ad4e);
       default:
         return Colors.grey.shade400;
       // return Colors.grey[600];

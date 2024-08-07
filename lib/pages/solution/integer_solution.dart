@@ -29,7 +29,9 @@ class IntegerSolution extends ConsumerWidget {
                 child: Column(
                   children: [
                     CachedNetworkImage(
-                      imageUrl: result.questionUrl,
+                      imageUrl: ref.read(solutionProvider).showSolutionImage
+                          ? result.questionUrl
+                          : result.solutionUrl,
                       placeholder: (context, url) =>
                           const CircularProgressIndicator(),
                       errorWidget: (context, url, error) =>

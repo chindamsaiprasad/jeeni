@@ -182,7 +182,7 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
     
           return InkWell(
             onTap: () {
-              print("STATUS ${question.status}");
+              print("STATUS ${question.status} ${question.userSelectedOption} ${question.columnMatchAnswer} for multiple ${question.answerValidity}  ${question.status.getColor()}");
               ref
                   .read(widget.solutionProvider)
                   .updateCurrentQuestion(question.questionId);
