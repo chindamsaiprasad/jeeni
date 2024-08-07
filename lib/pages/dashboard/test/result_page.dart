@@ -91,9 +91,10 @@ class ResultPage extends ConsumerWidget {
                     height: double.infinity,
                     width: double.infinity,
                     // color: Colors.amber,
-                    child: Column(
+                    child: ListView(
                       children: [
-                        _buildResultCell("Test Name", "${test?.name}", context),
+                        _buildResultCell("Test Name", "${test?.name}", context,
+                         Colors.black, FontWeight.normal),
                         const Divider(
                           color: Colors.black,
                           height: 1,
@@ -101,13 +102,15 @@ class ResultPage extends ConsumerWidget {
                         _buildResultCell(
                             "Test Date",
                             convertEpochToCustomTimeZone(test!.examDate),
-                            context),
+                            context,
+                             Colors.black, FontWeight.normal),
                         const Divider(
                           color: Colors.black,
                           height: 1,
                         ),
                         _buildResultCell("Duration",
-                            "${test?.durationInMinutes} Minutes", context),
+                            "${test?.durationInMinutes} Minutes", context,
+                             Colors.black, FontWeight.normal),
                         const Divider(
                           color: Colors.black,
                           height: 1,
@@ -115,7 +118,7 @@ class ResultPage extends ConsumerWidget {
                         _buildResultCell(
                             "Total Questions",
                             submitTestResponse.totalQuestions?.toString() ?? "",
-                            context),
+                            context,  Colors.black, FontWeight.normal),
                         const Divider(
                           color: Colors.black,
                           height: 1,
@@ -126,7 +129,7 @@ class ResultPage extends ConsumerWidget {
                                     (submitTestResponse.unAttemptedQuestions ??
                                         0))
                                 .toString(),
-                            context),
+                            context,  Colors.black, FontWeight.normal),
                         const Divider(
                           color: Colors.black,
                           height: 1,
@@ -201,7 +204,7 @@ class ResultPage extends ConsumerWidget {
          _buildResultCell(
                           "Correct Answers",
                           submitTestResponse.correctAnswers?.toString() ?? "",
-                          context),
+                          context, Colors.green, FontWeight.bold),
                       const Divider(
                         color: Colors.black,
                         height: 1,
@@ -209,7 +212,7 @@ class ResultPage extends ConsumerWidget {
                       _buildResultCell(
                           "Incorrect Answers",
                           submitTestResponse.inCorrectAnswer?.toString() ?? "",
-                          context),
+                          context,  Color.fromARGB(255, 228, 53, 40), FontWeight.bold),
                       const Divider(
                         color: Colors.black,
                         height: 1,
@@ -217,7 +220,7 @@ class ResultPage extends ConsumerWidget {
                       _buildResultCell(
                           "Partial Answers",
                           submitTestResponse.partialCorrect?.toString() ?? "",
-                          context),
+                          context, Color(0xfff0ad4e) , FontWeight.bold),
                       const Divider(
                         color: Colors.black,
                         height: 1,
@@ -225,13 +228,13 @@ class ResultPage extends ConsumerWidget {
                       _buildResultCell(
                           "Marks Obtained",
                           "${submitTestResponse.score} Out Of ${submitTestResponse.outOfScore}",
-                          context),
+                          context, Colors.black, FontWeight.normal),
                       const Divider(
                         color: Colors.black,
                         height: 1,
                       ),
                       _buildResultCell("Bonus",
-                          submitTestResponse.bonus?.toString() ?? "", context),
+                          submitTestResponse.bonus?.toString() ?? "", context, Colors.black, FontWeight.normal),
                       const Divider(
                         color: Colors.black,
                         height: 1,
@@ -240,7 +243,7 @@ class ResultPage extends ConsumerWidget {
     );
   }
 
-  _buildResultCell(String title, String value, BuildContext context) {
+  _buildResultCell(String title, String value, BuildContext context, Color colorCode, FontWeight? fontWeight) {
     return Container(
       constraints: BoxConstraints(minHeight: 50),
       child: Padding(
@@ -255,7 +258,7 @@ class ResultPage extends ConsumerWidget {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                     ),
                   ),
                 ],
@@ -268,8 +271,10 @@ class ResultPage extends ConsumerWidget {
                   Text(
                     "$value",
                     // overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 14,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: colorCode,
+                      fontWeight: fontWeight,
                     ),
                   ),
                 ],

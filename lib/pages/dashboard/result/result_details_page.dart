@@ -92,7 +92,7 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
   }
 
   Widget testResultContainerDetails() {
-    Row getResultDetails(String titlename, String value) {
+    Row getResultDetails(String titlename, String value,Color colorCode, FontWeight fontWeight) {
       return Row(
         children: [
           Expanded(
@@ -117,7 +117,7 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
                 Flexible(
                     child: Text(
                   value,
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, color: colorCode,fontWeight: fontWeight),
                 )),
               ],
             ),
@@ -150,40 +150,40 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
 
             return Column(
               children: [
-                getResultDetails("Test Name", widget.data.name),
+                getResultDetails("Test Name", widget.data.name, Colors.black, FontWeight.normal),
 
                 Divider(),
                 getResultDetails("Test Date",
-                    formatDateString(widget.data.strExamDate) ?? ''),
+                    formatDateString(widget.data.strExamDate) ?? '', Colors.black, FontWeight.normal),
 
                 Divider(),
                 getResultDetails("Duration",
-                    "${widget.data.durationInMinutes.toString()} Minutes"),
+                    "${widget.data.durationInMinutes.toString()} Minutes", Colors.black, FontWeight.normal),
 
                 Divider(),
                 getResultDetails("Total Questions",
-                    widget.data.numberOfQuestions.toString()),
+                    widget.data.numberOfQuestions.toString(), Colors.black, FontWeight.normal),
 
                 Divider(),
                 getResultDetails("Attempted Questions",
-                    widget.data.attemptedQuestions.toString()),
+                    widget.data.attemptedQuestions.toString(), Colors.black, FontWeight.normal),
 
                 Divider(),
                 getResultDetails(
-                    "Correct Answers", widget.data.correctAnswer.toString()),
+                    "Correct Answers", widget.data.correctAnswer.toString(), Colors.green, FontWeight.bold),
 
                 Divider(),
                 getResultDetails("Incorrect Answers",
-                    widget.data.inCorrectAnswer.toString()),
+                    widget.data.inCorrectAnswer.toString(), Color.fromARGB(255, 228, 53, 40), FontWeight.bold),
 
                 Divider(),
                 getResultDetails(
-                    "Partial Answers", widget.data.partialAnswer.toString()),
+                    "Partial Answers", widget.data.partialAnswer.toString(), Color(0xfff0ad4e), FontWeight.bold),
 
                 Divider(),
-                getResultDetails("Marks Obtained", "$score out of $outOfScore"),
+                getResultDetails("Marks Obtained", "$score out of $outOfScore", Colors.black, FontWeight.normal),
                 Divider(),
-                getResultDetails("Bonus Marks", widget.data.bonus.toString()),
+                getResultDetails("Bonus Marks", widget.data.bonus.toString(), Colors.black, FontWeight.normal),
 
                 // Divider(),
                 // getResultDetails("Total Marks", test["total_marks"].toString()),
