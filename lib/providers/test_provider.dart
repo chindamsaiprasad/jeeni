@@ -265,21 +265,46 @@ class TestProvider with ChangeNotifier {
     if (userSelectedOption == null) {
       return 2;
     }
+
     List<String> separatedValues = userSelectedOption.split(',').toList();
-    if (separatedValues
-            .where((selected) => selected == "null")
-            .toList()
-            .length <
-        4) {
+    final nullCount =
+        separatedValues.where((selected) => selected == "null").toList().length;
+
+    if (nullCount == 4) {
+      return 2;
+    }
+
+    if (nullCount == 0) {
       const listEquality = ListEquality();
       final isCorrect = listEquality.equals(
         separatedValues,
         columnMatchAnswer,
       );
       return isCorrect ? 1 : 0;
-    } else {
-      return 2;
     }
+
+    for (int index = 0; index < separatedValues.length; index++) {
+      if (separatedValues[index] != "null") {
+        if (separatedValues[index] != columnMatchAnswer![index]) {
+          return 0;
+        }
+      }
+    }
+    return 3;
+    // if (separatedValues
+    //         .where((selected) => selected == "null")
+    //         .toList()
+    //         .length <
+    //     4) {
+    //   const listEquality = ListEquality();
+    //   final isCorrect = listEquality.equals(
+    //     separatedValues,
+    //     columnMatchAnswer,
+    //   );
+    //   return isCorrect ? 1 : 0;
+    // } else {
+    //   return 2;
+    // }
   }
 
   int getStatusForNumeric(
@@ -291,6 +316,74 @@ class TestProvider with ChangeNotifier {
     return userSelectedOption == actualAnswer ? 1 : 0;
   }
 
+  int getStatusForMultiple(List<bool> userGivenAnswers,
+      List<bool>? multipleAnswer, String? userSelectedOption) {
+    print("userGivenAnswers :: $userGivenAnswers");
+    print("multipleAnswer :: $multipleAnswer");
+    print("userSelectedOption :: $userSelectedOption");
+    if (userSelectedOption == null) {
+      return 2;
+    }
+
+    if (multipleAnswer == null) {
+      return 2;
+    }
+
+    final userGivenTrueCount = userGivenAnswers
+        .where((isAnswered) => isAnswered == true)
+        .toList()
+        .length;
+
+    final actulaAnswerTrueCoun = multipleAnswer
+        .where((isAnswered) => isAnswered == true)
+        .toList()
+        .length;
+
+    if (userGivenTrueCount == actulaAnswerTrueCoun) {
+      const listEquality = ListEquality();
+      final isCorrect = listEquality.equals(
+        userGivenAnswers,
+        multipleAnswer,
+      );
+      return isCorrect ? 1 : 0;
+    } else if (userGivenTrueCount < actulaAnswerTrueCoun) {
+      for (int index = 0; index < userGivenAnswers.length; index++) {
+        if (userGivenAnswers[index]) {
+          if (userGivenAnswers[index] != multipleAnswer[index]) {
+            return 0;
+          }
+        }
+      }
+
+      return 3;
+    } else {
+      return 0;
+    }
+  }
+
+  List<bool> convertTouserGivenAnswersForMultiple(String? userSelectedOption) {
+    final userGivenAnswers = [false, false, false, false];
+    if (userSelectedOption == null) return userGivenAnswers;
+
+    List<String> separatedValues = userSelectedOption.split(',').toList();
+
+    for (int index = 0; index < separatedValues.length; index++) {
+      if (index == 0 && separatedValues[index] == "A") {
+        userGivenAnswers[index] = true;
+      }
+      if (index == 1 && separatedValues[index] == "B") {
+        userGivenAnswers[index] = true;
+      }
+      if (index == 2 && separatedValues[index] == "C") {
+        userGivenAnswers[index] = true;
+      }
+      if (index == 3 && separatedValues[index] == "D") {
+        userGivenAnswers[index] = true;
+      }
+    }
+    return userGivenAnswers;
+  }
+
   List<Result> convertToResult(ViewSolution solutionResponse) {
     final questions = solutionResponse.questionMobileVos ?? [];
     if (questions.isNotEmpty) {
@@ -300,8 +393,34 @@ class TestProvider with ChangeNotifier {
                 QuestionType.COMPREHENSION ||
                 QuestionType.MATRIX:
             print("============111   ${question.toString()}=============");
-            final userGivenAnswers =
+            var userGivenAnswers =
                 convertTouserGivenAnswers(question.userSelectedOption);
+
+            if (question.isMultipleAnswer ?? false) {
+              userGivenAnswers = convertTouserGivenAnswersForMultiple(
+                  question.userSelectedOption);
+              return Result(
+                testId: solutionResponse.id ?? 0,
+                section: question.section ?? "",
+                questionId: question.id!,
+                status: Status.getStatus(getStatusForMultiple(userGivenAnswers,
+                    question.answerValidity, question.userSelectedOption)),
+                questionUrl: question.questionUrl ?? "",
+                solutionUrl: question.solutionUrl ?? "",
+                timeTaken: 0,
+                negativeMark: question.negativeMark ?? 0,
+                positiveMark: question.positiveMark ?? 0,
+                isMultipleAnswer: question.isMultipleAnswer ?? false,
+                userSelectedOption: question.userSelectedOption,
+                actualAnswer: null,
+                numericAnswer: null,
+                userGivenAnswers: userGivenAnswers,
+                questionType: question.questionType ?? "",
+                answerValidity: question.answerValidity ?? [],
+                columnMatchAnswer: question.columnMatchAnswer ??
+                    ["null", "null", "null", "null"],
+              );
+            }
 
             return Result(
               testId: solutionResponse.id ?? 0,
@@ -374,12 +493,14 @@ class TestProvider with ChangeNotifier {
             );
 
           case QuestionType.COLUMN_MATCHING:
-            print("============111   ${question.toString()}=============");
+            print(
+                "============111   ${question.userSelectedOption}============= ${question.columnMatchAnswer}  ${question.status}");
 
             return Result(
               testId: solutionResponse.id ?? 0,
               section: question.section ?? "",
               questionId: question.id!,
+              // status: Status.getStatus(question.status),
               status: Status.getStatus(
                 getStatusForColoum(
                     question.userSelectedOption, question.columnMatchAnswer),
@@ -587,8 +708,8 @@ class TestProvider with ChangeNotifier {
 
       // final SubmitTestResponse submitTestResponse  = SubmitTestResponse.fromJson(data);
       // print("data subm ${submitTestResponse.batchId}");
-      print("RESPONSE ::");
-      print(response.body);
+      // print("RESPONSE ::");
+      // print(response.body);
       return convertToResult(ViewSolution.fromJson(data));
     }).catchError((error) {
       // TODO :: ERROR HANDELING
