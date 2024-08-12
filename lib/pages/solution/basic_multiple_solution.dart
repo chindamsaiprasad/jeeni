@@ -66,6 +66,7 @@ class BasicMultipleSolution extends ConsumerWidget {
                   width: (MediaQuery.of(context).size.width / 4) - 3,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
                         backgroundColor: ref
                                 .read(solutionProvider)
                                 .getUserSelecetdOption()[index]

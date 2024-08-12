@@ -116,6 +116,7 @@ class NumericSolution extends ConsumerWidget {
                   width: (MediaQuery.of(context).size.width / 4) - 3,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
                       backgroundColor: result.userSelectedOption == null
                           ? Colors.grey[600]
                           : result.userSelectedOption == option

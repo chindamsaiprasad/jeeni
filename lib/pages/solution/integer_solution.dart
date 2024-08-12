@@ -74,7 +74,7 @@ class IntegerSolution extends ConsumerWidget {
                               left: 0,
                               child: Icon(
                                 size: 40,
-                                color: Colors.green,
+                                color: Color.fromARGB(255, 21, 108, 24),
                                 IconData(
                                   0xf3fd,
                                   fontFamily: CupertinoIcons.iconFont,
@@ -143,6 +143,7 @@ class IntegerSolution extends ConsumerWidget {
                   width: (MediaQuery.of(context).size.width / 4) - 3,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
                       backgroundColor: result.userSelectedOption == null
                           ? Colors.grey[600]
                           : result.userSelectedOption == option

@@ -127,19 +127,19 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
                   ],
                 ),
 
-                RichText(
-                  text: TextSpan(
-                    text: "Spent ",
-                    style: const TextStyle(color: Colors.black),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: ': 0m 1s',
-                          style: TextStyle(
-                            color: Colors.red.shade400,
-                          )),
-                    ],
-                  ),
-                ),
+                // RichText(
+                //   text: TextSpan(
+                //     text: "Spent ",
+                //     style: const TextStyle(color: Colors.black),
+                //     children: <TextSpan>[
+                //       TextSpan(
+                //           text: ': 0m 1s',
+                //           style: TextStyle(
+                //             color: Colors.red.shade400,
+                //           )),
+                //     ],
+                //   ),
+                // ),
                 // _buildCorrectIncorrect(
                 //   "Spent : 0m ",
                 //   "${currentQuestion?.negativeMark ?? 0}",
@@ -216,7 +216,7 @@ class _ViewQuestionSolutionState extends ConsumerState<ViewQuestionSolution> {
                   child: Text(
                     'Q${index + 1}',
                     style: const TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 14,
                     ),
                   ),

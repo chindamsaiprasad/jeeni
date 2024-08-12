@@ -132,6 +132,7 @@ class ResultUtil {
       final userSolutions = submitTestResponse.questionResult ?? [];
       if (userSolutions.isNotEmpty) {
         return questions.map((question) {
+          
           final userSolution =
               findUserSolutionById(question.id!, userSolutions);
 
@@ -141,26 +142,22 @@ class ResultUtil {
             case QuestionType.MATRIX:
             case QuestionType.ASSERTION_AND_REASON:
               if (question.isMultipleAnswer ?? false) {
-                final userGivenAnswers = convertTouserGivenAnswersForMultiple(
-                    question.userSelectedOption);
+                
                 return Result(
                   testId: testId!,
                   section: question.section ?? "",
                   questionId: question.id!,
-                  status: Status.getStatus(getStatusForMultiple(
-                      userGivenAnswers,
-                      question.answerValidity,
-                      question.userSelectedOption)),
+                  status: Status.getStatus(userSolution!.status),
                   questionUrl: question.questionUrl ?? "",
                   solutionUrl: question.solutionUrl ?? "",
                   timeTaken: 0,
                   negativeMark: question.negativeMark ?? 0,
                   positiveMark: question.positiveMark ?? 0,
                   isMultipleAnswer: question.isMultipleAnswer ?? false,
-                  userSelectedOption: question.userSelectedOption,
+                  userSelectedOption: userSolution.userSelectedOption,
                   actualAnswer: null,
                   numericAnswer: null,
-                  userGivenAnswers: userGivenAnswers,
+                  userGivenAnswers: userSolution.userGivenAnswers ?? [false, false, false, false] ,
                   questionType: question.questionType ?? "",
                   answerValidity: question.answerValidity ?? [],
                   columnMatchAnswer: question.columnMatchAnswer ??

@@ -75,6 +75,7 @@ class _MultipleQuestionState extends ConsumerState<MultipleQuestion> {
             width: (MediaQuery.of(context).size.width / 4) - 3,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
                 backgroundColor:
                     multipleAnswer[index] ? Colors.green[600] : Colors.grey[400],
               ),

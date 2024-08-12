@@ -13,7 +13,8 @@ String? formatDateString(String? dateStr) {
     DateTime dateTime = DateTime.parse(dateStr);
 
     // Format the DateTime object to the desired format
-    String formattedDate = DateFormat('dd/MM/yyyy, hh:mm a').format(dateTime);
+    // String formattedDate = DateFormat('dd/MM/yyyy, hh:mm a').format(dateTime);
+    String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
 
     return formattedDate;
   } catch (e) {

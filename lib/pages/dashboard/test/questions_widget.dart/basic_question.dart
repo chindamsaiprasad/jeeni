@@ -72,6 +72,7 @@ class _BasicQuestionState extends ConsumerState<BasicQuestion> {
             width: (MediaQuery.of(context).size.width / 4) - 3,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
                 backgroundColor: userSelectedOption == null
                     ? Colors.grey[400]
                     : userSelectedOption == option

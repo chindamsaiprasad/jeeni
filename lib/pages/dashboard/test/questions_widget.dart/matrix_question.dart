@@ -62,6 +62,7 @@ class _MatrixQuestionState extends ConsumerState<MatrixQuestion> {
                   width: (MediaQuery.of(context).size.width / 4) - 3,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
                       backgroundColor:
                           ref.watch(testProgressProvider).userSelectedOption ==
                                   null
