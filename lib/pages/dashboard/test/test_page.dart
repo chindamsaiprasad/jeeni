@@ -33,7 +33,8 @@ class TestPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _TestPageState();
 }
 
-class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver {
+class _TestPageState extends ConsumerState<TestPage>
+    with WidgetsBindingObserver {
   final ItemScrollController questionNumberScrollController =
       ItemScrollController();
 
@@ -53,10 +54,7 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
     // });
 
     WidgetsBinding.instance.addObserver(this);
-
   }
-
-
 
   @override
   void dispose() {
@@ -112,27 +110,23 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
 
   void checkAndSubmitTest(WidgetRef ref, BuildContext context) {
     final timerService = ref.read(timerProvider);
-    
-      OverlayLoader.show(context: context, title: "Submitting");
-      print("this wroks");
-      ref.read(testProgressProvider).submitTest().then((response) {
-        if (response != null) {
-          timerService.stopTimer();
-          Navigator.pop(context, response);
-        }
-      }).catchError((onError) {
-        // Handle error
-        print("111111111111111111111111111111111 ERROR");
-      }).whenComplete(() {
-        print("111111111111111111111111111111111 whenComplete");
 
-        OverlayLoader.hide();
-      });
-    
+    OverlayLoader.show(context: context, title: "Submitting");
+    print("this wroks");
+    ref.read(testProgressProvider).submitTest().then((response) {
+      if (response != null) {
+        timerService.stopTimer();
+        Navigator.pop(context, response);
+      }
+    }).catchError((onError) {
+      // Handle error
+      print("111111111111111111111111111111111 ERROR");
+    }).whenComplete(() {
+      print("111111111111111111111111111111111 whenComplete");
+
+      OverlayLoader.hide();
+    });
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -156,13 +150,12 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
   }
 
   Container _buildAppBar() {
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
-          if(savedState == "AppResumed"){
-            print("data");
-            checkAndSubmitTest(ref,context);
-          }
-        });
+      if (savedState == "AppResumed") {
+        print("data");
+        checkAndSubmitTest(ref, context);
+      }
+    });
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 55,
@@ -349,7 +342,7 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
       // color: Colors.white,
       // color: Colors.green,
       height: 60,
-      width: MediaQuery.of(context).size.width *0.95,
+      width: MediaQuery.of(context).size.width * 0.95,
       child: ScrollablePositionedList.builder(
         itemScrollController: questionNumberScrollController,
         itemCount: questions.length,
@@ -362,7 +355,9 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
           return InkWell(
             onTap: () {
               // print("question id ${index} ${question.id}");
-              ref.read(testProgressProvider).updateCurrentQuestion(question.id ?? 0);
+              ref
+                  .read(testProgressProvider)
+                  .updateCurrentQuestion(question.id ?? 0);
             },
             child: Container(
               child: Stack(
@@ -373,19 +368,21 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
                     height: 50,
                     width: 50,
                     decoration: BoxDecoration(
-                      border:
-                          ref.read(testProgressProvider).getCurrentQuestion?.id ==
-                                  question.id
-                              ? Border.all(
-                                  width: 3,
-                                  // color: const Color.fromARGB(255, 4, 109, 122),
-                                  color: Colors.black,
-                                )
-                              : Border.all(
-                                  width: 1,
-                                  // color: Colors.black,
-                                  color: const Color.fromARGB(255, 4, 109, 122),
-                                ),
+                      border: ref
+                                  .read(testProgressProvider)
+                                  .getCurrentQuestion
+                                  ?.id ==
+                              question.id
+                          ? Border.all(
+                              width: 3,
+                              // color: const Color.fromARGB(255, 4, 109, 122),
+                              color: Colors.black,
+                            )
+                          : Border.all(
+                              width: 1,
+                              // color: Colors.black,
+                              color: const Color.fromARGB(255, 4, 109, 122),
+                            ),
                       borderRadius: const BorderRadius.all(Radius.circular(25)),
                       color: question.customAnswerStatus.backgroundColur,
                       // color: Colors.red,
@@ -409,7 +406,8 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
                             height: 9,
                             width: 9,
                             decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(25)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(25)),
                               color: Color.fromARGB(255, 9, 233, 16),
                             ),
                           ),
@@ -470,20 +468,19 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
         children: [
           TextButton(
             onPressed: () {
-
-              final currentIndex = ref.read(testProgressProvider).currentQuestionIndex();
+              final currentIndex =
+                  ref.read(testProgressProvider).currentQuestionIndex();
 
               if (currentIndex > 0) {
                 ref.read(testProgressProvider).previous();
                 jumpToSelectedIndex();
               }
-              
             },
             child: Text(
               "Prev",
               style: TextStyle(
                 color: ref.read(testProgressProvider).currentQuestionIndex() > 0
-                    ? AppColour.darkGrey  // Button enabled color
+                    ? AppColour.darkGrey // Button enabled color
                     : Colors.grey, // Button disabled color
                 fontSize: 14,
               ),
@@ -514,9 +511,11 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
           ),
           TextButton(
             onPressed: () {
-              
-              final currentIndex = ref.read(testProgressProvider).currentQuestionIndex();
-              final lastIndex = ref.read(testProgressProvider).questions.length - 1; // Adjust for zero-based index
+              final currentIndex =
+                  ref.read(testProgressProvider).currentQuestionIndex();
+              final lastIndex =
+                  ref.read(testProgressProvider).questions.length -
+                      1; // Adjust for zero-based index
 
               if (currentIndex < lastIndex) {
                 ref.read(testProgressProvider).next();
@@ -532,7 +531,6 @@ class _TestPageState extends ConsumerState<TestPage> with WidgetsBindingObserver
                     : Colors.grey,
                 fontSize: 14,
               ),
-
             ),
           ),
         ],

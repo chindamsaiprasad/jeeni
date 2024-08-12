@@ -517,7 +517,8 @@ class TestProvider with ChangeNotifier {
               userGivenAnswers: [false, false, false, false],
               questionType: question.questionType ?? "",
               answerValidity: question.answerValidity ?? [],
-              columnMatchAnswer: question.columnMatchAnswer ?? ["", "", "", ""],
+              columnMatchAnswer:
+                  question.columnMatchAnswer ?? [null, null, null, null],
             );
           default:
             if (question.questionType?.contains("ASSERTION") ?? false) {
@@ -708,7 +709,7 @@ class TestProvider with ChangeNotifier {
 
       // final SubmitTestResponse submitTestResponse  = SubmitTestResponse.fromJson(data);
       // print("data subm ${submitTestResponse.batchId}");
-      // print("RESPONSE ::");
+      print("RESPONSE ::");
       // print(response.body);
       return convertToResult(ViewSolution.fromJson(data));
     }).catchError((error) {

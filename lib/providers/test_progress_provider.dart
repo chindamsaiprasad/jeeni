@@ -314,7 +314,7 @@ class TestProgressProvider with ChangeNotifier {
 
     if (_currentQuestion!.questionType == QuestionType.COLUMN_MATCHING) {
       _currentQuestion = _currentQuestion
-          ?.copyWith(userGivenColumnMatchAnswer: ["", "", "", ""]);
+          ?.copyWith(userGivenColumnMatchAnswer: [null, null, null, null]);
     }
 
     if (_currentQuestion?.isMultipleAnswer ?? false) {
@@ -434,7 +434,6 @@ class TestProgressProvider with ChangeNotifier {
 
         //--------------Assertion Ans Reason--------------
         if (question.questionType == "Column Matching") {
-          print("COLUMN MATCHING :: ");
           userGivenAnswers.clear();
           userGivenAnswers.add(true);
           final userGivenColumnMatchAnswer =
@@ -498,6 +497,7 @@ class TestProgressProvider with ChangeNotifier {
 
           question.userSelectedOption =
               userGivenColumnMatchAnswer.map((e) => e).join(',');
+          print("COLUMN MATCHING :: $status  ${question.userSelectedOption}");
         }
 
         //--------------BASIC------------------

@@ -72,7 +72,7 @@ class Result {
   final List<bool> userGivenAnswers;
   final List<bool> answerValidity;
   final String questionType;
-  final List<String> columnMatchAnswer;
+  final List<String?> columnMatchAnswer;
 
   Result({
     required this.testId,
