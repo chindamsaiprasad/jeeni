@@ -50,72 +50,74 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xff1c5e20),
-        title: const Text(
-          "Attempted Test",
-          style: TextStyle(color: Colors.white, fontSize: 22),
-        ),
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              FontAwesomeIcons.magnifyingGlass,
-              size: 18,
-            ),
-            onPressed: () {
-              // Add your onPressed code here!
-              setState(() {
-                searchenable = !searchenable;
-              });
-            },
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color(0xff1c5e20),
+          title: const Text(
+            "Attempted Test",
+            style: TextStyle(color: Colors.white, fontSize: 22),
           ),
-          IconButton(
-            icon: const Icon(
-              FontAwesomeIcons.arrowsRotate,
-              size: 18,
-            ),
-            onPressed: () {
-              refreshResults(context);
-            },
+          iconTheme: const IconThemeData(
+            color: Colors.white,
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          searchenable
-              ? Padding(
-                  padding: const EdgeInsets.only(
-                      top: 12, right: 12, left: 12, bottom: 0),
-                  child: TextField(
-                    controller: searchTextController,
-                    decoration: InputDecoration(
-                      hintText: 'Search Test...',
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: () {
-                          setState(() {});
-                        },
+          actions: [
+            IconButton(
+              icon: const Icon(
+                FontAwesomeIcons.magnifyingGlass,
+                size: 18,
+              ),
+              onPressed: () {
+                // Add your onPressed code here!
+                setState(() {
+                  searchenable = !searchenable;
+                });
+              },
+            ),
+            IconButton(
+              icon: const Icon(
+                FontAwesomeIcons.arrowsRotate,
+                size: 18,
+              ),
+              onPressed: () {
+                refreshResults(context);
+              },
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            searchenable
+                ? Padding(
+                    padding: const EdgeInsets.only(
+                        top: 12, right: 12, left: 12, bottom: 0),
+                    child: TextField(
+                      controller: searchTextController,
+                      decoration: InputDecoration(
+                        hintText: 'Search Test...',
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.search),
+                          onPressed: () {
+                            setState(() {});
+                          },
+                        ),
                       ),
+                      // onChanged: filterResults,
+                      onChanged: (value) {
+                        setState(() {});
+                      },
                     ),
-                    // onChanged: filterResults,
-                    onChanged: (value) {
-                      setState(() {});
-                    },
-                  ),
-                )
-              : Container(),
-          Expanded(
-            child: Padding(
-              padding:
-                  const EdgeInsets.only(top: 4, bottom: 10, left: 6, right: 6),
-              child: getResultsList(),
+                  )
+                : Container(),
+            Expanded(
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(top: 4, bottom: 10, left: 6, right: 6),
+                child: getResultsList(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
