@@ -170,7 +170,7 @@ class ResultPage extends ConsumerWidget {
             ),
             onPressed: null,
             child: const Text(
-              "Result is not available.",
+              "The result will be declared soon.",
               style: TextStyle(color: Colors.white),
             ),
           ),

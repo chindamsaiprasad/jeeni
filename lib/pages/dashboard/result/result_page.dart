@@ -50,42 +50,42 @@ class ResultsPageState extends ConsumerState<ResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color(0xff1c5e20),
-          title: const Text(
-            "Attempted Test",
-            style: TextStyle(color: Colors.white, fontSize: 22),
-          ),
-          iconTheme: const IconThemeData(
-            color: Colors.white,
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(
-                FontAwesomeIcons.magnifyingGlass,
-                size: 18,
-              ),
-              onPressed: () {
-                // Add your onPressed code here!
-                setState(() {
-                  searchenable = !searchenable;
-                });
-              },
-            ),
-            IconButton(
-              icon: const Icon(
-                FontAwesomeIcons.arrowsRotate,
-                size: 18,
-              ),
-              onPressed: () {
-                refreshResults(context);
-              },
-            ),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xff1c5e20),
+        title: const Text(
+          "Attempted Test",
+          style: TextStyle(color: Colors.white, fontSize: 22),
         ),
-        body: Column(
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.magnifyingGlass,
+              size: 18,
+            ),
+            onPressed: () {
+              // Add your onPressed code here!
+              setState(() {
+                searchenable = !searchenable;
+              });
+            },
+          ),
+          IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.arrowsRotate,
+              size: 18,
+            ),
+            onPressed: () {
+              refreshResults(context);
+            },
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Column(
           children: [
             searchenable
                 ? Padding(

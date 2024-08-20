@@ -75,18 +75,20 @@ class ResultDetailsPageState extends ConsumerState<ResultDetailsPage> {
           color: Colors.white,
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(flex: 9, child: testResultContainerDetails()),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: SizedBox(
-              height: 40,
-              width: MediaQuery.of(context).size.width,
-              child: viewSolutionButton(),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(flex: 9, child: testResultContainerDetails()),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: SizedBox(
+                height: 40,
+                width: MediaQuery.of(context).size.width,
+                child: viewSolutionButton(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
