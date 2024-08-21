@@ -110,7 +110,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget navigationList(VoidCallback ontap, IconData leadingIcon,
       String titleText, String subTitleText, IconData trallingIcon) {
     return CustomListTile(
-      height: 100,
+      height: 120,
       onTap: ontap,
       leading: JeeniIcon(iconData: leadingIcon),
       title: Text(titleText),
