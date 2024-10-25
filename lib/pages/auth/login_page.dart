@@ -81,7 +81,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               const Padding(
                 padding: const EdgeInsets.only(left: 15.0, bottom: 5.0, top: 0.0),
                 child: Text(
-                  "VazeClasses",
+                  "Vaze Classes",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 30.0, 

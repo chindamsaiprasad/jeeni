@@ -1,4 +1,4 @@
-package com.jeeni.jeeni
+package com.jeeni.vazeclasses
 
 import io.flutter.embedding.android.FlutterActivity
 
