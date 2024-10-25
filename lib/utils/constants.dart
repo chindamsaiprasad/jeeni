@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 final options = ["A", "B", "C", "D"];
@@ -41,6 +42,8 @@ class ImageConstants {
   static const String splashScreenImage = "assets/images/splash.png";
   static const String jeeniLoginLogoImage = "assets/images/jeeniloginimage.png";
 
+  static const String vazeClassesLoginLogoImage = "assets/images/vazeclasses_logo.png";
+
   static const String loginImageBg = "assets/images/loginImageBg.jpg";
   static const String profileImageBg = "assets/images/profileBg.jpg";
 }
@@ -73,3 +76,15 @@ class ImageConstants {
   return convertedTime;
 }
 
+
+
+
+class ThemeColorsPortableFile {
+  // Define static colors for easy access
+  static const Color appBarColor = Colors.blue;
+  static const Color buttonColor = Colors.blue;
+
+  // Additional colors
+  static const Color appBarTextColor = Colors.black;
+  static const Color buttonTextColor = Colors.black;
+}

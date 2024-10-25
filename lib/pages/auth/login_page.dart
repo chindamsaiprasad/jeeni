@@ -70,10 +70,27 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           SizedBox(
             height: 100,
             width: 200,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Image.asset(ImageConstants.jeeniLoginLogoImage),
-            ),
+            child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0, bottom: 0, top: 0.0),
+                child: SizedBox(height: 50,width: 100,child: Image.asset(ImageConstants.vazeClassesLoginLogoImage)),
+              ),
+              const Padding(
+                padding: const EdgeInsets.only(left: 15.0, bottom: 5.0, top: 0.0),
+                child: Text(
+                  "VazeClasses",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 30.0, 
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+              ),
+            ],
+                        ),
           ),
         ],
       ),
